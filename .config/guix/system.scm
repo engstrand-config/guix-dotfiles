@@ -30,9 +30,10 @@
     (append
       (list 
 	  (specification->package "nss-certs")
-	  (specification->package "engstrand-dwm"))
+	  (specification->package "engstrand-dwm")
+	  (specification->package "engstrand-st")
+	  (specification->package "engstrand-dsblocks"))
 	  ;(specification->package "engstrand-dmenu")
-	  ;(specification->package "engstrand-st"))
       %base-packages))
   (services
     (append
@@ -43,6 +44,7 @@
                      Identifier  \"AMD\"
                      Driver      \"amdgpu\"
                      Option      \"TearFree\" \"true\"
+                     Option      \"Backlight\" \"amdgpu_bl0\"
                    EndSection"))
                 (keyboard-layout keyboard-layout))))
       %desktop-services))
