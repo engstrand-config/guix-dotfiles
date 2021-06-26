@@ -18,7 +18,7 @@ export STATUSBAR="dsblocks"
 export PASTEL_COLOR_MODE=8bit
 export npm_config_prefix=~/.node_modules
 export SUDO_ASKPASS="$HOME/.local/bin/tools/dmenupass"
-export PATH="$PATH:$HOME/.node_modules/bin:$HOME/.cargo/bin:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
+export PATH="$PATH:$HOME/.node_modules/bin:$HOME/.cargo/bin:$HOME/.local/bin/tools:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export FZF_DEFAULT_OPTS="-m --height 25% --layout=reverse --color fg:7,bg:-1,hl:1,fg+:232,bg+:6,hl+:255,info:7,prompt:2,spinner:1,pointer:232,marker:1,border:3"
 export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
 
@@ -49,10 +49,10 @@ alias grep='grep --color=auto'
 alias vim='nvim'
 
 # Disable ctrl-s and ctrl-q.
-stty -ixon 
+stty -ixon
 
 #Allows you to cd into directory merely by typing the directory name.
-shopt -s autocd 
+shopt -s autocd
 
 # Infinite history
 HISTSIZE= HISTFILESIZE=
