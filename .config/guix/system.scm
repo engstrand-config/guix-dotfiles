@@ -34,7 +34,7 @@
   (timezone "Europe/Stockholm")
   (keyboard-layout
 	(keyboard-layout "us,se" #:options '("grp:alt_shift_toggle" "grp_led:caps" "caps:escape")))
-  (host-name "fredrik-laptop")
+  (host-name "tuxedo")
   (users (cons* (user-account
                   (name "fredrik")
                   (comment "Fredrik Engstrand")
