@@ -9,6 +9,23 @@
 
 (use-service-modules desktop networking ssh xorg)
 
+; Allow users in the video group to modify backlight without using sudo
+(define %backlight-udev-rule
+  (udev-rule
+    "90-backlight.rules"
+    (string-append "ACTION==\"add\", "
+		   "SUBSYSTEM==\"backlight\", "
+		   "RUN+=\"/run/current-system/profile/bin/chgrp video /sys/class/backlight/%k/brightness\"\n"
+		   "ACTION==\"add\", "
+		   "SUBSYSTEM==\"backlight\", "
+		   "RUN+=\"/run/current-system/profile/bin/chmod g+w /sys/class/backlight/%k/brightness\"\n"
+		   "ACTION==\"add\", "
+		   "SUBSYSTEM==\"leds\", "
+		   "RUN+=\"/run/current-system/profile/bin/chgrp input /sys/class/leds/%k/brightness\"\n"
+		   "ACTION==\"add\", "
+		   "SUBSYSTEM==\"leds\", "
+		   "RUN+=\"/run/current-system/profile/bin/chmod g+w /sys/class/leds/%k/brightness\"")))
+
 (operating-system
   (kernel linux)
   (initrd microcode-initrd)
@@ -38,14 +55,16 @@
   (services
     (append
       (list (service gnome-desktop-service-type)
+	    (udev-rules-service 'backlight %backlight-udev-rule)
             (set-xorg-configuration
               (xorg-configuration
-		(extra-config '("Section \"Device\"
-                     Identifier  \"AMD\"
-                     Driver      \"amdgpu\"
-                     Option      \"TearFree\" \"true\"
-                     Option      \"Backlight\" \"amdgpu_bl0\"
-                   EndSection"))
+		(extra-config 
+		  '("Section \"Device\"
+                     	Identifier  \"AMD\"
+                     	Driver      \"amdgpu\"
+                     	Option      \"TearFree\" \"true\"
+                     	Option      \"Backlight\" \"amdgpu_bl0\"
+                     EndSection"))
                 (keyboard-layout keyboard-layout))))
       %desktop-services))
   (bootloader
