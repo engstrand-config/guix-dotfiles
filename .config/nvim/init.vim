@@ -14,6 +14,7 @@ Plug 'mhinz/vim-startify'
 Plug 'dylanaraps/wal.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'neoclide/coc.nvim'
+Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
 Plug 'alvan/vim-closetag'
