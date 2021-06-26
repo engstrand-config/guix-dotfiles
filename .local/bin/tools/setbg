@@ -1,0 +1,5 @@
+#!/bin/sh
+# Sets the background. If given an argument, will set file as background.
+
+[ ! -z "$1" ] && cp "$1" ~/.config/wallpaper.png
+xwallpaper --zoom ~/.config/wallpaper.png
