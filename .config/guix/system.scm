@@ -1,8 +1,9 @@
 ;; This is an operating system configuration generated
 ;; by the graphical installer.
 
-(use-modules 
-	(gnu) 
+(use-modules
+	(gnu)
+        (gnu services pm)
 	(engstrand packages)
 	(nongnu packages linux)
 	(nongnu system linux-initrd))
@@ -45,7 +46,7 @@
                 %base-user-accounts))
   (packages
     (append
-      (list 
+      (list
 	  (specification->package "nss-certs")
 	  (specification->package "engstrand-dwm")
 	  (specification->package "engstrand-st")
@@ -55,10 +56,14 @@
   (services
     (append
       (list (service gnome-desktop-service-type)
+            (service tlp-service-type
+                (tlp-configuration
+                    (cpu-scaling-governor-on-ac (list "performance"))
+                    (sched-powersave-on-bat? #t)))
 	    (udev-rules-service 'backlight %backlight-udev-rule)
             (set-xorg-configuration
               (xorg-configuration
-		(extra-config 
+		(extra-config
 		  '("Section \"Device\"
                      	Identifier  \"AMD\"
                      	Driver      \"amdgpu\"
