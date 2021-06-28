@@ -1,2 +1,3 @@
-XTerm*utf8: always
-XTerm*metaSendsEscape: true
+dwm.font: mono:style=Bold:size=10:antialias=true:autohint=true
+st.font: mono:pixelsize=20:antialias=true:autohint=true;
+*.alpha: 0.94

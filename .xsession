@@ -3,7 +3,7 @@
 xset r rate 300 50
 xmodmap ~/.xmodmap
 xcape -e 'Super_L=Escape'
-xrdb ~/.Xresources
+xrdb -merge ~/.Xdefaults
 
 setbg &
 picom &
