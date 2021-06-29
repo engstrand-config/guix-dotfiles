@@ -6,7 +6,6 @@ Section \"InputClass\"
     MatchDevicePath \"/dev/input/event*\"
     MatchIsTouchPad \"on\"
     Option \"DisableWhileTyping\" \"on\"
-    Option \"MiddleEmulation\" \"on\"
     Option \"NaturalScrolling\" \"true\"
 EndSection
 Section \"InputClass\"
@@ -17,21 +16,21 @@ Section \"InputClass\"
 EndSection
 ")
 
-(define %pavilion-graphics
-"
-Section \"Device\"
-        Identifier      \"Device0\"
-        Driver          \"nvidia\"
-        VendorName      \"NVIDIA Corporation\"
-        BusID           \"PCI:1:0:0\"
-EndSection
-Section \"Device\"
-  Identifier  \"Intel Graphics\"
-  Driver      \"intel\"
-  Option      \"AccelMethod\" \"sna\"
-  Option      \"TearFree\" \"true\"
-EndSection
-")
+; (define %pavilion-graphics
+; "
+; Section \"Device\"
+;         Identifier      \"Device0\"
+;         Driver          \"nvidia\"
+;         VendorName      \"NVIDIA Corporation\"
+;         BusID           \"PCI:1:0:0\"
+; EndSection
+; Section \"Device\"
+;   Identifier  \"Intel Graphics\"
+;   Driver      \"intel\"
+;   Option      \"AccelMethod\" \"sna\"
+;   Option      \"TearFree\" \"true\"
+; EndSection
+; ")
 
 (use-modules
 	(gnu)
