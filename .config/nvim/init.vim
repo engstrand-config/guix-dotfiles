@@ -267,15 +267,6 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
 " Automatically deletes all trailing whitespace on save.
 autocmd BufWritePre * %s/\s\+$//e
 
-" When shortcut files are updated, renew bash and vifm configs with new material:
-autocmd BufWritePost ~/.config/bmdirs,~/.config/bmfiles !shortcuts
-
-" Update binds when sxhkdrc is updated.
-" autocmd BufWritePost *sxhkdrc !pkill -USR1 sxhkd
-
-" Run xrdb whenever Xdefaults or Xresources are updated.
-autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
-
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
@@ -283,10 +274,6 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd FileType tex setlocal formatoptions+=l tw=80
 autocmd FileType markdown setlocal formatoptions+=l tw=80
 autocmd FileType text setlocal formatoptions+=l tw=80
-
-" Automatically recompile dwm and dwmblocks.
-autocmd BufWritePost */dwm/config.h !sudo make install && { killall -q dwm;setsid dwm & }
-autocmd BufWritePost */dsblocks/config.h !sudo make install && { killall -q dsblocks;setsid dsblocks& }
 
 autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler
