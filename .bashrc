@@ -37,6 +37,17 @@ alias ll='ls -l'
 alias grep='grep --color=auto'
 alias vim='nvim'
 
+alias shepinit='~/engstrand-config/guix-dotfiles/.config/shepherd/init.d/'
+alias dots='~/engstrand-config/guix-dotfiles/; ls -a'
+
+alias recsys='sudo guix system reconfigure'
+
+alias gs='git status'
+alias gd='git diff'
+alias ga='git add'
+alias gr='git restore'
+alias gc='read -p "Commit message: " desc; git commit -m "$desc"'
+
 # Disable ctrl-s and ctrl-q.
 stty -ixon
 
