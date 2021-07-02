@@ -1,62 +1,39 @@
-;; This "manifest" file can be passed to 'guix package -m' to reproduce
-;; the content of your profile.  This is "symbolic": it only specifies
-;; package names.  To reproduce the exact same profile, you also need to
-;; capture the channels being used, as returned by "guix describe".
-;; See the "Replicating Guix" section in the manual.
-
 (specifications->manifest
-  (list "mpv"
-        "xclip"
-        "tlp"
-        "maim"
-        "engstrand-dwm"
-        "kdeconnect"
-        "dunst"
-        "sxiv"
-        "xwallpaper"
-        "xf86-video-fbdev"
-        "xf86-input-libinput"
-        "xorg-server"
-        "xinit"
-        "unicode-emoji"
-        "font-awesome"
-        "font-jetbrains-mono"
-        "xprop"
-        "curl"
-        "redshift"
-        "brightnessctl"
-        "engstrand-dsblocks"
-        "stow"
-        "xrandr"
-        "xsetroot"
-        "pamixer"
-        "mpc"
-        "xrdb"
-        "engstrand-st"
-        "harfbuzz"
-        "fzf"
-        "xstow"
-        "bat"
-        "xmodmap"
-        "xcape"
-        "ncurses"
-        "picom"
-        "fontconfig"
-        "xset"
-        "xkeyboard-config"
-        "pkg-config"
-        "glib-networking"
-        "libmpdclient"
-        "mpd"
-        "libxinerama"
-        "freetype"
-        "libxft"
-        "libx11"
-        "gcc-toolchain@10"
-        "make"
-        "node"
-        "neovim"
-        "git"
-        "firefox"
-        "openssh"
+  (list
+    "tlp" ;; should be required by the laptop module
+    "engstrand-dwm" ;; move to dwm.scm?
+    "kdeconnect" ;; require for dwm?
+    "xwallpaper" ;; require for dwm?
+    "xf86-video-fbdev"
+    "xf86-input-libinput"
+    "xorg-server" ;; require for dwm?
+    "xinit"
+    "curl" ;; system package?
+    "redshift" ;; night light?
+    "brightnessctl" ;; should be required by the laptop module
+    "engstrand-dsblocks"
+    "stow" ;; system package? Will it be needed when we switch to guix home?
+    "xstow"
+    "xrandr" ;; cli-utils? video? system package?
+    "xsetroot"
+    "pamixer" ;; audio profile? or system package?
+    "xrdb" ;; require for dwm?
+    "engstrand-st" ;; system package? Have an X profile with st, dwm etc. and Wayland profile with dwl, some other terminal?
+    "harfbuzz"
+    "xmodmap" ;; system package?
+    "xcape"
+    "ncurses"
+    "xset"
+    "xkeyboard-config" ;; system package?
+    "pkg-config"
+    "glib-networking"
+    "libxinerama"
+    "freetype"
+    "libxft"
+    "libx11"
+    "gcc-toolchain@10"
+    "make"
+    "node"
+    "git" ;; system package?
+    "openssh"
     ))
