@@ -5,7 +5,10 @@
 ;; See the "Replicating Guix" section in the manual.
 
 (specifications->manifest
-  (list "tlp"
+  (list "mpv"
+        "xclip"
+        "tlp"
+        "maim"
         "engstrand-dwm"
         "kdeconnect"
         "dunst"
@@ -53,7 +56,7 @@
         "make"
         "node"
         "neovim"
-        "vim"
         "git"
         "firefox"
-        "openssh"))
+        "openssh"
+    ))
