@@ -1,3 +1,5 @@
+(define %user "johan")
+(define %full-name "Johan Engstrand")
 (define %xorg-libinput-config
 "
 Section \"InputClass\"
@@ -5,6 +7,7 @@ Section \"InputClass\"
     Driver \"libinput\"
     MatchDevicePath \"/dev/input/event*\"
     MatchIsTouchPad \"on\"
+    Option \"AccelProfile\" \"flat\"
     Option \"DisableWhileTyping\" \"on\"
     Option \"NaturalScrolling\" \"true\"
 EndSection
@@ -60,6 +63,13 @@ EndSection
 		   "ACTION==\"add\", "
 		   "SUBSYSTEM==\"leds\", "
 		   "RUN+=\"/run/current-system/profile/bin/chmod g+w /sys/class/leds/%k/brightness\"")))
+;; Could not get this to work, try again later?
+; (define %keyrepeat-udev-rule
+;   (udev-rule
+;     "00-keyrepeat.rules"
+;     (string-append "ACTION==\"add\", "
+;                    "ATTRS{product}==\"USB Keyboard\", "
+;                    "RUN+=\"/home/" %user "/.xsession\"")))
 
 (operating-system
   (kernel linux)
@@ -72,10 +82,10 @@ EndSection
 	(keyboard-layout "us,se" #:options '("grp:alt_shift_toggle" "grp_led:caps" "caps:escape")))
   (host-name "pavilion")
   (users (cons* (user-account
-                  (name "johan")
-                  (comment "Johan Engstrand")
+                  (name %user)
+                  (comment %full-name)
                   (group "users")
-                  (home-directory "/home/johan")
+                  (home-directory (string-append "/home/" %user))
                   (supplementary-groups
                     '("wheel" "netdev" "audio" "video")))
                 %base-user-accounts))
@@ -99,6 +109,7 @@ EndSection
                     (sched-powersave-on-bat? #t)))
             (service nix-service-type)
 	    (udev-rules-service 'backlight %backlight-udev-rule)
+	    (udev-rules-service 'keyrepeat %keyrepeat-udev-rule)
             (set-xorg-configuration
               (xorg-configuration
                 (extra-config (list %xorg-libinput-config))
