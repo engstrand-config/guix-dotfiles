@@ -1,7 +1,7 @@
 (define dunst
   (make <service>
     #:provides '(dunst)
-    #:docstring "Run the `dunst' notification daemon"
+    #:docstring "Run the `dunst' notification daemon."
     #:start (make-forkexec-constructor
               '("dunst")
               #:log-file (string-append (getenv "HOME")
