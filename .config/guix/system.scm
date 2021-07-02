@@ -8,7 +8,7 @@
 	(nongnu packages linux)
 	(nongnu system linux-initrd))
 
-(use-service-modules desktop networking ssh xorg)
+(use-service-modules desktop networking ssh xorg virtualization)
 
 ; Allow users in the video group to modify backlight without using sudo
 (define %backlight-udev-rule
@@ -42,7 +42,7 @@
                   (group "users")
                   (home-directory "/home/fredrik")
                   (supplementary-groups
-                    '("wheel" "netdev" "audio" "video")))
+                    '("wheel" "netdev" "audio" "video" "libvirt" "kvm")))
                 %base-user-accounts))
   (packages
     (append
@@ -56,6 +56,9 @@
   (services
     (append
       (list (service gnome-desktop-service-type)
+            (service virtlog-service-type)
+            (service libvirt-service-type
+                (libvirt-configuration (unix-sock-group "libvirt")))
             (service tlp-service-type
                 (tlp-configuration
                     (cpu-scaling-governor-on-ac (list "performance"))
