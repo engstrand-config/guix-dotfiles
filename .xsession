@@ -3,7 +3,12 @@
 xset r rate 300 50
 xmodmap ~/.xmodmap
 xcape -e 'Super_L=Escape'
-xrdb -merge ~/.Xdefaults
+
+# Make sure we have reasonable defaults for font size
+[ ! -f ~/.Xresources ] && cp ./.Xdefaults ~/.Xresources
+
+# Load our resources
+xrdb -load ~/.Xresources
 
 setbg &
 picom &
