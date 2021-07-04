@@ -14,5 +14,4 @@ alias gs='git status'
 alias gd='git diff'
 alias ga='git add'
 alias gr='git restore'
-alias gc='read -p "Commit message: " desc; git commit -m "$desc"'
-
+alias gc='git commit -m'
