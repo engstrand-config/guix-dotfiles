@@ -50,7 +50,8 @@
 	  (specification->package "nss-certs")
 	  (specification->package "engstrand-dwm")
 	  (specification->package "engstrand-st")
-	  (specification->package "engstrand-dsblocks"))
+	  (specification->package "engstrand-dsblocks")
+	  (specification->package "engstrand-utils"))
 	  ;(specification->package "engstrand-dmenu")
       %base-packages))
   (services
