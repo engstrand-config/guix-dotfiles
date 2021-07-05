@@ -7,10 +7,10 @@
                 #:use-module (gnu home-services files)
                 #:use-module (gnu home-services-utils)
                 #:use-module (gnu home-services shells)
+                #:use-module (gnu home-services state)
                 #:use-module (gnu home-services ssh)
                 #:use-module (gnu home-services xdg)
                 #:use-module (gnu home-services version-control))
-
 
 (home-environment
     (services
@@ -31,6 +31,21 @@
                     (publicshare "$HOME")
                     (templates "$HOME")
                     (desktop "$HOME")))
+            (service home-state-service-type
+	        (append
+	            (list
+		        (state-git "$HOME/engstrand-config/st"
+                                    "git@github.com:engstrand-config/st.git")
+		        (state-git "$HOME/engstrand-config/dwm"
+                                    "git@github.com:engstrand-config/dwm.git")
+		        (state-git "$HOME/engstrand-config/dmenu"
+                                   "git@github.com:engstrand-config/dmenu.git")
+		        (state-git "$HOME/engstrand-config/dsblocks"
+                                   "git@github.com:engstrand-config/dsblocks.git")
+		        (state-git "$HOME/engstrand-config/wallpapers"
+                                   "git@github.com:engstrand-config/wallpapers.git")
+		        (state-git "$HOME/engstrand-config/guix-channel"
+                                   "git@github.com:engstrand-config/guix-channel.git"))))
             (simple-service
                 'dotfiles home-files-service-type
                 (list
