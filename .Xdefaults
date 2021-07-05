@@ -1,4 +1,0 @@
-dwm.font: mono:style=Bold:size=10:antialias=true:autohint=true
-dwm.borderSize: 2
-st.font: mono:pixelsize=16:antialias=true:autohint=true;
-*.alpha: 0.95
