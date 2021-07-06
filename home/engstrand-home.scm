@@ -57,7 +57,6 @@
                 (list
                     `("aliasrc" ,(local-file "files/aliasrc"))
                     `("inputrc" ,(local-file "files/inputrc"))
-                    `("xmodmap" ,(local-file "files/xmodmap"))
                     `("nix-channels" ,(local-file "files/nix-channels"))
                     `("config/guix/channels.scm" ,(local-file "../channels.scm"))
                     `("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
