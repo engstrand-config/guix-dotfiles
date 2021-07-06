@@ -18,7 +18,7 @@
     "xsetroot"
     "pamixer" ;; audio profile? or system package?
     "xrdb" ;; require for dwm?
-    "xmodmap" ;; system package?
+    "setxkbmap"
     "ncurses"
     "xset"
     "pkg-config"
