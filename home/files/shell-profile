@@ -1,3 +1,5 @@
+#!/bin/sh
+
 export PATH="$PATH:$HOME/.node_modules/bin:$HOME/.cargo/bin:$HOME/.local/bin/tools:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 
 export EDITOR="nvim"
@@ -6,6 +8,10 @@ export BROWSER="firefox"
 export READER="zathura"
 export FILE="vifm"
 export STATUSBAR="dsblocks"
+
+# Enable mouse scrolling in less
+export LESS='--mouse --wheel-lines=1'
+
 
 export npm_config_prefix=~/.node_modules
 export SUDO_ASKPASS="$HOME/.local/bin/tools/dmenupass"
@@ -18,6 +24,5 @@ export GUIX_PROFILE="/home/$USER/.guix-profile"
 # Source the nix profile and fonts.
 if [ -f /run/current-system/profile/etc/profile.d/nix.sh ]; then
     source /run/current-system/profile/etc/profile.d/nix.sh
-    export FONTCONFIG_PATH="$(guix build fontconfig)/etc/fonts"
+    export FONTCONFIG_PATH="$GUIX_PROFILE/share/fonts"
 fi
-
