@@ -5,6 +5,11 @@
                 #:use-module (gnu packages fonts)
                 #:use-module (gnu packages xdisorg)
                 #:use-module (gnu packages ncurses)
+                #:use-module (gnu packages admin)
+                #:use-module (gnu packages rust-apps)
+                #:use-module (gnu packages terminals)
+                #:use-module (gnu packages pulseaudio)
+                #:use-module (gnu packages fontutils)
                 #:use-module (engstrand packages)
                 #:use-module (engstrand packages engstrand-utils)
                 #:use-module (guix gexp)
@@ -18,7 +23,7 @@
                 #:use-module (gnu home-services version-control))
 
 (home-environment
-    (packages (list ncurses))
+    (packages (list ncurses htop bat fzf pamixer xrandr fontconfig redshift))
     (services
         (list
             (service home-ssh-service-type)
