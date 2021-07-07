@@ -4,6 +4,7 @@
                 #:use-module (gnu packages xorg)
                 #:use-module (gnu packages fonts)
                 #:use-module (gnu packages xdisorg)
+                #:use-module (gnu packages ncurses)
                 #:use-module (engstrand packages)
                 #:use-module (engstrand packages engstrand-utils)
                 #:use-module (guix gexp)
@@ -17,6 +18,7 @@
                 #:use-module (gnu home-services version-control))
 
 (home-environment
+    (packages (list ncurses))
     (services
         (list
             (service home-ssh-service-type)
