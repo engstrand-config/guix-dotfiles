@@ -1,0 +1,27 @@
+#!/bin/sh
+
+[ $# -eq 0 ] && echo "No profiles specified!" && exit 1
+[ -z $GUIX_EXTRA_PROFILES ] && echo "The \$GUIX_EXTRA_PROFILES environment variables is not set!" && exit 1
+
+profiles=$*
+
+for profile in $profiles; do
+    if [ -f $profile ]; then
+        profileName=$(basename --suffix=.scm $profile)
+        profilePath="$GUIX_EXTRA_PROFILES/$profileName"
+        [ ! -f $profilePath ] && mkdir -p $profilePath
+
+        guix package --profile=$profilePath/$profileName --manifest="$profile"
+
+        profile_of_profile="$profilePath/$profileName/etc/profile"
+        if [ -f $profile_of_profile ]; then
+            source $profile_of_profile
+        else
+            echo "Could not source $profile_of_profile for profile \"$profileName\" ($profile)!"
+        fi
+    else
+        echo "Could not find manifest $profile!"
+    fi
+done
+
+
