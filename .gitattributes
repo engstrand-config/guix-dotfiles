@@ -1,2 +1,1 @@
-home/files/config/nvim/autoload/plug.vim -linguist-detectable
-home/files/config/nvim/autoload/plug.vim linguist-vendored
+home/files/config/nvim/autoload/* linguist-vendored
