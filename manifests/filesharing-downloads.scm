@@ -1,4 +1,5 @@
 (specifications->manifest
   (list
-    "picom" ;; require for dwm?
+    "youtube-dl"
+    "qbittorrent"
     ))
