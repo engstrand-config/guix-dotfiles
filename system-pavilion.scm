@@ -103,14 +103,13 @@ EndSection
       %base-packages))
   (services
     (append
-      (list (service gnome-desktop-service-type)
-            (service tlp-service-type
+      (list (service tlp-service-type
                 (tlp-configuration
                     (cpu-scaling-governor-on-ac (list "performance"))
                     (sched-powersave-on-bat? #t)))
             (service nix-service-type)
 	    (udev-rules-service 'backlight %backlight-udev-rule)
-	    (udev-rules-service 'keyrepeat %keyrepeat-udev-rule)
+	    ;;(udev-rules-service 'keyrepeat %keyrepeat-udev-rule)
             (set-xorg-configuration
               (xorg-configuration
                 (extra-config (list %xorg-libinput-config))
@@ -121,21 +120,17 @@ EndSection
       (bootloader grub-efi-bootloader)
       (target "/boot/efi")
       (keyboard-layout keyboard-layout)))
-  (mapped-devices
-    (list (mapped-device
-            (source
-              (uuid "19ae0e83-781a-4ad9-b5ac-cfa5d83e2512"))
-            (target "cryptroot")
-            (type luks-device-mapping))))
+  (swap-devices
+    (list (uuid "62f47965-ad3e-40a9-bb5e-46e4387fa449")))
   (file-systems
     (cons* (file-system
-             (mount-point "/boot/efi")
-             (device (uuid "1ADC-28E8" 'fat32))
-             (type "vfat"))
-           (file-system
-             (mount-point "/")
-             (device "/dev/mapper/cryptroot")
-             (type "ext4")
-             (dependencies mapped-devices))
-           %base-file-systems)))
-
+	     (mount-point "/boot/efi")
+	     (device (uuid "1ADC-28E8" 'fat32))
+	     (type "vfat"))
+	   (file-system
+	     (mount-point "/")
+	     (device
+	       (uuid "6c3ee1c8-6ee6-4142-b2bf-a370854f63e7"
+		     'ext4))
+	     (type "ext4"))
+	   %base-file-systems)))
