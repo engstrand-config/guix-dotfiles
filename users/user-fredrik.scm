@@ -6,5 +6,6 @@
         "fredrik"
         "Fredrik Engstrand"
         "fredrik@engstrand.nu"
+        "frewacom"
         "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
-        "frewacom"))
+        #t))

@@ -6,5 +6,6 @@
         "johan"
         "Johan Engstrand"
         "johan@engstrand.nu"
+        "johanengstrand"
         "123"
-        "johanengstrand"))
+        #t))

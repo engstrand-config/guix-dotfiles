@@ -61,20 +61,23 @@
                    (service home-git-service-type
                         (home-git-configuration
                             (config
-                                `((user
-                                    ((name . ,(system-user-name user))
-                                     (email . ,(system-user-email user))
-                                     (signingkey . ,(system-user-gpg-key user))))
-                                     (gpg
-                                         ((program . ,(file-append gnupg "/bin/gpg"))))
-                                     (commit
-                                         ((gpgsign . #t)))
-                                     (tag
-                                         ((gpgsign . #t)))
-                                     (pull
-                                         ((rebase . #t)))
-                                     (github
-                                         ((user . ,(system-user-github user))))))))
+                                (let ((%use-gpg (system-user-sign-commits? user)))
+                                    `((user
+                                        ((name . ,(system-user-name user))
+                                         (email . ,(system-user-email user))
+                                         ,@(if %use-gpg
+                                              `((signingkey . ,(system-user-gpg-key user)))
+                                              '())))
+                                      (gpg
+                                          ((program . ,(file-append gnupg "/bin/gpg"))))
+                                      (commit
+                                          ((gpgsign . ,%use-gpg)))
+                                      (tag
+                                          ((gpgsign . ,%use-gpg)))
+                                      (pull
+                                          ((rebase . ,%use-gpg)))
+                                      (github
+                                          ((user . ,(system-user-github user)))))))))
                     (service home-state-service-type
                         (append
                             (map (lambda (pair) (state-rsync (abspath home (car pair)) (cadr pair))) rsync)
