@@ -2,4 +2,5 @@
     (home-base)
     (users user-johan))
 
-(base-home-environment johan)
+(base-home-environment
+    #:user johan)

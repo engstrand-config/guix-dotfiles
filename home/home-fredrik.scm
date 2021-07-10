@@ -2,7 +2,8 @@
     (home home-base)
     (users user-fredrik))
 
-(base-home-environment fredrik
+(base-home-environment
+    #:user fredrik
     #:repos
     (list
         '("repos/pywalfox" ,"git@github.com:frewacom/pywalfox.git")

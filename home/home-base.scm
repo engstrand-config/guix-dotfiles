@@ -24,8 +24,9 @@
 
 (define (abspath homedir path) (string-append homedir "/" path))
 
-(define* (base-home-environment user
+(define* (base-home-environment
                   #:key
+                  (user '())
                   (home (get-environment-variable "HOME"))
                   (packages '())
                   (services '())
@@ -36,7 +37,7 @@
     (home-environment
         (packages
             (append
-                (list ncurses gnupg)
+                (list ncurses gnupg pinentry)
                 packages))
         (services
             (append
@@ -57,6 +58,23 @@
                             (publicshare home)
                             (templates home)
                             (desktop home)))
+                   (service home-git-service-type
+                        (home-git-configuration
+                            (config
+                                `((user
+                                    ((name . ,(system-user-name user))
+                                     (email . ,(system-user-email user))
+                                     (signingkey . ,(system-user-gpg-key user))))
+                                     (gpg
+                                         ((program . ,(file-append gnupg "/bin/gpg"))))
+                                     (commit
+                                         ((gpgsign . #t)))
+                                     (tag
+                                         ((gpgsign . #t)))
+                                     (pull
+                                         ((rebase . #t)))
+                                     (github
+                                         ((user . ,(system-user-github user))))))))
                     (service home-state-service-type
                         (append
                             (map (lambda (pair) (state-rsync (abspath home (car pair)) (cadr pair))) rsync)
