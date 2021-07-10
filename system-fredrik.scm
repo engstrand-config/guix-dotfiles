@@ -5,6 +5,7 @@
 	(gnu)
         (gnu services pm)
 	(engstrand packages)
+	(engstrand packages tuxedo-keyboard-module)
 	(nongnu packages linux)
 	(nongnu system linux-initrd))
 
@@ -31,6 +32,7 @@
   (kernel linux)
   (initrd microcode-initrd)
   (firmware (list linux-firmware))
+  (kernel-loadable-modules (list (tuxedo-keyboard-module linux)))
   (locale "en_US.utf8")
   (timezone "Europe/Stockholm")
   (keyboard-layout
