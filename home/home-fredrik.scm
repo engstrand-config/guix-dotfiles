@@ -1,6 +1,8 @@
-(use-modules (home-base))
+(use-modules
+    (home home-base)
+    (users user-fredrik))
 
-(base-home-environment
+(base-home-environment fredrik
     #:repos
     (list
         '("repos/pywalfox" ,"git@github.com:frewacom/pywalfox.git")

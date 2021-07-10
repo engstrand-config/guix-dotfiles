@@ -1,3 +1,5 @@
-(use-modules (home-base))
+(use-modules
+    (home-base)
+    (users user-johan))
 
-(base-home-environment)
+(base-home-environment johan)

@@ -1,27 +1,30 @@
-(define-module (home-base)
-                #:use-module (gnu home)
-                #:use-module (gnu services)
-                #:use-module (gnu packages xorg)
-                #:use-module (gnu packages fonts)
-                #:use-module (gnu packages xdisorg)
-                #:use-module (gnu packages ncurses)
-                #:use-module (engstrand packages)
-                #:use-module (engstrand packages engstrand-utils)
-                #:use-module (srfi srfi-98) ; for get-environment-variable
-                #:use-module (guix gexp)
-                #:use-module (gnu home-services)
-                #:use-module (gnu home-services files)
-                #:use-module (gnu home-services-utils)
-                #:use-module (gnu home-services shells)
-                #:use-module (gnu home-services state)
-                #:use-module (gnu home-services ssh)
-                #:use-module (gnu home-services xdg)
-                #:use-module (gnu home-services version-control)
-                #:export (base-home-environment))
+(define-module (home home-base)
+    #:use-module (users user-base)
+    #:use-module (gnu home)
+    #:use-module (gnu services)
+    #:use-module (gnu packages xorg)
+    #:use-module (gnu packages gnupg)
+    #:use-module (gnu packages fonts)
+    #:use-module (gnu packages xdisorg)
+    #:use-module (gnu packages ncurses)
+    #:use-module (engstrand packages)
+    #:use-module (engstrand packages engstrand-utils)
+    #:use-module (srfi srfi-98) ; for get-environment-variable
+    #:use-module (ice-9 exceptions) ; for exceptions
+    #:use-module (guix gexp)
+    #:use-module (gnu home-services)
+    #:use-module (gnu home-services files)
+    #:use-module (gnu home-services-utils)
+    #:use-module (gnu home-services shells)
+    #:use-module (gnu home-services state)
+    #:use-module (gnu home-services ssh)
+    #:use-module (gnu home-services xdg)
+    #:use-module (gnu home-services version-control)
+    #:export (base-home-environment))
 
 (define (abspath homedir path) (string-append homedir "/" path))
 
-(define* (base-home-environment
+(define* (base-home-environment user
                   #:key
                   (home (get-environment-variable "HOME"))
                   (packages '())
@@ -29,10 +32,11 @@
                   (repos '())
                   (rsync '())
                   (dotfiles '()))
+    (if (not (system-user? user)) (throw 'invalid-user . (display "Invalid user argument, expected user record")))
     (home-environment
         (packages
             (append
-                (list ncurses)
+                (list ncurses gnupg)
                 packages))
         (services
             (append
