@@ -61,7 +61,7 @@
            (laptop? #f)
            (kernel-modules '())
            (kernel-arguments '())
-           (host-name "guix")
+           (host-name "basehost")
            (packages '())
            (services '())
            (nix? #f)
@@ -139,20 +139,21 @@
                        (xorg-configuration
                          (keyboard-layout keyboard-layout)
                          (extra-config (append (list %xorg-libinput-config) xorg-extra)))))
-                     %desktop-services))
+               services
+               %desktop-services))
 
-             (bootloader (bootloader-configuration
-                           (bootloader grub-efi-bootloader)
-                           (target "/boot/efi")
-                           (keyboard-layout keyboard-layout)))
+           (bootloader (bootloader-configuration
+                         (bootloader grub-efi-bootloader)
+                         (target "/boot/efi")
+                         (keyboard-layout keyboard-layout)))
 
-             ;; file-systems must be overwritten with system-specific settings
-             (file-systems (cons*
-                             (file-system
-                               (mount-point "/tmp")
-                               (device "none")
-                               (type "tmpfs")
-                               (check? #f))
-                             %base-file-systems))
+           ;; file-systems must be overwritten with system-specific settings
+           (file-systems (cons*
+                           (file-system
+                             (mount-point "/tmp")
+                             (device "none")
+                             (type "tmpfs")
+                             (check? #f))
+                           %base-file-systems))
 
-             (issue "This is the GNU/Engstrand system. Welcome.\n")))
+           (issue "This is the GNU/Engstrand system. Welcome.\n")))
