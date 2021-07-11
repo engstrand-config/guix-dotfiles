@@ -113,36 +113,46 @@
 
            (services
              (append
+               ; virtualization services
+               (if virt?
+                   (list
+                     (service virtlog-service-type)
+                     (service libvirt-service-type
+                              (libvirt-configuration (unix-sock-group "libvirt"))))
+                   '())
+               ; laptop services
+               (if laptop?
+                   (list
+                     (udev-rules-service 'backlight %backlight-udev-rule)
+                     (service tlp-service-type
+                              (tlp-configuration
+                                (cpu-scaling-governor-on-ac (list "performance"))
+                                (sched-powersave-on-bat? #t))))
+                   '())
+               ; nix services
+               (if nix?
+                   (list
+                     (service nix-service-type))
+                   '())
+               ; base services
                (list (set-xorg-configuration
                        (xorg-configuration
                          (keyboard-layout keyboard-layout)
-                         (extra-config (append (list %xorg-libinput-config) xorg-extra))))
-                     (if laptop?
-                         (udev-rules-service 'backlight %backlight-udev-rule)
-                         (service tlp-service-type
-                                  (tlp-configuration
-                                    (cpu-scaling-governor-on-ac (list "performance"))
-                                    (sched-powersave-on-bat? #t))))
-                     (if virt?
-                         (service virtlog-service-type)
-                         (service libvirt-service-type
-                                  (libvirt-configuration (unix-sock-group "libvirt"))))
-                     (if nix? (service nix-service-type)))
-               ; services
-               %desktop-services))
+                         (extra-config (append (list %xorg-libinput-config) xorg-extra)))))
+                     %desktop-services))
 
-           (bootloader (bootloader-configuration
-                         (bootloader grub-efi-bootloader)
-                         (target "/boot/efi")
-                         (keyboard-layout keyboard-layout)))
+             (bootloader (bootloader-configuration
+                           (bootloader grub-efi-bootloader)
+                           (target "/boot/efi")
+                           (keyboard-layout keyboard-layout)))
 
-           ;; file-systems must be overwritten with system-specific settings
-           (file-systems (cons*
-                           (file-system
-                             (mount-point "/tmp")
-                             (device "none")
-                             (type "tmpfs")
-                             (check? #f))
-                           %base-file-systems))
+             ;; file-systems must be overwritten with system-specific settings
+             (file-systems (cons*
+                             (file-system
+                               (mount-point "/tmp")
+                               (device "none")
+                               (type "tmpfs")
+                               (check? #f))
+                             %base-file-systems))
 
-           (issue "This is the GNU/Engstrand system. Welcome.\n")))
+             (issue "This is the GNU/Engstrand system. Welcome.\n")))
