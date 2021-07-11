@@ -4,11 +4,11 @@
                #:use-module (gnu))
 
 (operating-system
-  (inherit base-operating-system
+  (inherit (base-operating-system
            #:user johan
            #:laptop? #f
            #:host-name "p400s"
-           #:nix? #t)
+           #:nix? #t))
 
   (swap-devices
     (list (uuid "2e1cafae-8f43-4938-be21-fc525250f915")))

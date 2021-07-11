@@ -1,3 +1,6 @@
+(define-module (manifests base)
+               #:use-module (gnu packages))
+
 (specifications->manifest
   (list
     "neovim"

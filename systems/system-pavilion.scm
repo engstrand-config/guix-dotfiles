@@ -5,10 +5,10 @@
 
 (operating-system
   (inherit (base-operating-system
-           #:user johan
-           #:laptop? #t
-           #:host-name "pavilion"
-           #:nix? #t))
+             #:user johan
+             #:laptop? #t
+             #:host-name "pavilion"
+             #:nix? #t))
   (swap-devices
     (list (uuid "62f47965-ad3e-40a9-bb5e-46e4387fa449")))
   (file-systems
