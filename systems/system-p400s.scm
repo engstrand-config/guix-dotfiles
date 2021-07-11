@@ -1,25 +1,26 @@
-(define-module (systems system-pavilion)
+(define-module (systems system-p400s)
                #:use-module (systems system-base)
                #:use-module (users user-johan)
                #:use-module (gnu))
 
 (operating-system
   (inherit (base-operating-system
-             #:user johan
-             #:laptop? #t
-             #:host-name "pavilion"
-             #:nix? #t))
+           #:user johan
+           #:laptop? #f
+           #:host-name "p400s"
+           #:nix? #t))
+
   (swap-devices
-    (list (uuid "62f47965-ad3e-40a9-bb5e-46e4387fa449")))
+    (list (uuid "2e1cafae-8f43-4938-be21-fc525250f915")))
   (file-systems
     (cons* (file-system
              (mount-point "/boot/efi")
-             (device (uuid "1ADC-28E8" 'fat32))
+             (device (uuid "8396-F2E9" 'fat32))
              (type "vfat"))
            (file-system
              (mount-point "/")
              (device
-               (uuid "6c3ee1c8-6ee6-4142-b2bf-a370854f63e7"
+               (uuid "3d72e2f8-6474-4b99-8087-48094ed37f2b"
                      'ext4))
              (type "ext4"))
            %base-file-systems)))

@@ -1,31 +1,26 @@
-(define-module (tuxedo)
-               #:use-module (base-system)
-               ;; The general laptop module should be added, name pending
-               #:use-module (common-laptop)
-               #:use-module (gnu))
+(define-module (systems system-tuxedo)
+               #:use-module (gnu)
+               #:use-module (engstrand packages tuxedo-keyboard-module)
+               #:use-module (systems system-base)
+               #:use-module (users user-fredrik))
 
 (define %xorg-amdgpu-config
   "Section \"Device\"
-        Identifier  \"AMD\"
-        Driver      \"amdgpu\"
-        Option      \"TearFree\" \"true\"
-        Option      \"Backlight\" \"amdgpu_bl0\"
-    EndSection")
+  Identifier  \"AMD\"
+  Driver      \"amdgpu\"
+  Option      \"TearFree\" \"true\"
+  Option      \"Backlight\" \"amdgpu_bl0\"
+  EndSection")
 
 (operating-system
-  (inherit base-operating-system)
-  (host-name "tuxedo")
-  (services
-    (append
-      (list (set-xorg-configuration
-              (xorg-configuration
-		(extra-config (list %xorg-amdgpu-config)))))))
-      %desktop-services))
-  (bootloader
-    (bootloader-configuration
-      (bootloader grub-efi-bootloader)
-      (target "/boot/efi")
-      (keyboard-layout keyboard-layout)))
+  (inherit (base-operating-system
+             #:laptop? #t
+             #:user fredrik
+             #:host-name "tuxedo"
+             #:kernel-modules (list tuxedo-keyboard-module)
+             #:xorg-extra (list %xorg-amdgpu-config)
+             #:virt? #t
+             #:nix? #t))
   (swap-devices
     (list (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))
   (file-systems
