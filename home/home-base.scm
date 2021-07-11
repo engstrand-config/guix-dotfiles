@@ -38,7 +38,7 @@
         (packages
           (map specification->package
                (append
-                 '("ncurses" "gnupg" "pinentry" "sxiv" "mpv")
+                 '("ncurses" "gnupg" "pinentry" "htop" "sxiv" "mpv")
                  packages)))
         (services
           (append
