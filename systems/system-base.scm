@@ -1,4 +1,5 @@
 (define-module (systems system-base)
+               #:use-module (srfi srfi-1) ;; for "remove"
                #:use-module (gnu)
                #:use-module (gnu services pm)
                #:use-module (gnu packages)
@@ -135,12 +136,20 @@
                      (service nix-service-type))
                    '())
                ; base services
-               (list (set-xorg-configuration
-                       (xorg-configuration
-                         (keyboard-layout keyboard-layout)
-                         (extra-config (append (list %xorg-libinput-config) xorg-extra)))))
+               (list
+                 (service slim-service-type
+                          (slim-configuration
+                            ; (default-user (system-user-account user))
+                            (xorg-configuration
+                              (xorg-configuration
+                                (keyboard-layout keyboard-layout)
+                                (extra-config (append (list %xorg-libinput-config) xorg-extra)))))))
                services
-               %desktop-services))
+               (remove (lambda (service)
+                         (member (service-kind service)
+                                 (list gdm-service-type
+                                       screen-locker-service-type)))
+                       %desktop-services)))
 
            (bootloader (bootloader-configuration
                          (bootloader grub-efi-bootloader)
