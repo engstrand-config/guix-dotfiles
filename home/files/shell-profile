@@ -24,9 +24,8 @@ export GUIX_PROFILE="$HOME/.guix-profile"
 # Enable all the installed profiles
 export GUIX_EXTRA_PROFILES="$HOME/.guix-extra-profiles"
 for i in $GUIX_EXTRA_PROFILES/*; do
-    profile=$i/$(basename "$i")
-    [ -f "$profile"/etc/profile ] && source "$profile"/etc/profile
-    unset profile
+    GUIX_PROFILE=$i/$(basename "$i")
+    . "$GUIX_PROFILE"/etc/profile
 done
 
 # Source the nix profile and fonts.

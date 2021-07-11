@@ -3,4 +3,7 @@
                #:use-module (users user-johan))
 
 (base-home-environment
-    #:user johan)
+    #:user johan
+    #:packages '(
+                 "youtube-dl"
+                 ))
