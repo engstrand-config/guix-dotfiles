@@ -139,17 +139,15 @@
                (list
                  (service slim-service-type
                           (slim-configuration
-                            ; (default-user (system-user-account user))
+                            (auto-login? #f)
+                            (default-user (system-user-account user))
                             (xorg-configuration
                               (xorg-configuration
                                 (keyboard-layout keyboard-layout)
                                 (extra-config (append (list %xorg-libinput-config) xorg-extra)))))))
                services
-               (remove (lambda (service)
-                         (member (service-kind service)
-                                 (list gdm-service-type
-                                       screen-locker-service-type)))
-                       %desktop-services)))
+               (modify-services %desktop-services
+                                (delete gdm-service-type))))
 
            (bootloader (bootloader-configuration
                          (bootloader grub-efi-bootloader)
