@@ -9,9 +9,17 @@ export READER="zathura"
 export FILE="vifm"
 export STATUSBAR="dsblocks"
 
-# Enable mouse scrolling in less
-export LESS="--mouse --wheel-lines=1"
+# less/man colors
+export LESS_TERMCAP_mb="$(printf '%b' '[1;31m')"; a="${a%_}"
+export LESS_TERMCAP_md="$(printf '%b' '[1;36m')"; a="${a%_}"
+export LESS_TERMCAP_me="$(printf '%b' '[0m')"; a="${a%_}"
+export LESS_TERMCAP_so="$(printf '%b' '[01;44;33m')"; a="${a%_}"
+export LESS_TERMCAP_se="$(printf '%b' '[0m')"; a="${a%_}"
+export LESS_TERMCAP_us="$(printf '%b' '[1;32m')"; a="${a%_}"
+export LESS_TERMCAP_ue="$(printf '%b' '[0m')"; a="${a%_}"
 
+# less: raw control characters, mouse scrolling
+export LESS="-R --mouse --wheel-lines=1"
 
 export npm_config_prefix=~/.node_modules
 # export SUDO_ASKPASS="$HOME/.local/bin/tools/dmenupass"
@@ -30,6 +38,6 @@ done
 
 # Source the nix profile and fonts.
 if [ -f /run/current-system/profile/etc/profile.d/nix.sh ]; then
-    source /run/current-system/profile/etc/profile.d/nix.sh
-    export FONTCONFIG_PATH="$GUIX_PROFILE/share/fonts"
+    . /run/current-system/profile/etc/profile.d/nix.sh
+    export FONTCONFIG_PATH="$(guix build fontconfig)/etc/fonts:$GUIX_PROFILE/share/fonts"
 fi

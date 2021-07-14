@@ -6,7 +6,7 @@ export SHELL
 source /etc/bashrc
 
 # Source aliases.
-[ -f "$HOME/.aliasrc" ] && source "$HOME/.aliasrc"
+[ -f "$HOME/.aliasrc" ] && . "$HOME/.aliasrc"
 
 if [[ $- != *i* ]]
 then
@@ -20,17 +20,7 @@ then
 fi
 
 export PASTEL_COLOR_MODE=8bit
-export PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
-
-# less/man colors
-export LESS=-R
-export LESS_TERMCAP_mb="$(printf '%b' '[1;31m')"; a="${a%_}"
-export LESS_TERMCAP_md="$(printf '%b' '[1;36m')"; a="${a%_}"
-export LESS_TERMCAP_me="$(printf '%b' '[0m')"; a="${a%_}"
-export LESS_TERMCAP_so="$(printf '%b' '[01;44;33m')"; a="${a%_}"
-export LESS_TERMCAP_se="$(printf '%b' '[0m')"; a="${a%_}"
-export LESS_TERMCAP_us="$(printf '%b' '[1;32m')"; a="${a%_}"
-export LESS_TERMCAP_ue="$(printf '%b' '[0m')"; a="${a%_}"
+PS1="\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h \[$(tput setaf 5)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"
 
 # Infinite history
 HISTSIZE= HISTFILESIZE=
