@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export PATH="$PATH:$HOME/.node_modules/bin:$HOME/.cargo/bin:$HOME/.local/bin/tools:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
+export PATH="$PATH:$HOME/.node_modules/bin:$HOME/.cargo/bin"
 
 export EDITOR="nvim"
 export TERMINAL="st"

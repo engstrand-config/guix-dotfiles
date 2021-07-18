@@ -55,7 +55,7 @@
                  (service home-zsh-service-type
                           (home-zsh-configuration
                             (zshrc `(,(slurp-file-gexp (local-file "files/zshrc"))))
-                            (zshenv `(,(slurp-file-gexp (local-file "files/shell-env"))))))
+                            (zprofile `(,(slurp-file-gexp (local-file "files/shell-profile"))))))
                  (service home-xdg-user-directories-service-type
                           (home-xdg-user-directories-configuration
                             (download (abspath home "downloads"))

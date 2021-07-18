@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+zmodload zsh/complist
+
 setopt autocd
 setopt interactive_comments
 setopt sharehistory
@@ -8,7 +10,7 @@ setopt histignorespace
 # Disable ctrl-s to freeze terminal.
 stty stop undef
 
-autoload -U compinit
+autoload -Uz compinit
 autoload edit-command-line
 autoload -U colors && colors
 
@@ -19,7 +21,11 @@ HISTSIZE=5000
 SAVEHIST=$HISTSIZE
 HISTFILE=${XDG_CACHE_HOME:-$HOME/.cache}/.zhistory
 
-compinit -d ${XDG_CACHE_HOME:-$HOME/.cache}/.zcompdump
+for dump in ${ZDOTDIR}/.zcompdump(N.mh+24); do
+  compinit
+done
+
+compinit -C
 
 # Prompt
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
@@ -38,9 +44,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # Include hidden files.
 _comp_options+=(globdots)
-
-# Allow modifying of keybindings in menuselect mode
-zmodload zsh/complist
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
