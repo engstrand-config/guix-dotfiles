@@ -8,6 +8,7 @@ export BROWSER="firefox"
 export READER="zathura"
 export FILE="vifm"
 export STATUSBAR="dsblocks"
+export PASTEL_COLOR_MODE=8bit
 
 # less/man colors
 export LESS_TERMCAP_mb="$(printf '%b' '[1;31m')"; a="${a%_}"
@@ -20,8 +21,11 @@ export LESS_TERMCAP_ue="$(printf '%b' '[0m')"; a="${a%_}"
 
 # less: raw control characters, mouse scrolling
 export LESS="-R --mouse --wheel-lines=1"
+export KEYTIMEOUT=1
 
 export npm_config_prefix=~/.node_modules
+
+# dmenupass does not exist atm
 # export SUDO_ASKPASS="$HOME/.local/bin/tools/dmenupass"
 export FZF_DEFAULT_OPTS="-m --height 25% --layout=reverse --color fg:7,bg:-1,hl:1,fg+:232,bg+:6,hl+:255,info:7,prompt:2,spinner:1,pointer:232,marker:1,border:3"
 
@@ -29,15 +33,11 @@ export FZF_DEFAULT_OPTS="-m --height 25% --layout=reverse --color fg:7,bg:-1,hl:
 export GUIX_PROFILE="$HOME/.guix-profile"
 . "$GUIX_PROFILE/etc/profile"
 
-# Enable all the installed profiles
-export GUIX_EXTRA_PROFILES="$HOME/.guix-extra-profiles"
-for i in $GUIX_EXTRA_PROFILES/*; do
-    GUIX_PROFILE=$i/$(basename "$i")
-    . "$GUIX_PROFILE"/etc/profile
-done
-
 # Source the nix profile and fonts.
 if [ -f /run/current-system/profile/etc/profile.d/nix.sh ]; then
     . /run/current-system/profile/etc/profile.d/nix.sh
-    export FONTCONFIG_PATH="$(guix build fontconfig)/etc/fonts:$GUIX_PROFILE/share/fonts"
+    export FONTCONFIG_PATH="$(guix build fontconfig)/etc/fonts"
+
+    # Some applications require this path instead
+    # export FONTCONFIG_PATH="$GUIX_PROFILE/share/fonts"
 fi

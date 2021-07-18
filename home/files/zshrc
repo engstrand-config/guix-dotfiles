@@ -1,0 +1,71 @@
+#!/bin/zsh
+
+setopt autocd
+setopt interactive_comments
+setopt sharehistory
+setopt histignorespace
+
+# Disable ctrl-s to freeze terminal.
+stty stop undef
+
+autoload -U compinit
+autoload edit-command-line
+autoload -U colors && colors
+
+# Source aliases.
+[ -f "$HOME/.aliasrc" ] && . "$HOME/.aliasrc"
+
+HISTSIZE=5000
+SAVEHIST=$HISTSIZE
+HISTFILE=${XDG_CACHE_HOME:-$HOME/.cache}/.zhistory
+
+compinit -d ${XDG_CACHE_HOME:-$HOME/.cache}/.zcompdump
+
+# Prompt
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' insert-tab false
+zstyle ':completion:*' matcher-list '' \
+  'm:{a-z\-}={A-Z\_}' \
+  'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
+  'r:|?=** m:{a-z\-}={A-Z\_}'
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,args -w -"
+
+# Colored completion
+hash dircolors 2> /dev/null && eval $(dircolors --sh) && \
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Include hidden files.
+_comp_options+=(globdots)
+
+# Allow modifying of keybindings in menuselect mode
+zmodload zsh/complist
+
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v
+bindkey -v '^?' backward-delete-char
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey '^e' edit-command-line
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select() {
+    case $KEYMAP in
+        # block
+        vicmd) echo -ne '\e[1 q';;
+
+        # beam
+        viins|main) echo -ne '\e[5 q';;
+    esac
+}
+
+zle -N zle-keymap-select
+zle -N edit-command-line
+
+# Use beam shape cursor on startup.
+echo -ne '\e[5 q'
