@@ -72,3 +72,6 @@ zle -N edit-command-line
 
 # Use beam shape cursor on startup.
 echo -ne '\e[5 q'
+
+# Display current directory in title bar
+precmd() { echo -ne "\033]0;${PWD}\007" }
