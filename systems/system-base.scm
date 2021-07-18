@@ -3,6 +3,7 @@
                #:use-module (gnu)
                #:use-module (gnu services pm)
                #:use-module (gnu packages)
+               #:use-module (gnu packages shells)
                #:use-module (gnu packages package-management)
                #:use-module (users user-base)
                #:use-module (engstrand packages)
@@ -88,6 +89,7 @@
            (users (cons* (user-account
                            (name (system-user-account user))
                            (comment (system-user-name user))
+                           (shell (file-append zsh "/bin/zsh"))
                            (group "users")
                            (home-directory (string-append "/home/" (system-user-account user)))
                            (supplementary-groups
