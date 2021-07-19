@@ -2,10 +2,10 @@
     #:use-module (users user-base))
 
 (define-public fredrik
-    (make-system-user
-        "fredrik"
-        "Fredrik Engstrand"
-        "fredrik@engstrand.nu"
-        "frewacom"
-        "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
-        #t))
+    (system-user
+      (account "fredrik")
+      (name "Fredrik Engstrand")
+      (email "fredrik@engstrand.nu")
+      (github "frewacom")
+      (gpg-key "C9BEB8A04458FDDF12681B39029D8EB77E18D68C")
+      (sign-commits? #t)))
