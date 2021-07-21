@@ -21,6 +21,7 @@
                #:use-module (gnu home-services ssh)
                #:use-module (gnu home-services xdg)
                #:use-module (gnu home-services version-control)
+               #:use-module (gnu home-services video)
                #:export (base-home-environment))
 
 (define (abspath homedir path) (string-append homedir "/" path))
@@ -44,7 +45,6 @@
                       "pinentry"
                       "htop"
                       "sxiv"
-                      "mpv"
                       "zsh")
                     packages)))
            (services
@@ -112,6 +112,8 @@
                        `("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
                        `("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf")))
                      dotfiles))
+                 (service home-mpv-service-type
+                          (home-mpv-configuration))
                  (simple-service
                    'bootstrap home-run-on-first-login-service-type
                    #~(system* #$(file-append engstrand-utils "/bin/bootstrap"))))
