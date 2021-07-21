@@ -2,8 +2,10 @@
                #:use-module (srfi srfi-1) ;; for "remove"
                #:use-module (gnu)
                #:use-module (gnu services pm)
+               #:use-module (gnu services sddm)
                #:use-module (gnu packages)
                #:use-module (gnu packages shells)
+               #:use-module (gnu packages display-managers)
                #:use-module (gnu packages package-management)
                #:use-module (users user-base)
                #:use-module (engstrand packages)
@@ -108,9 +110,10 @@
                       "nss-certs"
                       "openssh"
                       "pulseaudio"
-                      "engstrand-dwm" "engstrand-dmenu" "engstrand-dsblocks"
+                      "engstrand-dwm" "engstrand-dmenu" "engstrand-dsblocks" "engstrand-dwl"
                       "engstrand-st"
-                      "engstrand-utils"))
+                      "engstrand-utils"
+                      "chili-sddm-theme"))
                packages
                %base-packages))
 
@@ -139,10 +142,10 @@
                    '())
                ; base services
                (list
-                 (service slim-service-type
-                          (slim-configuration
-                            (auto-login? #f)
-                            (default-user (system-user-account user))
+                 (service sddm-service-type
+                          (sddm-configuration
+                            (theme "chili")
+                            (display-server "wayland")
                             (xorg-configuration
                               (xorg-configuration
                                 (keyboard-layout keyboard-layout)
