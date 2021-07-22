@@ -34,6 +34,7 @@
            (services '())
            (repos '())
            (rsync '())
+           (mpv-extra-config '())
            (dotfiles '()))
          (if (not (system-user? user)) (throw 'invalid-user . (display "Invalid user argument, expected user record")))
          (home-environment
