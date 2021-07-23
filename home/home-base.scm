@@ -1,4 +1,6 @@
 (define-module (home home-base)
+               #:use-module (srfi srfi-1)
+               #:use-module (ice-9 match)
                #:use-module (users user-base)
                #:use-module (gnu home)
                #:use-module (gnu services)
@@ -7,6 +9,7 @@
                #:use-module (gnu packages gnupg)
                #:use-module (gnu packages fonts)
                #:use-module (gnu packages xdisorg)
+               #:use-module (gnu packages base)
                #:use-module (engstrand packages)
                #:use-module (engstrand packages engstrand-utils)
                #:use-module (srfi srfi-98) ; for get-environment-variable
@@ -22,9 +25,36 @@
                #:use-module (gnu home-services xdg)
                #:use-module (gnu home-services version-control)
                #:use-module (gnu home-services video)
-               #:export (base-home-environment))
+               #:export (base-home-environment x))
 
 (define (abspath homedir path) (string-append homedir "/" path))
+(define
+  (transform-bemenu-options lst)
+  (fold-right
+    (lambda
+      (option acc)
+      (string-append
+        "--"
+        (car option)
+        " "
+        (string-append
+          acc
+          (let ((value (cdr option)))
+            (if
+              (number? value)
+              (number->string value)
+              (if
+                (or (boolean? value) (null? value))
+                " "
+                (string-append
+                  "'" value "'")))))))
+    ""
+    lst))
+
+;; test
+(define x
+  (transform-bemenu-options '(("ignorecase" . #t)
+                               ("fn" . "JetBrains Mono 10"))))
 
 (define* (base-home-environment
            #:key
@@ -41,12 +71,7 @@
            (packages
              (map specification->package
                   (append
-                    '("ncurses"
-                      "gnupg"
-                      "pinentry"
-                      "htop"
-                      "sxiv"
-                      "zsh")
+                    '("ncurses" "gnupg" "pinentry" "zsh")
                     packages)))
            (services
              (append
@@ -93,13 +118,54 @@
                             (map (lambda (pair) (state-git (abspath home (car pair)) (cadr pair)))
                                  (append
                                    (list
-                                     '("engstrand-config/st" ,"git@github.com:engstrand-config/st.git")
-                                     '("engstrand-config/dwm" ,"git@github.com:engstrand-config/dwm.git")
-                                     '("engstrand-config/dmenu" ,"git@github.com:engstrand-config/dmenu.git")
                                      '("engstrand-config/utils" ,"git@github.com:engstrand-config/utils.git")
-                                     '("engstrand-config/dsblocks" ,"git@github.com:engstrand-config/dsblocks.git")
                                      '("engstrand-config/guix-channel" ,"git@github.com:engstrand-config/guix-channel.git"))
                                    repos))))
+                 (simple-service
+                   'desktop-environment home-profile-service-type
+                   (map specification->package
+                        (append
+                          '("dwl" "alacritty" "bemenu" "htop" "kdeconnect" ))))
+                 (simple-service
+                   'dwl-config home-files-service-type
+                   `(("config/dwl/config.scm" ,(scheme-file "dwl-config.scm" #~(define x 10)))))
+                 (simple-service
+                   'bemenu-options home-environment-variables-service-type
+                   `(("BEMENU_OPTS" . ,(string-append
+                                         "\""
+                                         (transform-bemenu-options
+                                           '(("ignorecase" . #t)
+                                             ("line-height" . 21)
+                                             ("filter" . #f)
+                                             ("wrap" . #f)
+                                             ("list" . #f)
+                                             ("prompt" . #f)
+                                             ("prefix" . #f)
+                                             ("index" . #f)
+                                             ("password" . #f)
+                                             ("scrollbar" . #f)
+                                             ("ifne" . #f)
+                                             ("fork" . #f)
+                                             ("no-exec" . #f)
+                                             ("bottom" . #f)
+                                             ("grab" . #f)
+                                             ("no-overlap" . #f)
+                                             ("monitor" . #f)
+                                             ("line-height" . 0)
+                                             ("fn" . "'JetBrains Mono 10'")
+                                             ("tb" . #f)
+                                             ("tf" . #f)
+                                             ("fb" . #f)
+                                             ("ff" . #f)
+                                             ("nb" . #f)
+                                             ("nf" . #f)
+                                             ("hb" . #f)
+                                             ("hf" . #f)
+                                             ("sb" . #f)
+                                             ("sf" . #f)
+                                             ("scb" . #f)
+                                             ("scf" . #f)))
+                                         "\""))))
                  (simple-service
                    'dotfiles home-files-service-type
                    (append
@@ -113,6 +179,9 @@
                        `("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
                        `("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf")))
                      dotfiles))
+                 (simple-service
+                   'dwl-reload home-run-on-change-service-type
+                   `(("files/config/dwl/config.scm" ,#~(system* "cat" "/home/johan/.config/dwl/config.scm"))))
                  (service home-mpv-service-type
                           (home-mpv-configuration))
                  (simple-service
