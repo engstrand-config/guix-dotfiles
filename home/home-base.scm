@@ -25,36 +25,21 @@
                #:use-module (gnu home-services xdg)
                #:use-module (gnu home-services version-control)
                #:use-module (gnu home-services video)
-               #:export (base-home-environment x))
+               #:export (base-home-environment x y))
 
 (define (abspath homedir path) (string-append homedir "/" path))
-(define
-  (transform-bemenu-options lst)
-  (fold-right
-    (lambda
-      (option acc)
-      (string-append
-        "--"
-        (car option)
-        " "
-        (string-append
-          acc
-          (let ((value (cdr option)))
-            (if
-              (number? value)
-              (number->string value)
-              (if
-                (or (boolean? value) (null? value))
-                " "
-                (string-append
-                  "'" value "'")))))))
-    ""
-    lst))
 
-;; test
-(define x
-  (transform-bemenu-options '(("ignorecase" . #t)
-                               ("fn" . "JetBrains Mono 10"))))
+;; rewrite with match
+(define (transform-bemenu-options lst)
+  (define (make-cli-argument config-pair)
+    (let ((argument (car config-pair)) (value (cdr config-pair)))
+      (if (not value) ""
+          (string-append "--" argument
+                         (cond ((eq? value #t) "")
+                               ((string? value) (string-append " " "'" value "'"))
+                               ((number? value) (string-append " " (number->string value)))
+                               (else (raise "invalid bemenu argument!")))))))
+  (string-join (map make-cli-argument lst)))
 
 (define* (base-home-environment
            #:key
