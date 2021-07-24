@@ -25,6 +25,10 @@
                #:use-module (gnu home-services xdg)
                #:use-module (gnu home-services version-control)
                #:use-module (gnu home-services video)
+               #:use-module (gnu home-services emacs)
+               #:use-module (gnu packages emacs-xyz)
+               #:use-module (flat packages emacs)
+               #:use-module (gnu packages emacs)
                #:export (base-home-environment x y))
 
 (define (abspath homedir path) (string-append homedir "/" path))
@@ -169,6 +173,46 @@
                    `(("files/config/dwl/config.scm" ,#~(system* "cat" "/home/johan/.config/dwl/config.scm"))))
                  (service home-mpv-service-type
                           (home-mpv-configuration))
+                 (service home-emacs-service-type
+                          (home-emacs-configuration
+                            (package emacs-pgtk-native-comp)
+                            ; (rebuild-elisp-packages? #t)
+                            (xdg-flavor? #t)
+                            (elisp-packages
+                              (list
+                                emacs-use-package
+                                emacs-evil
+                                emacs-guix
+                                emacs-doom-modeline
+                                emacs-geiser
+                                emacs-geiser-guile
+                                ))
+                            (init-el
+                              '(
+                                (package-initialize)
+                                (eval-when-compile
+                                  (require 'use-package))
+                                (eval-when-compile
+                                  (setq user-emacs-directory "~/.local/share/emacs/")
+                                  (add-to-list 'load-path "~/.config/emacs/site-lisp")
+                                  (add-to-list 'load-path "~/.guix-home-environment/profile/share/emacs/site-lisp")
+                                  )
+                                (use-package evil
+                                             :init
+                                             (setq evil-want-integration t)
+                                             (setq evil-want-keybinding nil)
+                                             (setq evil-want-C-u-scroll t)
+                                             (setq evil-want-C-i-jump nil)
+                                             :hook (evil-mode . rune/evil-hook)
+                                             :config
+                                             (evil-mode 1)
+                                             (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+                                             (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join))
+                                (use-package doom-modeline
+                                             :ensure t
+                                             :init (doom-modeline-mode 1)
+                                             :custom ((doom-modeline-height 15)))
+                                ))))
                  (simple-service
                    'bootstrap home-run-on-first-login-service-type
                    #~(system* #$(file-append engstrand-utils "/bin/bootstrap"))))
