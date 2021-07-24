@@ -19,6 +19,14 @@
         (openpgp-fingerprint
           "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
   (channel
+    (name 'flat)
+    (url "https://github.com/flatwhatson/guix-channel.git")
+    (introduction
+      (make-channel-introduction
+        "33f86a4b48205c0dc19d7c036c85393f0766f806"
+        (openpgp-fingerprint
+          "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
+  (channel
     (name 'rde)
     (url "https://git.sr.ht/~abcdw/rde")
     (introduction
