@@ -4,7 +4,8 @@ zmodload zsh/complist
 
 setopt autocd
 setopt interactive_comments
-setopt sharehistory
+setopt no_sharehistory
+unsetopt share_history
 setopt histignorespace
 
 # Disable ctrl-s to freeze terminal.
