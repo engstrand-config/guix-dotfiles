@@ -16,7 +16,12 @@
                #:use-module (engstrand packages engstrand-utils)
                #:use-module (nongnu packages linux)
                #:use-module (nongnu system linux-initrd)
-               #:export (base-operating-system))
+               #:export (%keyboard-layout base-operating-system))
+
+(define %keyboard-layout
+  (keyboard-layout "us,se"
+                   #:options
+                   '("grp:alt_shift_toggle" "grp_led:caps" "caps:escape")))
 
 (define %xorg-libinput-config
   "
@@ -85,8 +90,7 @@
            (timezone "Europe/Stockholm")
            (locale "en_US.utf8")
 
-           (keyboard-layout
-             (keyboard-layout "us,se" #:options '("grp:alt_shift_toggle" "grp_led:caps" "caps:escape")))
+           (keyboard-layout %keyboard-layout)
 
            (users (cons* (user-account
                            (name (system-user-account user))

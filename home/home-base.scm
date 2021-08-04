@@ -11,6 +11,7 @@
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages base)
                #:use-module (engstrand packages)
+               #:use-module (systems system-base)
                #:use-module (engstrand packages engstrand-utils)
                #:use-module (ice-9 exceptions)
                #:use-module (guix gexp)
@@ -30,7 +31,7 @@
                #:use-module (gnu packages emacs-xyz)
                #:use-module (flat packages emacs)
                #:use-module (gnu packages emacs)
-               #:export (base-home-environment x y))
+               #:export (base-home-environment))
 
 (define (abspath homedir path) (string-append homedir "/" path))
 
@@ -69,7 +70,7 @@
                  (service home-ssh-service-type)
                  (service home-dwl-guile-service-type
                           (home-dwl-guile-configuration
-                            (patches (list %patch-xwayland
+                            (patches (list ;%patch-xwayland ; causes issues with firefox
                                            %patch-alpha
                                            %patch-focusmon
                                            %patch-vanitygaps
@@ -77,6 +78,8 @@
                             (config
                               (dwl-config
                                 (terminal '("foot"))
+                                (natural-scrolling #t)
+                                (xkb-rules %keyboard-layout)
                                 (colors
                                   (dwl-colors
                                     (root '(0 0 1 1))))))))
