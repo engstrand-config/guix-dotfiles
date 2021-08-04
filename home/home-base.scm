@@ -12,8 +12,7 @@
                #:use-module (gnu packages base)
                #:use-module (engstrand packages)
                #:use-module (engstrand packages engstrand-utils)
-               #:use-module (srfi srfi-98) ; for get-environment-variable
-               #:use-module (ice-9 exceptions) ; for exceptions
+               #:use-module (ice-9 exceptions)
                #:use-module (guix gexp)
                #:use-module (gnu home-services)
                #:use-module (gnu home-services files)
@@ -26,6 +25,8 @@
                #:use-module (gnu home-services version-control)
                #:use-module (gnu home-services video)
                #:use-module (gnu home-services emacs)
+               #:use-module (dwl-guile patches)
+               #:use-module (dwl-guile home-service)
                #:use-module (gnu packages emacs-xyz)
                #:use-module (flat packages emacs)
                #:use-module (gnu packages emacs)
@@ -48,7 +49,7 @@
 (define* (base-home-environment
            #:key
            (user '())
-           (home (get-environment-variable "HOME"))
+           (home (getenv "HOME"))
            (packages '())
            (services '())
            (repos '())
@@ -66,6 +67,19 @@
              (append
                (list
                  (service home-ssh-service-type)
+                 (service home-dwl-guile-service-type
+                          (home-dwl-guile-configuration
+                            (patches (list %patch-xwayland
+                                           %patch-alpha
+                                           %patch-focusmon
+                                           %patch-vanitygaps
+                                           %patch-attachabove))
+                            (config
+                              (dwl-config
+                                (terminal '("foot"))
+                                (colors
+                                  (dwl-colors
+                                    (root '(0 0 1 1))))))))
                  (service home-zsh-autosuggestions-service-type)
                  (service home-zsh-service-type
                           (home-zsh-configuration
@@ -114,10 +128,7 @@
                    'desktop-environment home-profile-service-type
                    (map specification->package
                         (append
-                          '("dwl" "alacritty" "bemenu" "htop" "kdeconnect" ))))
-                 (simple-service
-                   'dwl-config home-files-service-type
-                   `(("config/dwl/config.scm" ,(scheme-file "dwl-config.scm" #~(define x 10)))))
+                          '("dwl" "foot" "bemenu" "htop" "kdeconnect" ))))
                  (simple-service
                    'bemenu-options home-environment-variables-service-type
                    `(("BEMENU_OPTS" . ,(string-append
@@ -168,9 +179,6 @@
                        `("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
                        `("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf")))
                      dotfiles))
-                 (simple-service
-                   'dwl-reload home-run-on-change-service-type
-                   `(("files/config/dwl/config.scm" ,#~(system* "cat" "/home/johan/.config/dwl/config.scm"))))
                  (service home-mpv-service-type
                           (home-mpv-configuration))
                  (service home-emacs-service-type
@@ -178,6 +186,7 @@
                             (package emacs-pgtk-native-comp)
                             ; (rebuild-elisp-packages? #t)
                             (xdg-flavor? #t)
+                            (server-mode? #t)
                             (elisp-packages
                               (list
                                 emacs-use-package
@@ -191,12 +200,9 @@
                               '(
                                 (package-initialize)
                                 (eval-when-compile
+                                  (add-to-list 'load-path
+                                               (expand-file-name "~/.guix-home/profile/share/emacs/site-lisp/use-package-2.4.1"))
                                   (require 'use-package))
-                                (eval-when-compile
-                                  (setq user-emacs-directory "~/.local/share/emacs/")
-                                  (add-to-list 'load-path "~/.config/emacs/site-lisp")
-                                  (add-to-list 'load-path "~/.guix-home-environment/profile/share/emacs/site-lisp")
-                                  )
                                 (use-package evil
                                              :init
                                              (setq evil-want-integration t)
@@ -208,10 +214,10 @@
                                              (evil-mode 1)
                                              (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
                                              (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join))
-                                (use-package doom-modeline
-                                             :ensure t
-                                             :init (doom-modeline-mode 1)
-                                             :custom ((doom-modeline-height 15)))
+                                ; (use-package doom-modeline
+                                ;              :ensure t
+                                ;              :init (doom-modeline-mode 1)
+                                ;              :custom ((doom-modeline-height 15)))
                                 ))))
                  (simple-service
                    'bootstrap home-run-on-first-login-service-type
