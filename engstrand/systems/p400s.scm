@@ -7,10 +7,10 @@
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
 
-(define-public %system-p400s-swap
+(define-public %system-swap
                (list (uuid "2e1cafae-8f43-4938-be21-fc525250f915")))
 
-(define-public %system-p400s
+(define-public %system-features
                (list
                  (feature-kernel
                    #:kernel linux

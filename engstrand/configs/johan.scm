@@ -3,8 +3,7 @@
                #:use-module (rde features base)
                #:use-module (rde features gnupg)
                #:use-module (rde features keyboard)
-               #:use-module (rde features version-control)
-               #:use-module (engstrand defaults))
+               #:use-module (rde features version-control))
 
 ; TODO: Add custom packages as feature:
 ;       "youtube-dl"
