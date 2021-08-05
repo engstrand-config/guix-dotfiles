@@ -8,13 +8,21 @@
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
 
+; TODO: Add amdgpu driver for xorg as a feature
+; (define %xorg-amdgpu-config
+;   "Section \"Device\"
+;   Identifier  \"AMD\"
+;   Driver      \"amdgpu\"
+;   Option      \"TearFree\" \"true\"
+;   Option      \"Backlight\" \"amdgpu_bl0\"
+;   EndSection")
+
 ; TODO: Add support for swap-devices as a feature.
 ; rde does not support this out of the box. Instead, we
 ; must pass it using the initial-os field of rde-config.
 (define-public %system-tuxedo-swap
                (list (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))
 
-; TODO: Add amdgpu driver for xorg as a feature
 (define-public %system-tuxedo
                (list
                  (feature-kernel
