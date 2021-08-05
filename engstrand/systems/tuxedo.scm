@@ -27,6 +27,7 @@
                (list
                  (feature-kernel
                    #:kernel linux
+                   #:firmware (list linux-firmware)
                    #:kernel-arguments %engstrand-kernel-arguments
                    #:kernel-loadable-modules (kernel-modules->list (list tuxedo-keyboard-module)
                                                                    linux))

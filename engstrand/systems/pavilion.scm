@@ -14,6 +14,7 @@
                (list
                  (feature-kernel
                    #:kernel linux
+                   #:firmware (list linux-firmware)
                    #:kernel-arguments %engstrand-kernel-arguments)
                  (feature-host-info
                    #:host-name "pavilion"
