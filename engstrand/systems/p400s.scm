@@ -2,8 +2,6 @@
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
                #:use-module (rde features system)
-               #:use-module (nongnu packages linux)
-               #:use-module (nongnu system linux-initrd)
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
 
@@ -12,15 +10,10 @@
 
 (define-public %system-features
                (list
-                 (feature-kernel
-                   #:kernel linux
-                   #:firmware (list linux-firmware)
-                   #:kernel-arguments %engstrand-kernel-arguments)
                  (feature-host-info
                    #:host-name "p400s"
                    #:timezone %engstrand-timezone
                    #:locale %engstrand-locale)
-                 (feature-bootloader)
                  (feature-file-systems
                    #:file-systems
                    (list (file-system
