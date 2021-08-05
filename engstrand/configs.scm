@@ -38,13 +38,13 @@
 
 ; TODO: Move these package lists into separate files (like manifests?)
 ; TODO: Move neovim to feature?
-(define-public %engstrand-base-system-packages
+(define-public %config-base-system-packages
                (pkgs '("git" "nss-certs")))
 
-(define-public %engstrand-base-home-packages
+(define-public %config-base-home-packages
                (pkgs '("curl" "htop" "neovim" "engstrand-utils" "ncurses")))
 
-(define-public %engstrand-base-config
+(define-public %config-base-features
                (list
                  ; TODO: Pass in udev rules to base-services "udev-rules"?
                  (feature-base-services)
@@ -66,5 +66,5 @@
                      (templates "$HOME")
                      (desktop "$HOME")))
                  (feature-base-packages
-                   #:system-packages %engstrand-base-system-packages
-                   #:home-packages %engstrand-base-home-packages)))
+                   #:system-packages %config-base-system-packages
+                   #:home-packages %config-base-home-packages)))
