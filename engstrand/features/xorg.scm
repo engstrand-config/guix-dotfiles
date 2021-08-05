@@ -34,3 +34,8 @@
 ;                    (xorg-configuration
 ;                      (keyboard-layout keyboard-layout)
 ;                      (extra-config (append (list %xorg-libinput-config) xorg-extra)))))))
+
+; TODO: Add startup script:
+;       (simple-service
+;         'bootstrap home-run-on-first-login-service-type
+;         #~(system* #$(file-append engstrand-utils "/bin/bootstrap"))))

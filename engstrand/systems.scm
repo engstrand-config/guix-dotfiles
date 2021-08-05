@@ -33,7 +33,25 @@
 ;       (issue "This is the GNU/Engstrand system. Welcome.\n")))
 
 ; TODO: Add base packages:
-;       "git" "curl" "neovim" "nss-certs" "openssh" "pulseaudio" "engstrand-utils"
+;       "git" "curl" "htop" "neovim" "nss-certs" "openssh" "pulseaudio" "engstrand-utils"
+;       "ncurses" "gnupg" "pinentry" "zsh"
+
+; TODO: Add XDG feature
+;       (service home-xdg-user-directories-service-type
+;                (home-xdg-user-directories-configuration
+;                  (download (abspath home "downloads"))
+;                  (documents (abspath home "documents"))
+;                  (pictures (abspath home "images"))
+;                  (music (abspath home "music"))
+;                  (videos (abspath home "videos"))
+;                  (publicshare home)
+;                  (templates home)
+;                  (desktop home)))
+
+; TODO: Add ssh service:
+;       (service home-ssh-service-type)
+
+; (define (abspath homedir path) (string-append homedir "/" path))
 
 (define-public %engstrand-timezone "Europe/Stockholm")
 (define-public %engstrand-locale "en_US.utf8")

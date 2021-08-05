@@ -6,6 +6,9 @@
                #:use-module (rde features version-control)
                #:use-module (engstrand defaults))
 
+; TODO: Add custom packages as feature:
+;       "youtube-dl"
+
 (define-public %user-features
                (list
                  (feature-user-info
