@@ -25,6 +25,8 @@
 
 (define-public %system-features
                (list
+                 ; TODO: Changing a single value in this feature requires
+                 ;       you to define the entire feature again. Perhaps add a helper for this?
                  (feature-kernel
                    #:kernel linux
                    #:firmware (list linux-firmware)
@@ -35,7 +37,6 @@
                    #:host-name "tuxedo"
                    #:timezone %engstrand-timezone
                    #:locale %engstrand-locale)
-                 (feature-bootloader)
                  (feature-file-systems
                    #:file-systems
                    (list

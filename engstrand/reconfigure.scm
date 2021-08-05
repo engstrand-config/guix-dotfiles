@@ -1,5 +1,6 @@
 (define-module (engstrand reconfigure)
                #:use-module (ice-9 match)
+               #:use-module (gnu system)
                #:use-module (rde features)
                #:use-module (engstrand systems)
                #:use-module (engstrand configs))
@@ -28,13 +29,25 @@
 (when (not %user-features) (throw 'no-config-features . (display "'%user-features' is not defined")))
 (when (not %system-features) (throw 'no-system-features . (display "'%system-features' is not defined")))
 
+; Check if a swap device has been set in the system configuration.
+; If this is the case, we must extend the initial os to make sure
+; that it is included in the system configuration.
+(define %initial-os
+  (if (null? %system-swap)
+      %engstrand-initial-os
+      (operating-system
+        (inherit %engstrand-initial-os)
+        (swap-devices %system-swap))))
+
 ; All is good, create the configuration
 (define-public generated-config
                (rde-config
+                 (initial-os %initial-os)
                  (features
                    (append
                      %user-features
                      %config-base-features
+                     %system-base-features
                      %system-features))))
 
 (define-public engstrand-system
