@@ -70,7 +70,7 @@
                  (service home-ssh-service-type)
                  (service home-dwl-guile-service-type
                           (home-dwl-guile-configuration
-                            (patches (list ;%patch-xwayland ; causes issues with firefox
+                            (patches (list %patch-xwayland
                                            %patch-alpha
                                            %patch-focusmon
                                            %patch-vanitygaps
@@ -78,7 +78,7 @@
                             (config
                               (dwl-config
                                 (terminal '("foot"))
-                                (natural-scrolling #t)
+                                (natural-scrolling? #t)
                                 (xkb-rules %keyboard-layout)
                                 (colors
                                   (dwl-colors
