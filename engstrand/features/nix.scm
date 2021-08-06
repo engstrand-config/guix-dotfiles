@@ -1,10 +1,26 @@
-(define-module (engstrand features nix))
+(define-module (engstrand features nix)
+               #:use-module (rde features)
+               #:use-module (rde features predicates)
+               #:use-module (gnu services)
+               #:use-module (gnu services nix)
+               #:use-module (engstrand utils)
+               #:export (feature-nix))
 
-; TODO: Add packages
-;      (if nix? (specification->package "nix")))
+(define %base-nix-system-packages
+  (pkgs '("nix")))
 
-; TODO: Add services
-;       (if nix?
-;           (list
-;             (service nix-service-type))
-;           '())
+(define* (feature-nix)
+         "Setup the nix package manager."
+
+         (define (get-system-services config)
+           "Return a list of system services required by nix."
+           (list
+             (simple-service
+               'add-nix-system-packages-to-profile
+               profile-service-type
+               %base-nix-system-packages)
+             (service nix-service-type)))
+
+         (feature
+           (name 'nix)
+           (system-services-getter get-system-services)))
