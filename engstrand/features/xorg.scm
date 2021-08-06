@@ -70,6 +70,7 @@
                %base-xorg-dwm-system-packages)
              (service sddm-service-type
                       (sddm-configuration
+                        ; TODO: This does not work?
                         (theme sddm-theme)
                         (xorg-configuration
                           (xorg-configuration

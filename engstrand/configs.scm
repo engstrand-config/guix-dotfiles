@@ -27,25 +27,6 @@
 ; TODO: Add feature for setting custom groups (preferrably directly in features).
 ;       This is required by certain services, e.g. virtualization.
 
-; TODO: Do we need this?
-;       rde seems to have something like this already built in,
-;       see features/linux.scm. Test it before adding the rules below.
-; (define %backlight-udev-rule
-;   (udev-rule
-;     "90-backlight.rules"
-;     (string-append "ACTION==\"add\", "
-;                    "SUBSYSTEM==\"backlight\", "
-;                    "RUN+=\"/run/current-system/profile/bin/chgrp video /sys/class/backlight/%k/brightness\"\n"
-;                    "ACTION==\"add\", "
-;                    "SUBSYSTEM==\"backlight\", "
-;                    "RUN+=\"/run/current-system/profile/bin/chmod g+w /sys/class/backlight/%k/brightness\"\n"
-;                    "ACTION==\"add\", "
-;                    "SUBSYSTEM==\"leds\", "
-;                    "RUN+=\"/run/current-system/profile/bin/chgrp input /sys/class/leds/%k/brightness\"\n"
-;                    "ACTION==\"add\", "
-;                    "SUBSYSTEM==\"leds\", "
-;                    "RUN+=\"/run/current-system/profile/bin/chmod g+w /sys/class/leds/%k/brightness\"")))
-
 ; TODO: Move these package lists into separate files (like manifests?)
 ; TODO: Move neovim to feature?
 (define %engstrand-base-system-packages
@@ -57,7 +38,6 @@
 
 (define %engstrand-base-features
                (list
-                 ; TODO: Pass in udev rules to base-services "udev-rules"?
                  (feature-base-services)
                  (feature-desktop-services)
                  (feature-fonts)
