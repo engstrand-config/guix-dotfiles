@@ -20,6 +20,7 @@
                    #:email "johan@engstrand.nu")
                  (feature-gnupg
                    #:gpg-primary-key "DFC6C6B70EF5F7CB75EE97E6DF3088DDBCAD566D"
+                   #:pinentry-flavor 'gtk2
                    #:gpg-smart-card? #f)
                  (feature-git
                    #:sign-commits? #t)

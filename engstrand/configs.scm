@@ -5,13 +5,13 @@
                #:use-module (rde features ssh)
                #:use-module (rde features base)
                #:use-module (rde features linux)
-               #:use-module (rde features shells)
                #:use-module (rde features fontutils)
                #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
                #:use-module (engstrand features state)
+               #:use-module (engstrand features shells)
                #:use-module (engstrand features wayland)
                #:export (
                          %engstrand-base-system-packages
