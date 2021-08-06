@@ -1,6 +1,8 @@
 (define-module (engstrand utils)
                #:use-module (srfi srfi-1)
-               #:use-module (gnu packages))
+               #:use-module (guix gexp)
+               #:use-module (gnu packages)
+               #:use-module (rde features predicates))
 
 ; Converts a list of kernel modules into a list of packages.
 ; Each kernel module should accept the current system kernel
@@ -15,7 +17,7 @@
 
 ; Predicates
 (define-public (dotfile? x)
-               (and (string? (car v)) (file-like? (cdr v))))
+               (and (string? (car x)) (file-like? (cdr x))))
 
 (define-public (state-item? x)
                (and (string? (car x)) (string? (cdr x))))
@@ -25,5 +27,3 @@
 
 (define-public (list-of-state-items? x)
                (every state-item? x))
-
-

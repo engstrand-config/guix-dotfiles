@@ -3,6 +3,8 @@
                #:use-module (rde features predicates)
                #:use-module (gnu services)
                #:use-module (gnu services nix)
+               #:use-module (gnu home-services state)
+               #:use-module (gnu home-services files)
                #:use-module (engstrand utils)
                #:export (
                          feature-dotfiles
@@ -21,8 +23,8 @@
            (list
              (simple-service
                'add-dotfiles-to-symlink
-                home-files-service-type
-                dotfiles)))
+               home-files-service-type
+               dotfiles)))
 
          (feature
            (name 'dotfiles)
@@ -30,9 +32,11 @@
 
 (define* (feature-state-git
            #:key
+           (prefix (getenv "HOME"))
            (repos '()))
          "Add git repository states that can be synced using shepherd."
 
+         (ensure-pred string? prefix)
          (ensure-pred list-of-state-items? repos)
 
          (define (get-home-services config)
@@ -40,9 +44,12 @@
            (list
              (simple-service
                'add-state-git-repos
-                home-state-service-type
-                (map (lambda (repo) (state-git (car pair) (cdr pair)))
-                     repos))))
+               home-state-service-type
+               (map (lambda (repo)
+                      (state-git
+                        (string-append prefix "/" (car repo))
+                        (cdr repo)))
+                    repos))))
 
          (feature
            (name 'state-git)
@@ -50,9 +57,11 @@
 
 (define* (feature-state-rsync
            #:key
+           (prefix (getenv "HOME"))
            (hosts '()))
          "Add rsync states that can be synces using shepherd."
 
+         (ensure-pred string? prefix)
          (ensure-pred list-of-state-items? hosts)
 
          (define (get-home-services config)
@@ -60,9 +69,12 @@
            (list
              (simple-service
                'add-state-rsync-hosts
-                home-state-service-type
-                (map (lambda (repo) (state-rsync (car pair) (cdr pair)))
-                     hosts))))
+               home-state-service-type
+               (map (lambda (host)
+                      (state-rsync
+                        (string-append prefix "/" (car host))
+                        (cdr host)))
+                    hosts))))
 
          (feature
            (name 'state-rsync)
