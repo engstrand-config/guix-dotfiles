@@ -1,27 +1,69 @@
-(define-module (engstrand features state))
+(define-module (engstrand features state)
+               #:use-module (rde features)
+               #:use-module (rde features predicates)
+               #:use-module (gnu services)
+               #:use-module (gnu services nix)
+               #:use-module (engstrand utils)
+               #:export (
+                         feature-dotfiles
+                         feature-state-git
+                         feature-state-rsync))
 
-; TODO: Add feature for symlinking dotfiles
-;       (simple-service
-;         'dotfiles home-files-service-type
-;         (append
-;           (list
-;             `("aliasrc" ,(local-file "files/aliasrc"))
-;             `("inputrc" ,(local-file "files/inputrc"))
-;             `("nix-channels" ,(local-file "files/nix-channels"))
-;             `("config/guix/channels.scm" ,(local-file "../channels.scm"))
-;             `("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
-;             `("config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
-;             `("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
-;             `("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf")))
-;           dotfiles))
+(define* (feature-dotfiles
+           #:key
+           (dotfiles '()))
+         "Symlink dotfiles to home."
 
-; TODO: Add feature for adding state
-;       (service home-state-service-type
-;                (append
-;                  (map (lambda (pair) (state-rsync (abspath home (car pair)) (cadr pair))) rsync)
-;                  (map (lambda (pair) (state-git (abspath home (car pair)) (cadr pair)))
-;                       (append
-;                         (list
-;                           '("engstrand-config/utils" ,"git@github.com:engstrand-config/utils.git")
-;                           '("engstrand-config/guix-channel" ,"git@github.com:engstrand-config/guix-channel.git"))
-;                         repos))))
+         (ensure-pred list-of-dotfiles? dotfiles)
+
+         (define (get-home-services config)
+           "Return a list of home services required for adding dotfiles."
+           (list
+             (simple-service
+               'add-dotfiles-to-symlink
+                home-files-service-type
+                dotfiles)))
+
+         (feature
+           (name 'dotfiles)
+           (home-services-getter get-home-services)))
+
+(define* (feature-state-git
+           #:key
+           (repos '()))
+         "Add git repository states that can be synced using shepherd."
+
+         (ensure-pred list-of-state-items? repos)
+
+         (define (get-home-services config)
+           "Return a list of home services required for adding git states."
+           (list
+             (simple-service
+               'add-state-git-repos
+                home-state-service-type
+                (map (lambda (repo) (state-git (car pair) (cdr pair)))
+                     repos))))
+
+         (feature
+           (name 'state-git)
+           (home-services-getter get-home-services)))
+
+(define* (feature-state-rsync
+           #:key
+           (hosts '()))
+         "Add rsync states that can be synces using shepherd."
+
+         (ensure-pred list-of-state-items? hosts)
+
+         (define (get-home-services config)
+           "Return a list of home services required for adding rsync states."
+           (list
+             (simple-service
+               'add-state-rsync-hosts
+                home-state-service-type
+                (map (lambda (repo) (state-rsync (car pair) (cdr pair)))
+                     hosts))))
+
+         (feature
+           (name 'state-rsync)
+           (home-services-getter get-home-services)))

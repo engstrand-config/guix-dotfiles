@@ -1,4 +1,5 @@
 (define-module (engstrand utils)
+               #:use-module (srfi srfi-1)
                #:use-module (gnu packages))
 
 ; Converts a list of kernel modules into a list of packages.
@@ -11,3 +12,18 @@
 ; Converts a list of package names into the actual package definitions.
 (define-public (pkgs lst)
                (map specification->package lst))
+
+; Predicates
+(define-public (dotfile? x)
+               (and (string? (car v)) (file-like? (cdr v))))
+
+(define-public (state-item? x)
+               (and (string? (car x)) (string? (cdr x))))
+
+(define-public (list-of-dotfiles? x)
+               (every dotfile? x))
+
+(define-public (list-of-state-items? x)
+               (every state-item? x))
+
+

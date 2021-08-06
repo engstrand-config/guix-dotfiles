@@ -36,6 +36,32 @@
 ;                    "SUBSYSTEM==\"leds\", "
 ;                    "RUN+=\"/run/current-system/profile/bin/chmod g+w /sys/class/leds/%k/brightness\"")))
 
+; TODO: Convert to feature
+;       (simple-service
+;         'dotfiles home-files-service-type
+;         (append
+;           (list
+;             `("aliasrc" ,(local-file "files/aliasrc"))
+;             `("inputrc" ,(local-file "files/inputrc"))
+;             `("nix-channels" ,(local-file "files/nix-channels"))
+;             `("config/guix/channels.scm" ,(local-file "../channels.scm"))
+;             `("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
+;             `("config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
+;             `("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
+;             `("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf")))
+;           dotfiles))
+
+; TODO: Convert to features
+;       (service home-state-service-type
+;                (append
+;                  (map (lambda (pair) (state-rsync (abspath home (car pair)) (cadr pair))) rsync)
+;                  (map (lambda (pair) (state-git (abspath home (car pair)) (cadr pair)))
+;                       (append
+;                         (list
+;                           '("engstrand-config/utils" ,"git@github.com:engstrand-config/utils.git")
+;                           '("engstrand-config/guix-channel" ,"git@github.com:engstrand-config/guix-channel.git"))
+;                         repos))))
+
 ; TODO: Move these package lists into separate files (like manifests?)
 ; TODO: Move neovim to feature?
 (define-public %config-base-system-packages
