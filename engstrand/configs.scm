@@ -12,7 +12,11 @@
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
                #:use-module (engstrand features state)
-               #:use-module (engstrand features wayland))
+               #:use-module (engstrand features wayland)
+               #:export (
+                         %engstrand-base-system-packages
+                         %engstrand-base-home-packages
+                         %engstrand-base-features))
 
 ; This module is responsible for creating the rde config.
 ; It will define all the different base system services.
@@ -44,29 +48,14 @@
 
 ; TODO: Move these package lists into separate files (like manifests?)
 ; TODO: Move neovim to feature?
-(define-public %config-base-system-packages
+(define %engstrand-base-system-packages
                (pkgs '("git" "nss-certs")))
 
-(define-public %config-base-home-packages
-               (pkgs '("curl" "htop" "neovim" "engstrand-utils" "ncurses")))
+(define %engstrand-base-home-packages
+               ;"engstrand-utils"
+               (pkgs '("curl" "htop" "neovim"  "ncurses")))
 
-(define-public %engstrand-dwl-guile-patches
-               (list %patch-xwayland
-                     %patch-alpha
-                     %patch-focusmon
-                     %patch-vanitygaps
-                     %patch-attachabove))
-
-(define-public %engstrand-dwl-guile-config
-               (dwl-config
-                 (terminal '("foot"))
-                 (natural-scrolling? #t)
-                 (xkb-rules %engstrand-keyboard-layout)
-                 (colors
-                   (dwl-colors
-                     (root '(0 0 1 1))))))
-
-(define-public %config-base-features
+(define %engstrand-base-features
                (list
                  ; TODO: Pass in udev rules to base-services "udev-rules"?
                  (feature-base-services)
@@ -88,8 +77,8 @@
                      (templates "$HOME")
                      (desktop "$HOME")))
                  (feature-base-packages
-                   #:system-packages %config-base-system-packages
-                   #:home-packages %config-base-home-packages)
+                   #:system-packages %engstrand-base-system-packages
+                   #:home-packages %engstrand-base-home-packages)
                  (feature-state-git
                    #:repos
                    `(("engstrand-config/utils" .

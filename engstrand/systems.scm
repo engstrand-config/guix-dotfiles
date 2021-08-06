@@ -8,7 +8,14 @@
                #:use-module (gnu bootloader)
                #:use-module (gnu bootloader grub)
                #:use-module (nongnu packages linux)
-               #:use-module (nongnu system linux-initrd))
+               #:use-module (nongnu system linux-initrd)
+               #:export (
+                         %engstrand-timezone
+                         %engstrand-locale
+                         %engstrand-kernel-arguments
+                         %engstrand-keyboard-layout
+                         %engstrand-initial-os
+                         %engstrand-system-base-features))
 
 ; This module is responsible for configuring an operating system,
 ; i.e. kernel, microcode, hostname, keyboard layout, etc.
@@ -45,7 +52,7 @@
                  (file-systems %base-file-systems)
                  (issue "This is the GNU/Engstrand system. Welcome.\n")))
 
-(define-public %system-base-features
+(define-public %engstrand-system-base-features
                (list
                  (feature-keyboard
                    #:keyboard-layout %engstrand-keyboard-layout)

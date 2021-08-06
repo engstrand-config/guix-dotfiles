@@ -1,33 +1,59 @@
 (define-module (engstrand reconfigure)
                #:use-module (ice-9 match)
+               #:use-module (ice-9 exceptions)
                #:use-module (gnu system)
                #:use-module (rde features)
                #:use-module (engstrand systems)
-               #:use-module (engstrand configs))
+               #:use-module (engstrand configs)
+               #:use-module (engstrand systems p400s)
+               #:use-module (engstrand systems tuxedo)
+               #:use-module (engstrand systems pavilion)
+               #:use-module (engstrand configs johan)
+               #:use-module (engstrand configs fredrik))
 
-; Extract current config and system based on username and hostname.
-(define %current-user (getenv "USER"))
+(define %current-user (getlogin))
 (define %current-system (gethostname))
 
-; Make sure that both variables exist
-(when (not %current-user) (throw 'no-user . (display "$USER not set")))
-(when (not %current-system) (throw 'no-hostname' . (display "$HOST not set")))
+(when (not %current-user)
+  (raise-exception
+    (make-exception-with-message "reconfigure: could not get user")))
 
-(define (dynamic-load submodule module-exp)
-  (primitive-eval `(use-modules (engstrand
-                                  ,(string->symbol submodule)
-                                  ,(string->symbol module-exp)))))
+(when (not %current-system)
+  (raise-exception
+    (make-exception-with-message "reconfigure: could not get hostname")))
 
-; Load configuration
-; TODO: How do we validate the result of this?
-(dynamic-load "configs" %current-user)
-(dynamic-load "systems" %current-system)
+(define* (load-feature-list
+           #:key
+           (prefix "")
+           (target "")
+           (throw? #t)
+           (error-msg ""))
+         (let ((var-name (string->symbol (string-append prefix target))))
+           (if (defined? var-name)
+               (primitive-eval var-name)
+               (when throw?
+                 (raise-exception
+                   (make-exception-with-message error-msg))))))
 
-; Make sure that the imported modules exports the necessary variables
-; TODO: Access these in some other way? Perhaps return the feature list
-;       directly and receive the features when loading the module?
-(when (not %user-features) (throw 'no-config-features . (display "'%user-features' is not defined")))
-(when (not %system-features) (throw 'no-system-features . (display "'%system-features' is not defined")))
+(define %user-features
+  (load-feature-list
+    #:prefix "%user-features-"
+    #:target %current-user
+    #:error-msg
+    (string-append "reconfigure: no such user '" %current-user "'")))
+
+(define %system-features
+  (load-feature-list
+    #:prefix "%system-features-"
+    #:target %current-system
+    #:error-msg
+    (string-append "reconfigure: no such system '" %current-system "'")))
+
+(define %system-swap
+  (load-feature-list
+    #:prefix "%system-swap-"
+    #:target %current-system
+    #:throw? #f))
 
 ; Check if a swap device has been set in the system configuration.
 ; If this is the case, we must extend the initial os to make sure
@@ -40,20 +66,20 @@
         (swap-devices %system-swap))))
 
 ; All is good, create the configuration
-(define-public generated-config
+(define generated-config
                (rde-config
                  (initial-os %initial-os)
                  (features
                    (append
                      %user-features
-                     %config-base-features
-                     %system-base-features
+                     %engstrand-base-features
+                     %engstrand-system-base-features
                      %system-features))))
 
-(define-public engstrand-system
+(define engstrand-system
                (rde-config-operating-system generated-config))
 
-(define-public engstrand-he
+(define engstrand-he
                (rde-config-home-environment generated-config))
 
 (define (dispatcher)

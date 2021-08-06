@@ -10,7 +10,7 @@
                #:use-module (engstrand features state)
                #:use-module (engstrand features wayland))
 
-(define-public %user-features
+(define-public %user-features-fredrik
                (list
                  (feature-user-info
                    #:user-name "fredrik"
