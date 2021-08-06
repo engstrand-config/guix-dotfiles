@@ -3,6 +3,7 @@
                #:use-module (rde features predicates)
                #:use-module (gnu services)
                #:use-module (gnu services nix)
+               #:use-module (gnu home-services)
                #:use-module (engstrand utils)
                #:use-module (dwl-guile home-service)
                #:export (
