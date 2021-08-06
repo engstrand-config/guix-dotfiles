@@ -62,6 +62,23 @@
 ;                           '("engstrand-config/guix-channel" ,"git@github.com:engstrand-config/guix-channel.git"))
 ;                         repos))))
 
+; TODO: Convert to feature
+;       (home-dwl-guile-configuration
+;         (patches (list %patch-xwayland
+;                    %patch-alpha
+;                    %patch-focusmon
+;                    %patch-vanitygaps
+;                    %patch-attachabove))
+;         (config
+;           (dwl-config
+;             (terminal '("foot"))
+;             (natural-scrolling? #t)
+;             (xkb-rules %keyboard-layout)
+;             (colors
+;               (dwl-colors
+;                 (root '(0 0 1 1))))))))))
+
+
 ; TODO: Move these package lists into separate files (like manifests?)
 ; TODO: Move neovim to feature?
 (define-public %config-base-system-packages
