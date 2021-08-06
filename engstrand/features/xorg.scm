@@ -5,6 +5,8 @@
                #:use-module (engstrand packages engstrand-utils)
                #:use-module (guix gexp)
                #:use-module (gnu services)
+               #:use-module (gnu services xorg)
+               #:use-module (gnu services sddm)
                #:use-module (gnu home-services)
                #:use-module (gnu home-services base)
                #:export (feature-xorg-dwm))
@@ -33,6 +35,7 @@
 (define %base-xorg-dwm-home-packages
   (pkgs '("engstrand-dmenu" "engstrand-dsblocks" "engstrand-st")))
 
+; TODO: Split into multiple features?
 (define* (feature-xorg-dwm
            #:key
            (sddm-theme "chili")
@@ -70,9 +73,9 @@
                         (theme sddm-theme)
                         (xorg-configuration
                           (xorg-configuration
-                            (keyboard-layout (get-value 'keyboard-layout config)
-                                             (extra-config (append extra-config
-                                                                   base-extra-config)))))))))
+                            (keyboard-layout (get-value 'keyboard-layout config))
+                            (extra-config (append extra-config
+                                                  base-extra-config))))))))
          (feature
            (name 'xorg-dwm)
            (home-services-getter get-home-services)
