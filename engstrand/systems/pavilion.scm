@@ -5,10 +5,10 @@
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
 
-(define-public %system-swap-pavilion
+(define-public %system-swap
                (list (uuid "62f47965-ad3e-40a9-bb5e-46e4387fa449")))
 
-(define-public %system-features-pavilion
+(define-public %system-features
                (list
                  (feature-host-info
                    #:host-name "pavilion"

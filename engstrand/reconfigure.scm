@@ -1,6 +1,7 @@
 (define-module (engstrand reconfigure)
                #:use-module (ice-9 match)
                #:use-module (ice-9 exceptions)
+               #:use-module (ice-9 pretty-print)
                #:use-module (gnu system)
                #:use-module (rde features)
                #:use-module (engstrand systems)
@@ -22,38 +23,18 @@
   (raise-exception
     (make-exception-with-message "reconfigure: could not get hostname")))
 
-(define* (load-feature-list
-           #:key
-           (prefix "")
-           (target "")
-           (throw? #t)
-           (error-msg ""))
-         (let ((var-name (string->symbol (string-append prefix target))))
-           (if (defined? var-name)
-               (primitive-eval var-name)
-               (when throw?
-                 (raise-exception
-                   (make-exception-with-message error-msg))))))
+(define* (dynamic-load sub mod var-name #:key (throw? #t))
+  (let ((var (module-variable (resolve-module `(engstrand ,sub ,(string->symbol mod))) var-name)))
+    (if (or (not var) (not (variable-bound? var)))
+        (when throw?
+          (raise-exception
+            (make-exception-with-message
+              (string-append "reconfigure: could not load module '" mod "'"))))
+        (variable-ref var))))
 
-(define %user-features
-  (load-feature-list
-    #:prefix "%user-features-"
-    #:target %current-user
-    #:error-msg
-    (string-append "reconfigure: no such user '" %current-user "'")))
-
-(define %system-features
-  (load-feature-list
-    #:prefix "%system-features-"
-    #:target %current-system
-    #:error-msg
-    (string-append "reconfigure: no such system '" %current-system "'")))
-
-(define %system-swap
-  (load-feature-list
-    #:prefix "%system-swap-"
-    #:target %current-system
-    #:throw? #f))
+(define %user-features (dynamic-load 'configs %current-user '%user-features))
+(define %system-features (dynamic-load 'systems %current-system '%system-features))
+(define %system-swap (dynamic-load 'systems %current-system '%system-swap #:throw? #f))
 
 ; Check if a swap device has been set in the system configuration.
 ; If this is the case, we must extend the initial os to make sure
