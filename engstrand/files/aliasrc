@@ -7,8 +7,14 @@ alias vim='nvim'
 alias shepinit='~/engstrand-config/guix-dotfiles/.config/shepherd/init.d/; ls -a'
 alias dots='~/engstrand-config/guix-dotfiles/; ls -a'
 
-alias sysrec='sudo guix system -L ~/engstrand-config/guix-dotfiles/ reconfigure ~/engstrand-config/guix-dotfiles/systems/system-$(hostname).scm'
-alias homerec='guix home -L ~/engstrand-config/guix-dotfiles reconfigure ~/engstrand-config/guix-dotfiles/home/home-$USER.scm'
+alias sysrec='sudo RDE_TARGET=system guix system -L ~/engstrand-config/guix-dotfiles \
+                                                 -L ~/engstrand-config/home-dwl-service \
+                                                 reconfigure \
+                                                 ~/engstrand-config/guix-dotfiles/engstrand/reconfigure.scm'
+alias homerec='RDE_TARGET=home guix home -L ~/engstrand-config/guix-dotfiles \
+                                         -L ~/engstrand-config/home-dwl-service \
+                                         reconfigure \
+                                         ~/engstrand-config/guix-dotfiles/engstrand/reconfigure.scm'
 
 alias gs='git status'
 alias gd='git diff'
