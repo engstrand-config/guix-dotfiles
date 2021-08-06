@@ -12,7 +12,7 @@
 ; TODO: Add custom packages as feature:
 ;       "youtube-dl"
 
-(define-public %user-features-johan
+(define-public %user-features
                (list
                  (feature-user-info
                    #:user-name "johan"
