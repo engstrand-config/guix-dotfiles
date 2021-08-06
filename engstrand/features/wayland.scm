@@ -5,11 +5,32 @@
                #:use-module (gnu services nix)
                #:use-module (gnu home-services)
                #:use-module (engstrand utils)
+               #:use-module (engstrand systems)
+               #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
                #:export (
                          feature-wayland-dwl-guile
                          feature-wayland-bemenu
-                         feature-wayland-foot))
+                         feature-wayland-foot
+
+                         %engstrand-dwl-guile-patches
+                         %engstrand-dwl-guile-config))
+
+(define %engstrand-dwl-guile-patches
+               (list %patch-xwayland
+                     %patch-alpha
+                     %patch-focusmon
+                     %patch-vanitygaps
+                     %patch-attachabove))
+
+(define %engstrand-dwl-guile-config
+               (dwl-config
+                 (terminal '("foot"))
+                 (natural-scrolling? #t)
+                 (xkb-rules %engstrand-keyboard-layout)
+                 (colors
+                   (dwl-colors
+                     (root '(0 0 1 1))))))
 
 ;; rewrite with match
 (define (transform-bemenu-options lst)

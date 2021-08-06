@@ -20,10 +20,10 @@
 ; TODO: Add support for swap-devices as a feature.
 ; rde does not support this out of the box. Instead, we
 ; must pass it using the initial-os field of rde-config.
-(define-public %system-swap
+(define-public %system-swap-tuxedo
                (list (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))
 
-(define-public %system-features
+(define-public %system-features-tuxedo
                (list
                  ; TODO: Changing a single value in this feature requires
                  ;       you to define the entire feature again. Perhaps add a helper for this?
