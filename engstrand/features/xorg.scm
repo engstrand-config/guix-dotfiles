@@ -1,6 +1,7 @@
 (define-module (engstrand features xorg)
                #:use-module (rde features)
                #:use-module (rde features predicates)
+               #:use-module (engstrand utils)
                #:use-module (engstrand packages engstrand-utils)
                #:use-module (guix gexp)
                #:use-module (gnu services)
@@ -27,17 +28,17 @@
   ")
 
 (define %base-xorg-dwm-system-packages
-  '("chili-sddm-theme" "engstrand-dwm"))
+  (pkgs '("chili-sddm-theme" "engstrand-dwm")))
 
 (define %base-xorg-dwm-home-packages
-  '("engstrand-dmenu" "engstrand-dsblocks" "engstrand-st"))
+  (pkgs '("engstrand-dmenu" "engstrand-dsblocks" "engstrand-st")))
 
 (define* (feature-xorg-dwm
            #:key
            (sddm-theme "chili")
            (extra-config '())
            (base-extra-config (list %xorg-libinput-config)))
-         "Sets up xorg with SDDM (display manager), dwm, dsblocks, dmenu and st."
+         "Setup xorg with SDDM (display manager), dwm, dsblocks, dmenu and st."
 
          (ensure-pred string? sddm-theme)
          (ensure-pred list-of-strings? extra-config)
