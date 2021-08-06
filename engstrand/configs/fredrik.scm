@@ -23,10 +23,8 @@
                    #:sign-commits? #t)
                  (feature-state-git
                    #:repos
-                   `(("repos/pywalfox" .
-                      "git@github.com:frewacom/pywalfox.git")
-                     ("repos/pywalfox-native" .
-                      "git@github.com:frewacom/pywalfox-native.git")))
+                   `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
+                     ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
                  (feature-nix)
                  (feature-wayland-dwl-guile
                    #:dwl-guile-configuration

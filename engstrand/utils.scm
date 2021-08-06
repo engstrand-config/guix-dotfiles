@@ -17,7 +17,7 @@
 
 ; Predicates
 (define-public (dotfile? x)
-               (and (string? (car x)) (file-like? (cdr x))))
+               (and (string? (car x)) (file-like? (cadr x))))
 
 (define-public (state-item? x)
                (and (string? (car x)) (string? (cdr x))))
