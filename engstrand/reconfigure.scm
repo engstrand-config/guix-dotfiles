@@ -4,13 +4,14 @@
                #:use-module (ice-9 pretty-print)
                #:use-module (gnu system)
                #:use-module (rde features)
+               #:use-module (rde features predicates)
                #:use-module (engstrand systems)
                #:use-module (engstrand configs)
-               #:use-module (engstrand systems p400s)
-               #:use-module (engstrand systems tuxedo)
-               #:use-module (engstrand systems pavilion)
-               #:use-module (engstrand configs johan)
-               #:use-module (engstrand configs fredrik))
+               #:export (make-config))
+
+; Predicate for validating the reconfiguration target
+(define (configure-target? x)
+  (or (equal? x "home") (equal? x "system")))
 
 ; Primarily use "RDE_USER" environment variable,
 ; but fallback to the currently logged in user.
@@ -22,59 +23,64 @@
 
 (define %current-system (gethostname))
 
-(when (not %current-user)
-  (raise-exception
-    (make-exception-with-message "reconfigure: could not get user")))
-
-(when (not %current-system)
-  (raise-exception
-    (make-exception-with-message "reconfigure: could not get hostname")))
-
+; Allows dynamic loading of configuration modules based on file name.
 (define* (dynamic-load sub mod var-name #:key (throw? #t))
-  (let ((var (module-variable (resolve-module `(engstrand ,sub ,(string->symbol mod))) var-name)))
-    (if (or (not var) (not (variable-bound? var)))
-        (when throw?
-          (raise-exception
-            (make-exception-with-message
-              (string-append "reconfigure: could not load module '" mod "'"))))
-        (variable-ref var))))
+         (let ((var (module-variable
+                      (resolve-module `(engstrand ,sub ,(string->symbol mod))) var-name)))
+           (if (or (not var) (not (variable-bound? var)))
+               (when throw?
+                 (raise-exception
+                   (make-exception-with-message
+                     (string-append "reconfigure: could not load module '" mod "'"))))
+               (variable-ref var))))
 
-(define %user-features (dynamic-load 'configs %current-user '%user-features))
-(define %system-features (dynamic-load 'systems %current-system '%system-features))
-(define %system-swap (dynamic-load 'systems %current-system '%system-swap #:throw? #f))
+; Create a system or home configuration based on some parameters.
+; Generally, you want to call @code{make-config} with no arguments.
+(define* (make-config
+           #:key
+           (user %current-user)
+           (system %current-system)
+           (target (getenv "RDE_TARGET"))
+           (initial-os %engstrand-initial-os))
 
-; Check if a swap device has been set in the system configuration.
-; If this is the case, we must extend the initial os to make sure
-; that it is included in the system configuration.
-(define %initial-os
-  (if (null? %system-swap)
-      %engstrand-initial-os
-      (operating-system
-        (inherit %engstrand-initial-os)
-        (swap-devices %system-swap))))
+         (ensure-pred string? user)
+         (ensure-pred string? system)
+         (ensure-pred configure-target? target)
+         (ensure-pred operating-system? initial-os)
 
-; All is good, create the configuration
-(define generated-config
-               (rde-config
-                 (initial-os %initial-os)
-                 (features
-                   (append
-                     %user-features
-                     %engstrand-base-features
-                     %engstrand-system-base-features
-                     %system-features))))
+         (when (not user)
+           (raise-exception
+             (make-exception-with-message "reconfigure: could not get user")))
 
-(define engstrand-system
-               (rde-config-operating-system generated-config))
+         (when (not system)
+           (raise-exception
+             (make-exception-with-message "reconfigure: could not get hostname")))
 
-(define engstrand-he
-               (rde-config-home-environment generated-config))
+         (define %user-features (dynamic-load 'configs user '%user-features))
+         (define %system-features (dynamic-load 'systems system '%system-features))
+         (define %system-swap (dynamic-load 'systems system '%system-swap #:throw? #f))
 
-(define (dispatcher)
-  (let ((rde-target (getenv "RDE_TARGET")))
-    (match rde-target
-           ("home" engstrand-he)
-           ("system" engstrand-system)
-           (_ engstrand-he))))
+         ; Check if a swap device has been set in the system configuration.
+         ; If this is the case, we must extend the initial os to make sure
+         ; that it is included in the system configuration.
+         (define %initial-os
+           (if (null? %system-swap)
+               initial-os
+               (operating-system
+                 (inherit initial-os)
+                 (swap-devices %system-swap))))
 
-(dispatcher)
+         ; All is good, create the configuration
+         (define generated-config
+           (rde-config
+             (initial-os %initial-os)
+             (features
+               (append
+                 %user-features
+                 %engstrand-base-features
+                 %engstrand-system-base-features
+                 %system-features))))
+
+         (match target
+                ("home" (rde-config-home-environment generated-config))
+                ("system" (rde-config-operating-system generated-config))))
