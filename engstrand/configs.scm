@@ -36,6 +36,16 @@
   ;"engstrand-utils"
   (pkgs '("curl" "htop" "neovim"  "ncurses")))
 
+; Dynamically create a configuration that can be reproduced
+; without having the correct environment variables set.
+; This is required for some commands to work, e.g. guix pull.
+(define (make-entrypoint)
+  (scheme-file "entrypoint.scm"
+               #~(begin
+                   (use-modules (engstrand reconfigure))
+                   (make-config #:user #$(getenv "RDE_USER")
+                                #:system #$(gethostname)))))
+
 (define %engstrand-base-features
   (list
     (feature-base-services)
@@ -75,7 +85,7 @@
         ("inputrc" ,(local-file "files/inputrc"))
         ("nix-channels" ,(local-file "files/nix-channels"))
         ("config/guix/channels.scm" ,(local-file "channels.scm"))
-        ("config/guix/config.scm" ,(local-file "files/entrypoint.scm"))
+        ("config/guix/config.scm" ,(make-entrypoint))
         ("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
         ("config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
         ("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))

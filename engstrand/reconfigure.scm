@@ -9,16 +9,6 @@
                #:use-module (engstrand configs)
                #:export (make-config))
 
-; Primarily use "RDE_USER" environment variable,
-; but fallback to the currently logged in user.
-; Note that using sudo should not affect the result
-; of (getlogin). It might still fail to find the user though.
-(define %current-user
-  (let ((rde-user (getenv "RDE_USER")))
-    (if (not rde-user) (getlogin) rde-user)))
-
-(define %current-system (gethostname))
-
 ; Allows dynamic loading of configuration modules based on file name.
 (define* (dynamic-load sub mod var-name #:key (throw? #t))
          (let ((var (module-variable
@@ -34,8 +24,8 @@
 ; Generally, you want to call this procedure with no arguments.
 (define* (make-config
            #:key
-           (user %current-user)
-           (system %current-system)
+           (user (getenv "RDE_USER"))
+           (system (gethostname))
            (target (getenv "RDE_TARGET"))
            (initial-os %engstrand-initial-os))
 
@@ -77,4 +67,4 @@
          (match target
                 ("home" %engstrand-he)
                 ("system" %engstrand-system)
-                (_ %engstrand-he)))
+                (_ %engstrand-system)))
