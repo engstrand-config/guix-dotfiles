@@ -69,10 +69,10 @@
                  %system-features))))
 
          (define %engstrand-he
-           (rde-config-home-environment generated-config))
+           (rde-config-home-environment %generated-config))
 
          (define %engstrand-system
-           (rde-config-operating-system generated-config))
+           (rde-config-operating-system %generated-config))
 
          (match target
                 ("home" %engstrand-he)
