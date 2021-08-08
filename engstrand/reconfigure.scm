@@ -9,10 +9,6 @@
                #:use-module (engstrand configs)
                #:export (make-config))
 
-; Predicate for validating the reconfiguration target
-(define (configure-target? x)
-  (or (equal? x "home") (equal? x "system")))
-
 ; Primarily use "RDE_USER" environment variable,
 ; but fallback to the currently logged in user.
 ; Note that using sudo should not affect the result
@@ -35,7 +31,7 @@
                (variable-ref var))))
 
 ; Create a system or home configuration based on some parameters.
-; Generally, you want to call @code{make-config} with no arguments.
+; Generally, you want to call this procedure with no arguments.
 (define* (make-config
            #:key
            (user %current-user)
@@ -45,16 +41,7 @@
 
          (ensure-pred string? user)
          (ensure-pred string? system)
-         (ensure-pred configure-target? target)
          (ensure-pred operating-system? initial-os)
-
-         (when (not user)
-           (raise-exception
-             (make-exception-with-message "reconfigure: could not get user")))
-
-         (when (not system)
-           (raise-exception
-             (make-exception-with-message "reconfigure: could not get hostname")))
 
          (define %user-features (dynamic-load 'configs user '%user-features))
          (define %system-features (dynamic-load 'systems system '%system-features))
@@ -71,7 +58,7 @@
                  (swap-devices %system-swap))))
 
          ; All is good, create the configuration
-         (define generated-config
+         (define %generated-config
            (rde-config
              (initial-os %initial-os)
              (features
@@ -81,6 +68,13 @@
                  %engstrand-system-base-features
                  %system-features))))
 
+         (define %engstrand-he
+           (rde-config-home-environment generated-config))
+
+         (define %engstrand-system
+           (rde-config-operating-system generated-config))
+
          (match target
-                ("home" (rde-config-home-environment generated-config))
-                ("system" (rde-config-operating-system generated-config))))
+                ("home" %engstrand-he)
+                ("system" %engstrand-system)
+                (_ %engstrand-he)))
