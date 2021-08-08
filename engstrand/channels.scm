@@ -35,6 +35,15 @@
         (openpgp-fingerprint
           "2841 9AC6 5038 7440 C7E9  2FFA 2208 D209 58C1 DEB0"))))
   (channel
+    (name 'home-dwl-service)
+    (url "https://github.com/engstrand-config/home-dwl-service")
+    (branch "main")
+    (introduction
+      (make-channel-introduction
+        "314453a87634d67e914cfdf51d357638902dd9fe"
+        (openpgp-fingerprint
+          "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
+  (channel
     (name 'engstrand)
     (url "https://github.com/engstrand-config/guix-channel.git")
     (branch "main")))
