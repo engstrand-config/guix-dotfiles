@@ -1,0 +1,6 @@
+(authorizations
+ (version 0)
+ (("C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"
+   (name "frewacom"))
+  ("DFC6 C6B7 0EF5 F7CB 75EE 97E6 DF30 88DD BCAD 566D"
+   (name "johanengstrand"))))

@@ -1,0 +1,21 @@
+(channel
+ (version 0)
+ (dependencies
+  (channel
+   (name home-dwl-service)
+   (url "https://github.com/engstrand-config/home-dwl-service")
+   (branch "main")
+   (introduction
+    (channel-introduction
+     (version 0)
+     (commit "314453a87634d67e914cfdf51d357638902dd9fe")
+     (signer "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
+  ; TODO: Remove when Guix home has been upstreamed
+  (channel
+   (name rde) ; no quote needed here
+   (url "https://git.sr.ht/~abcdw/rde")
+   (introduction
+    (channel-introduction
+     (version 0)
+     (commit "257cebd587b66e4d865b3537a9a88cccd7107c95")
+     (signer "2841 9AC6 5038 7440 C7E9  2FFA 2208 D209 58C1 DEB0"))))))
