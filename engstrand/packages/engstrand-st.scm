@@ -8,7 +8,6 @@
     #:use-module (gnu packages fonts)
     #:use-module (gnu packages fontutils)
     #:use-module (gnu packages xorg)
-    #:use-module (engstrand packages)
     #:use-module (engstrand packages engstrand-dwm))
 
 (define-public engstrand-st

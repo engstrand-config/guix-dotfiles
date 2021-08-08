@@ -14,7 +14,6 @@
     #:use-module (gnu packages xorg)
     #:use-module (gnu packages glib)
     #:use-module (gnu packages pkg-config)
-    #:use-module (engstrand packages)
     #:use-module (engstrand packages engstrand-dwm))
 
 (define-public engstrand-dsblocks

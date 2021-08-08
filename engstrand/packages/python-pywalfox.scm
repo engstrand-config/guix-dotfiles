@@ -2,8 +2,7 @@
                #:use-module (guix packages)
                #:use-module (guix download)
                #:use-module (guix build-system python)
-               #:use-module (guix licenses)
-               #:use-module (engstrand packages))
+               #:use-module (guix licenses))
 
 (define-public python-pywalfox
   (package

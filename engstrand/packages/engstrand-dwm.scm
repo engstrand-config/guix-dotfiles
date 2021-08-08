@@ -6,8 +6,7 @@
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages fonts)
-  #:use-module (gnu packages compton)
-  #:use-module (engstrand packages))
+  #:use-module (gnu packages compton))
 
 (define-public engstrand-dwm
   (package

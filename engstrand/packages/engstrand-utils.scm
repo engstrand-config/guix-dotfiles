@@ -6,8 +6,7 @@
     #:use-module (guix build-system copy)
     #:use-module ((guix licenses) #:prefix license:)
     #:use-module (gnu packages xorg)
-    #:use-module (gnu packages xdisorg)
-    #:use-module (engstrand packages))
+    #:use-module (gnu packages xdisorg))
 
 (define-public engstrand-utils
     (package
