@@ -2,7 +2,8 @@
                #:use-module (rde features)
                #:use-module (rde features predicates)
                #:use-module (gnu services)
-               #:use-module (gnu services nix)
+               #:use-module (gnu packages xdisorg)
+               #:use-module (gnu packages terminals)
                #:use-module (gnu home-services)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
@@ -17,20 +18,20 @@
                          %engstrand-dwl-guile-config))
 
 (define %engstrand-dwl-guile-patches
-               (list %patch-xwayland
-                     %patch-alpha
-                     %patch-focusmon
-                     %patch-vanitygaps
-                     %patch-attachabove))
+  (list %patch-xwayland
+        %patch-alpha
+        %patch-focusmon
+        %patch-vanitygaps
+        %patch-attachabove))
 
 (define %engstrand-dwl-guile-config
-               (dwl-config
-                 (terminal '("foot"))
-                 (natural-scrolling? #t)
-                 (xkb-rules %engstrand-keyboard-layout)
-                 (colors
-                   (dwl-colors
-                     (root '(0 0 1 1))))))
+  (dwl-config
+    (terminal '("foot"))
+    (natural-scrolling? #t)
+    (xkb-rules %engstrand-keyboard-layout)
+    (colors
+      (dwl-colors
+        (root '(0 0 1 1))))))
 
 ;; rewrite with match
 (define (transform-bemenu-options lst)

@@ -1,4 +1,4 @@
-(define-module (engstrand packages python-pywalfox)
+(define-module (engstrand packages python)
                #:use-module (guix packages)
                #:use-module (guix download)
                #:use-module (guix build-system python)

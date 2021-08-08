@@ -1,4 +1,4 @@
-(define-module (engstrand packages tuxedo-keyboard-module)
+(define-module (engstrand packages linux)
     #:use-module (gnu packages tls)
     #:use-module (guix gexp)
     #:use-module (guix utils)
@@ -9,7 +9,6 @@
     #:use-module (guix build-system linux-module)
     #:use-module ((guix licenses) #:prefix license:))
 
-; https://notabug.org/jlicht/guix-pkgs/src/master/staging/linux-nonfree.scm
 (define-public (tuxedo-keyboard-module kernel)
   (package
     (name "tuxedo-keyboard-module")

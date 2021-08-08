@@ -1,7 +1,7 @@
 (define-module (engstrand systems tuxedo)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
-               #:use-module (engstrand packages tuxedo-keyboard-module)
+               #:use-module (engstrand packages linux)
                #:use-module (rde features system)
                #:use-module (nongnu packages linux)
                #:use-module (nongnu system linux-initrd)

@@ -1,4 +1,4 @@
-(define-module (engstrand packages engstrand-utils)
+(define-module (engstrand packages utils)
     #:use-module (guix utils)
     #:use-module (guix packages)
     #:use-module (guix download)

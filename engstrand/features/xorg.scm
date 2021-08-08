@@ -2,13 +2,15 @@
                #:use-module (rde features)
                #:use-module (rde features predicates)
                #:use-module (engstrand utils)
-               #:use-module (engstrand packages engstrand-utils)
+               #:use-module (engstrand packages xorg)
+               #:use-module (engstrand packages utils)
                #:use-module (guix gexp)
                #:use-module (gnu services)
                #:use-module (gnu services xorg)
                #:use-module (gnu services sddm)
                #:use-module (gnu home-services)
                #:use-module (gnu home-services base)
+               #:use-module (gnu packages display-managers)
                #:export (feature-xorg-dwm))
 
 (define %xorg-libinput-config
@@ -30,10 +32,10 @@
   ")
 
 (define %base-xorg-dwm-system-packages
-  (pkgs '("chili-sddm-theme" "engstrand-dwm")))
+  (list chili-sddm-theme engstrand-dwm))
 
 (define %base-xorg-dwm-home-packages
-  (pkgs '("engstrand-dmenu" "engstrand-dsblocks" "engstrand-st")))
+  (list engstrand-dmenu engstrand-dsblocks engstrand-st engstrand-utils))
 
 ; TODO: Split into multiple features?
 (define* (feature-xorg-dwm
