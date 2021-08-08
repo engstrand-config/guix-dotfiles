@@ -30,52 +30,53 @@
 ; TODO: Move these package lists into separate files (like manifests?)
 ; TODO: Move neovim to feature?
 (define %engstrand-base-system-packages
-               (pkgs '("git" "nss-certs")))
+  (pkgs '("git" "nss-certs")))
 
 (define %engstrand-base-home-packages
-               ;"engstrand-utils"
-               (pkgs '("curl" "htop" "neovim"  "ncurses")))
+  ;"engstrand-utils"
+  (pkgs '("curl" "htop" "neovim"  "ncurses")))
 
 (define %engstrand-base-features
-               (list
-                 (feature-base-services)
-                 (feature-desktop-services)
-                 (feature-fonts)
-                 (feature-pipewire)
-                 (feature-backlight)
-                 (feature-zsh)
-                 (feature-ssh)
-                 (feature-xdg
-                   #:xdg-user-directories-configuration
-                   (home-xdg-user-directories-configuration
-                     (download "$HOME/downloads")
-                     (documents "$HOME/documents")
-                     (pictures "$HOME/images")
-                     (music "$HOME/music")
-                     (videos "$HOME/videos")
-                     (publicshare "$HOME")
-                     (templates "$HOME")
-                     (desktop "$HOME")))
-                 (feature-base-packages
-                   #:system-packages %engstrand-base-system-packages
-                   #:home-packages %engstrand-base-home-packages)
-                 (feature-state-git
-                   #:repos
-                   `(("engstrand-config/utils" .
-                      "git@github.com:engstrand-config/utils.git")
-                     ("engstrand-config/guix-channel" .
-                      "git@github.com:engstrand-config/guix-channel.git")
-                     ("engstrand-config/home-dwl-service" .
-                      "git@github.com:engstrand-config/home-dwl-service.git")
-                     ("engstrand-config/farg" .
-                      "git@github.com:engstrand-config/farg.git")))
-                 (feature-dotfiles
-                   #:dotfiles
-                   `(("aliasrc" ,(local-file "files/aliasrc"))
-                     ("inputrc" ,(local-file "files/inputrc"))
-                     ("nix-channels" ,(local-file "files/nix-channels"))
-                     ("config/guix/channels.scm" ,(local-file "channels.scm"))
-                     ("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
-                     ("config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
-                     ("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
-                     ("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))))
+  (list
+    (feature-base-services)
+    (feature-desktop-services)
+    (feature-fonts)
+    (feature-pipewire)
+    (feature-backlight)
+    (feature-zsh)
+    (feature-ssh)
+    (feature-xdg
+      #:xdg-user-directories-configuration
+      (home-xdg-user-directories-configuration
+        (download "$HOME/downloads")
+        (documents "$HOME/documents")
+        (pictures "$HOME/images")
+        (music "$HOME/music")
+        (videos "$HOME/videos")
+        (publicshare "$HOME")
+        (templates "$HOME")
+        (desktop "$HOME")))
+    (feature-base-packages
+      #:system-packages %engstrand-base-system-packages
+      #:home-packages %engstrand-base-home-packages)
+    (feature-state-git
+      #:repos
+      `(("engstrand-config/utils" .
+         "git@github.com:engstrand-config/utils.git")
+        ("engstrand-config/guix-channel" .
+         "git@github.com:engstrand-config/guix-channel.git")
+        ("engstrand-config/home-dwl-service" .
+         "git@github.com:engstrand-config/home-dwl-service.git")
+        ("engstrand-config/farg" .
+         "git@github.com:engstrand-config/farg.git")))
+    (feature-dotfiles
+      #:dotfiles
+      `(("aliasrc" ,(local-file "files/aliasrc"))
+        ("inputrc" ,(local-file "files/inputrc"))
+        ("nix-channels" ,(local-file "files/nix-channels"))
+        ("config/guix/channels.scm" ,(local-file "channels.scm"))
+        ("config/guix/config.scm" ,(local-file "files/entrypoint.scm"))
+        ("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
+        ("config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
+        ("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
+        ("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))))
