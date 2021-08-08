@@ -7,6 +7,7 @@
                #:use-module (dwl-guile home-service)
                #:use-module (engstrand configs)
                #:use-module (engstrand features nix)
+               #:use-module (engstrand features video)
                #:use-module (engstrand features wayland))
 
 ; TODO: Add custom packages as feature:
@@ -25,6 +26,7 @@
                  (feature-git
                    #:sign-commits? #t)
                  (feature-nix)
+                 (feature-mpv)
                  (feature-wayland-dwl-guile
                    #:dwl-guile-configuration
                    (home-dwl-guile-configuration

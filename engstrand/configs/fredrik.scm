@@ -9,6 +9,7 @@
                #:use-module (engstrand features nix)
                #:use-module (engstrand features state)
                #:use-module (engstrand features xorg)
+               #:use-module (engstrand features video)
                #:use-module (engstrand features wayland))
 
 ; TODO: Remove xorg feature again.
@@ -44,6 +45,7 @@
                    `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
                      ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
                  (feature-nix)
+                 (feature-mpv)
                  (feature-xorg-dwm
                    #:extra-config (list %xorg-amdgpu-config))
                  (feature-wayland-dwl-guile
