@@ -11,39 +11,11 @@
         (openpgp-fingerprint
           "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA"))))
   (channel
-    (name 'nonguix)
-    (url "https://gitlab.com/nonguix/nonguix")
+    (name 'engstrand-config)
+    (url "https://github.com/engstrand-config/guix-dotfiles")
+    (branch "channel")
     (introduction
       (make-channel-introduction
-        "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
+        "005c42a980c895e0853b821494534d67c7b85e91"
         (openpgp-fingerprint
-          "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
-  (channel
-    (name 'flat)
-    (url "https://github.com/flatwhatson/guix-channel.git")
-    (introduction
-      (make-channel-introduction
-        "33f86a4b48205c0dc19d7c036c85393f0766f806"
-        (openpgp-fingerprint
-          "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
-  (channel
-    (name 'rde)
-    (url "https://git.sr.ht/~abcdw/rde")
-    (introduction
-      (make-channel-introduction
-        "257cebd587b66e4d865b3537a9a88cccd7107c95"
-        (openpgp-fingerprint
-          "2841 9AC6 5038 7440 C7E9  2FFA 2208 D209 58C1 DEB0"))))
-  (channel
-    (name 'home-dwl-service)
-    (url "https://github.com/engstrand-config/home-dwl-service")
-    (branch "main")
-    (introduction
-      (make-channel-introduction
-        "314453a87634d67e914cfdf51d357638902dd9fe"
-        (openpgp-fingerprint
-          "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
-  (channel
-    (name 'engstrand)
-    (url "https://github.com/engstrand-config/guix-channel.git")
-    (branch "main")))
+          "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C")))))
