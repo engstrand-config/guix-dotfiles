@@ -12,7 +12,14 @@
                #:use-module (engstrand configs johan)
                #:use-module (engstrand configs fredrik))
 
-(define %current-user (getlogin))
+; Primarily use "RDE_USER" environment variable,
+; but fallback to the currently logged in user.
+; Note that using sudo should not affect the result
+; of (getlogin). It might still fail to find the user though.
+(define %current-user
+  (let ((rde-user (getenv "RDE_USER")))
+    (if (not rde-user) (getlogin) rde-user)))
+
 (define %current-system (gethostname))
 
 (when (not %current-user)
