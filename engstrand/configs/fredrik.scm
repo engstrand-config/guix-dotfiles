@@ -46,6 +46,7 @@
                      ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
                  (feature-nix)
                  (feature-mpv)
+                 (feature-obs)
                  (feature-xorg-dwm
                    #:extra-config (list %xorg-amdgpu-config))
                  (feature-wayland-dwl-guile
