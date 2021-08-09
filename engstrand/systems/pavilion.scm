@@ -1,6 +1,7 @@
 (define-module (engstrand systems pavilion)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
+               #:use-module (engstrand features laptop)
                #:use-module (rde features system)
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
@@ -26,4 +27,5 @@
                        (device
                          (uuid "6c3ee1c8-6ee6-4142-b2bf-a370854f63e7"
                                'ext4))
-                       (type "ext4"))))))
+                       (type "ext4"))))
+                 (feature-tlp)))

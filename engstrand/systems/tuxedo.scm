@@ -2,6 +2,7 @@
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
                #:use-module (engstrand packages linux)
+               #:use-module (engstrand features laptop)
                #:use-module (rde features system)
                #:use-module (nongnu packages linux)
                #:use-module (nongnu system linux-initrd)
@@ -48,4 +49,5 @@
                        (mount-point "/")
                        (device
                          (uuid "4484aa6c-d5ff-4964-b62d-c2572c701e66" 'ext4))
-                       (type "ext4"))))))
+                       (type "ext4"))))
+                 (feature-tlp)))
