@@ -73,8 +73,6 @@
       #:repos
       `(("engstrand-config/utils" .
          "git@github.com:engstrand-config/utils.git")
-        ("engstrand-config/guix-channel" .
-         "git@github.com:engstrand-config/guix-channel.git")
         ("engstrand-config/home-dwl-service" .
          "git@github.com:engstrand-config/home-dwl-service.git")
         ("engstrand-config/farg" .
