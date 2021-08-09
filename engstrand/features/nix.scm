@@ -6,9 +6,6 @@
                #:use-module (engstrand utils)
                #:export (feature-nix))
 
-(define %base-nix-system-packages
-  (pkgs '("nix")))
-
 (define* (feature-nix)
          "Setup the nix package manager."
 
@@ -18,7 +15,7 @@
              (simple-service
                'add-nix-system-packages-to-profile
                profile-service-type
-               %base-nix-system-packages)
+               (pkgs '("nix")))
              (service nix-service-type)))
 
          (feature
