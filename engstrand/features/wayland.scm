@@ -13,6 +13,7 @@
                          feature-wayland-dwl-guile
                          feature-wayland-bemenu
                          feature-wayland-foot
+                         feature-wayland-mako
 
                          %engstrand-dwl-guile-patches
                          %engstrand-dwl-guile-config))
@@ -45,6 +46,9 @@
                                (else (raise "invalid bemenu argument!")))))))
   (string-join (map make-cli-argument lst)))
 
+; TODO: Add this feature AFTER adding all other features, e.g. mako, foot, bemenu, etc.
+;       Doing this means that we can check if certain features are available and
+;       add special configuration (for example keybindings).
 (define* (feature-wayland-dwl-guile
            #:key
            (dwl-guile-configuration (home-dwl-guile-configuration)))
@@ -60,6 +64,23 @@
 
          (feature
            (name 'wayland-dwl-guile)
+           (home-services-getter get-home-services)))
+
+(define* (feature-wayland-mako)
+         "Setup mako, a lightweight notification daemon for Wayland"
+
+         (define (get-home-services config)
+           "Return a list of home services required by mako"
+           (list
+             (simple-service
+               'add-mako-home-packages-to-profile
+               home-profile-service-type
+               (pkgs '("mako" "libnotify")))))
+
+         ; TODO: Allow configuration using Guile.
+
+         (feature
+           (name 'wayland-mako)
            (home-services-getter get-home-services)))
 
 (define* (feature-wayland-foot)
