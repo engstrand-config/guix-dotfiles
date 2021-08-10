@@ -2,7 +2,9 @@
                #:use-module (srfi srfi-1)
                #:use-module (guix gexp)
                #:use-module (gnu packages)
-               #:use-module (rde features predicates))
+               #:use-module (rde features)
+               #:use-module (rde features predicates)
+               #:export (modify-features))
 
 ; Converts a list of kernel modules into a list of packages.
 ; Each kernel module should accept the current system kernel
@@ -28,3 +30,21 @@
 
 (define-public (list-of-state-items? x)
                (every state-item? x))
+
+(define-syntax %modify-feature
+  (syntax-rules ()
+    ((_ feature (delete kind) clauses ...)
+     (if (eq? (feature-name feature) kind)
+         #f
+         (%modify-feature feature clauses ...)))
+    ((_ feature)
+     feature)))
+
+(define-syntax modify-features
+  (syntax-rules ()
+    "Modify the features listed in FEATURES according to CLAUSES and return
+    the resulting list of features  Each clause must have the form: (delete FEATURE-NAME)"
+    ((_ features clauses ...)
+     (filter-map (lambda (feature)
+                   (%modify-feature feature clauses ...))
+                 features))))

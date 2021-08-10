@@ -6,10 +6,13 @@
                #:use-module (rde features base)
                #:use-module (rde features linux)
                #:use-module (rde features fontutils)
+               #:use-module (rde features version-control)
                #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
+               #:use-module (engstrand features nix)
+               #:use-module (engstrand features video)
                #:use-module (engstrand features state)
                #:use-module (engstrand features shells)
                #:use-module (engstrand features wayland)
@@ -50,6 +53,8 @@
   (list
     (feature-base-services)
     (feature-desktop-services)
+    (feature-git
+      #:sign-commits? #t)
     (feature-fonts)
     (feature-pipewire)
     (feature-backlight)
@@ -87,4 +92,14 @@
         ("config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
         ("config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
         ("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
-        ("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))))
+        ("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))
+    (feature-nix)
+    (feature-mpv)
+    (feature-obs)
+    (feature-wayland-bemenu)
+    (feature-wayland-foot)
+    (feature-wayland-dwl-guile
+      #:dwl-guile-configuration
+      (home-dwl-guile-configuration
+        (patches %engstrand-dwl-guile-patches)
+        (config %engstrand-dwl-guile-config)))))

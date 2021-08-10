@@ -6,7 +6,6 @@
                #:use-module (rde features)
                #:use-module (rde features predicates)
                #:use-module (engstrand systems)
-               #:use-module (engstrand configs)
                #:export (make-config))
 
 ; Allows dynamic loading of configuration modules based on file name.
@@ -54,7 +53,6 @@
              (features
                (append
                  %user-features
-                 %engstrand-base-features
                  %engstrand-system-base-features
                  %system-features))))
 
