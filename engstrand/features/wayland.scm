@@ -89,33 +89,34 @@
 
          (define (get-home-services config)
            "Return a list of home services required by mako"
-           (append
-             (list
+           ; (make-service-list
+           (make-service-list
+             (simple-service
+               'add-mako-home-packages-to-profile
+               home-profile-service-type
+               (pkgs '("mako" "libnotify")))
+             (when add-keybindings?
                (simple-service
-                 'add-mako-home-packages-to-profile
-                 home-profile-service-type
-                 (pkgs '("mako" "libnotify"))))
-             (if add-keybindings?
-                 (list
-                   (simple-service
-                     'add-dwl-keybindings
-                     home-dwl-guile-service-type
-                     (lambda (old-config)
-                       (extend-dwl-guile-config
-                         old-config
-                         (keys
-                           (append
-                             (list
-                               (dwl-key
-                                 (modifiers dismiss-modifiers)
-                                 (key dismiss-key)
-                                 (action `(system* ,(file-append mako "/bin/makoctl") "dismiss")))
-                               (dwl-key
-                                 (modifiers dismiss-all-modifiers)
-                                 (key dismiss-all-key)
-                                 (action `(system* ,(file-append mako "/bin/makoctl") "dismiss" "--all"))))
-                             (dwl-config-keys (home-dwl-guile-configuration-config old-config))))))))
-                 '())))
+                 'add-mako-dwl-keybindings
+                 home-dwl-guile-service-type
+                 (modify-dwl-guile-config
+                   (config =>
+                           (dwl-config
+                             (inherit config)
+                             (keys
+                               (append
+                                 (list
+                                   (dwl-key
+                                     (modifiers dismiss-modifiers)
+                                     (key dismiss-key)
+                                     (action `(system* ,(file-append mako "/bin/makoctl")
+                                                       "dismiss")))
+                                   (dwl-key
+                                     (modifiers dismiss-all-modifiers)
+                                     (key dismiss-all-key)
+                                     (action `(system* ,(file-append mako "/bin/makoctl")
+                                                       "dismiss" "--all"))))
+                                 (dwl-config-keys config))))))))))
 
          (feature
            (name 'wayland-mako)

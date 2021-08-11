@@ -17,6 +17,18 @@
 (define-public (pkgs lst)
                (map specification->package lst))
 
+; Helper for removing #<unspecified> from a list.
+; This means that we easily can conditionally add services to the list:
+;
+; @example
+; (list
+;   (simple-service ...)
+;   (simple-service ...)
+;   (when add-keybindings? (simple-service ...)))
+; @end example
+(define-public (make-service-list . services)
+               (filter (lambda (v) (not (unspecified? v))) services))
+
 ; Predicates
 (define-public (dotfile? x)
                (and (string? (car x))
