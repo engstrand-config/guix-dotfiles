@@ -98,6 +98,7 @@
     (feature-obs)
     (feature-wayland-bemenu)
     (feature-wayland-foot)
+    (feature-wayland-mako)
     (feature-wayland-dwl-guile
       #:dwl-guile-configuration
       (home-dwl-guile-configuration

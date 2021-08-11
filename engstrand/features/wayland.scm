@@ -1,14 +1,18 @@
 (define-module (engstrand features wayland)
                #:use-module (rde features)
                #:use-module (rde features predicates)
+               #:use-module (guix gexp)
                #:use-module (gnu services)
+               #:use-module (gnu packages wm)
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages terminals)
                #:use-module (gnu home-services)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
+               #:use-module (dwl-guile utils)
                #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
+               #:use-module (dwl-guile configuration)
                #:export (
                          feature-wayland-dwl-guile
                          feature-wayland-bemenu
@@ -66,18 +70,52 @@
            (name 'wayland-dwl-guile)
            (home-services-getter get-home-services)))
 
-(define* (feature-wayland-mako)
+(define* (feature-wayland-mako
+           #:key
+           (dismiss-key "d")
+           (dismiss-modifiers '(SUPER CTRL))
+           (dismiss-all-key "d")
+           (dismiss-all-modifiers '(SUPER CTRL SHIFT))
+           (add-keybindings? #t))
          "Setup mako, a lightweight notification daemon for Wayland"
+
+         (ensure-pred string? dismiss-key)
+         (ensure-pred string? dismiss-all-key)
+         (ensure-pred list-of-modifiers? dismiss-modifiers)
+         (ensure-pred list-of-modifiers? dismiss-all-modifiers)
+         (ensure-pred boolean? add-keybindings?)
+
+         ; TODO: Allow configuration using Guile.
 
          (define (get-home-services config)
            "Return a list of home services required by mako"
-           (list
-             (simple-service
-               'add-mako-home-packages-to-profile
-               home-profile-service-type
-               (pkgs '("mako" "libnotify")))))
-
-         ; TODO: Allow configuration using Guile.
+           (append
+             (list
+               (simple-service
+                 'add-mako-home-packages-to-profile
+                 home-profile-service-type
+                 (pkgs '("mako" "libnotify"))))
+             (if add-keybindings?
+                 (list
+                   (simple-service
+                     'add-dwl-keybindings
+                     home-dwl-guile-service-type
+                     (lambda (old-config)
+                       (extend-dwl-guile-config
+                         old-config
+                         (keys
+                           (append
+                             (list
+                               (dwl-key
+                                 (modifiers dismiss-modifiers)
+                                 (key dismiss-key)
+                                 (action `(system* ,(file-append mako "/bin/makoctl") "dismiss")))
+                               (dwl-key
+                                 (modifiers dismiss-all-modifiers)
+                                 (key dismiss-all-key)
+                                 (action `(system* ,(file-append mako "/bin/makoctl") "dismiss" "--all"))))
+                             (dwl-config-keys (home-dwl-guile-configuration-config old-config))))))))
+                 '())))
 
          (feature
            (name 'wayland-mako)
