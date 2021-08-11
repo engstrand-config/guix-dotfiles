@@ -7,8 +7,10 @@
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages terminals)
                #:use-module (gnu home-services)
+               #:use-module (gnu home-services shepherd)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
+               #:use-module (engstrand packages wayland)
                #:use-module (dwl-guile utils)
                #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
@@ -18,6 +20,7 @@
                          feature-wayland-bemenu
                          feature-wayland-foot
                          feature-wayland-mako
+                         feature-wayland-wbg
 
                          %engstrand-dwl-guile-patches
                          %engstrand-dwl-guile-config))
@@ -137,6 +140,40 @@
 
          (feature
            (name 'wayland-foot)
+           (home-services-getter get-home-services)))
+
+; TODO: Move to farg?
+; TODO: Copy file at PATH to store and restart shepherd service on change
+(define* (feature-wayland-wbg
+           #:key
+           (path #f))
+         "Setup wbg for setting wallpaper in Wayland compositors."
+
+         (ensure-pred maybe-string? path)
+
+         (define (get-home-services config)
+           "Return a list of home services required by wbg"
+           (make-service-list
+             (simple-service
+               'add-wbg-home-packages-to-profile
+               home-profile-service-type
+               (list wbg))
+             (when path
+               (simple-service
+                 'add-wbg-shepherd-service
+                 home-shepherd-service-type
+                 (list
+                   (shepherd-service
+                     (documentation "Run wbg.")
+                     (provision '(wbg))
+                     (auto-start? #t)
+                     (start
+                       #~(make-forkexec-constructor
+                           (list #$(file-append wbg "/bin/wbg") #$path)))
+                     (stop #~(make-kill-destructor))))))))
+
+         (feature
+           (name 'wayland-wbg)
            (home-services-getter get-home-services)))
 
 (define* (feature-wayland-bemenu
