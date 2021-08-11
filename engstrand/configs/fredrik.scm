@@ -5,7 +5,8 @@
                #:use-module (engstrand utils)
                #:use-module (engstrand configs)
                #:use-module (engstrand features xorg)
-               #:use-module (engstrand features state))
+               #:use-module (engstrand features state)
+               #:use-module (engstrand features wayland))
 
 ; TODO: Remove xorg feature again.
 (define %xorg-amdgpu-config
@@ -39,5 +40,8 @@
                      `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
                        ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
                    (feature-xorg-dwm
-                     #:extra-config (list %xorg-amdgpu-config)))
+                     #:extra-config (list %xorg-amdgpu-config))
+                   (feature-wayland-wbg
+                     #:path (string-append (getenv "HOME")
+                                           "/engstrand-config/wallpapers/default.jpg")))
                  %engstrand-base-features))
