@@ -38,7 +38,6 @@
 
 (define %engstrand-dwl-guile-config
   (dwl-config
-    (terminal '("foot"))
     (natural-scrolling? #t)
     (xkb-rules %engstrand-keyboard-layout)
     (colors
@@ -57,9 +56,6 @@
                                (else (raise "invalid bemenu argument!")))))))
   (string-join (map make-cli-argument lst)))
 
-; TODO: Add this feature AFTER adding all other features, e.g. mako, foot, bemenu, etc.
-;       Doing this means that we can check if certain features are available and
-;       add special configuration (for example keybindings).
 (define* (feature-wayland-dwl-guile
            #:key
            (dwl-guile-configuration (home-dwl-guile-configuration)))
@@ -75,6 +71,7 @@
 
          (feature
            (name 'wayland-dwl-guile)
+           (values `((dwl-guile . #t)))
            (home-services-getter get-home-services)))
 
 (define* (feature-wayland-mako
@@ -102,7 +99,7 @@
                'add-mako-home-packages-to-profile
                home-profile-service-type
                (pkgs '("mako" "libnotify")))
-             (when add-keybindings?
+             (when (and add-keybindings? (get-value 'dwl-guile config))
                (simple-service
                  'add-mako-dwl-keybindings
                  home-dwl-guile-service-type
@@ -129,16 +126,28 @@
            (name 'wayland-mako)
            (home-services-getter get-home-services)))
 
-(define* (feature-wayland-foot)
+; TODO: Move to features/terminals.scm?
+(define* (feature-wayland-foot
+           #:key
+           (set-default-terminal? #t))
          "Setup foot terminal."
 
          (define (get-home-services config)
            "Return a list of home services required by foot."
-           (list
+           (make-service-list
              (simple-service
                'add-foot-home-packages-to-profile
                home-profile-service-type
-               (pkgs '("foot")))))
+               (pkgs '("foot")))
+             (when (and set-default-terminal? (get-value 'dwl-guile config))
+               (simple-service
+                 'set-foot-as-default-terminal
+                 home-dwl-guile-service-type
+                 (modify-dwl-guile-config
+                   (config =>
+                           (dwl-config
+                             (inherit config)
+                             (terminal '("foot")))))))))
 
          ; TODO: Allow configuration using Guile.
 
@@ -148,6 +157,7 @@
 
 ; TODO: Move to farg?
 ; TODO: Copy file at PATH to store and restart shepherd service on change
+; TODO: Service must be restarted after restarting dwl-guile
 (define* (feature-wayland-wbg
            #:key
            (path #f))
@@ -237,7 +247,7 @@
                                             (start 'wlsunset))
                                         #t)))))
                    (stop #~(make-kill-destructor)))))
-             (when add-keybindings?
+             (when (and add-keybindings? (get-value 'dwl-guile config))
                (simple-service
                  'add-wlsunset-dwl-keybindings
                  home-dwl-guile-service-type
@@ -301,7 +311,7 @@
                'add-screenshot-home-packages-to-profile
                home-profile-service-type
                (pkgs '("grim" "slurp" "wl-clipboard")))
-             (when add-keybindings?
+             (when (and add-keybindings? (get-value 'dwl-guile config))
                (simple-service
                  'add-screenshot-dwl-keybindings
                  home-dwl-guile-service-type
@@ -335,16 +345,26 @@
 
 (define* (feature-wayland-bemenu
            #:key
-           (options '()))
+           (options '())
+           (set-default-menu? #t))
          "Setup bemenu."
 
          (define (get-home-services config)
            "Return a list of home services required by bemenu."
-           (list
+           (make-service-list
              (simple-service
                'add-bemenu-home-packages-to-profile
                home-profile-service-type
                (pkgs '("bemenu")))
+             (when (and set-default-menu? (get-value 'dwl-guile config))
+               (simple-service
+                 'set-bemenu-as-default-menu
+                 home-dwl-guile-service-type
+                 (modify-dwl-guile-config
+                   (config =>
+                           (dwl-config
+                             (inherit config)
+                             (menu '("bemenu-run")))))))
 
              ; TODO: Convert options list into a configuration
              ;       and automatically transform when enabling feature.
