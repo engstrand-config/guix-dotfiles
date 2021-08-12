@@ -99,6 +99,7 @@
     (feature-wayland-bemenu)
     (feature-wayland-foot)
     (feature-wayland-mako)
+    (feature-wayland-wlsunset)
     (feature-wayland-dwl-guile
       #:dwl-guile-configuration
       (home-dwl-guile-configuration
