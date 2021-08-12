@@ -17,6 +17,7 @@
                #:use-module (engstrand features state)
                #:use-module (engstrand features shells)
                #:use-module (engstrand features wayland)
+               #:use-module (engstrand features browsers)
                #:export (
                          %engstrand-base-system-packages
                          %engstrand-base-home-packages
@@ -98,6 +99,7 @@
     (feature-mpv)
     (feature-obs)
     (feature-imv)
+    (feature-firefox)
     (feature-wayland-bemenu)
     (feature-wayland-foot)
     (feature-wayland-mako)
