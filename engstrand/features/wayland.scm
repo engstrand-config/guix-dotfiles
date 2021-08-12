@@ -4,6 +4,7 @@
                #:use-module (guix gexp)
                #:use-module (gnu services)
                #:use-module (gnu packages wm)
+               #:use-module (gnu packages admin)
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages terminals)
                #:use-module (gnu home-services)
@@ -21,6 +22,7 @@
                          feature-wayland-foot
                          feature-wayland-mako
                          feature-wayland-wbg
+                         feature-wayland-wlsunset
 
                          %engstrand-dwl-guile-patches
                          %engstrand-dwl-guile-config))
@@ -174,6 +176,86 @@
 
          (feature
            (name 'wayland-wbg)
+           (home-services-getter get-home-services)))
+
+(define* (feature-wayland-wlsunset
+           #:key
+           (toggle-key "End")
+           (toggle-modifiers '(SUPER))
+           (latitude 59.8)
+           (longitude 17.6)
+           (gamma-low 2000)
+           (gamma-high 6500)
+           (add-keybindings? #t))
+         "Setup wlsunset for adjusting day/night gamma for Wayland compositors."
+
+         (ensure-pred keycode? toggle-key)
+         (ensure-pred number? latitude)
+         (ensure-pred number? longitude)
+         (ensure-pred number? gamma-low)
+         (ensure-pred number? gamma-high)
+         (ensure-pred list-of-modifiers? toggle-modifiers)
+         (ensure-pred boolean? add-keybindings?)
+
+         (define (get-home-services config)
+           "Return a list of home services required by wlsunset"
+           ; (make-service-list
+           (make-service-list
+             (simple-service
+               'add-wlsunset-home-packages-to-profile
+               home-profile-service-type
+               (list wlsunset))
+             (simple-service
+               'add-wlsunset-shepherd-service
+               home-shepherd-service-type
+               (list
+                 (shepherd-service
+                   (documentation "Run wlsunset.")
+                   (provision '(wlsunset))
+                   (auto-start? #t)
+                   (start
+                     #~(make-forkexec-constructor
+                         (list
+                           #$(file-append wlsunset "/bin/wlsunset")
+                           ; TODO: For some reason, you can not start the service if
+                           ;       you do not use string-append. I.e. "-l" #$latitude.
+                           ;       It works like this, but it is not the cleanest of solutions.
+                           #$(string-append "-l" (number->string latitude))
+                           #$(string-append "-L" (number->string longitude))
+                           #$(string-append "-t" (number->string gamma-low))
+                           #$(string-append "-T" (number->string gamma-high)))))
+                   (actions
+                     (list
+                       (shepherd-action
+                         (name 'toggle)
+                         (documentation "Toggles the wlsunset service on/off.")
+                         (procedure #~(lambda (running?)
+                                        (if running?
+                                            (stop 'wlsunset)
+                                            (start 'wlsunset))
+                                        #t)))))
+                   (stop #~(make-kill-destructor)))))
+             (when add-keybindings?
+               (simple-service
+                 'add-wlsunset-dwl-keybindings
+                 home-dwl-guile-service-type
+                 (modify-dwl-guile-config
+                   (config =>
+                           (dwl-config
+                             (inherit config)
+                             (keys
+                               (append
+                                 (list
+                                   (dwl-key
+                                     (modifiers toggle-modifiers)
+                                     (key toggle-key)
+                                     (action `(system* ,(file-append shepherd "/bin/herd")
+                                                       "toggle"
+                                                       "wlsunset"))))
+                                 (dwl-config-keys config))))))))))
+
+         (feature
+           (name 'wayland-wlsunset)
            (home-services-getter get-home-services)))
 
 (define* (feature-wayland-bemenu
