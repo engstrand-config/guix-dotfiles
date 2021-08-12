@@ -13,7 +13,7 @@
   (channel
     (name 'engstrand-config)
     (url "https://github.com/engstrand-config/guix-dotfiles")
-    (branch "channel")
+    (branch "main")
     (introduction
       (make-channel-introduction
         "005c42a980c895e0853b821494534d67c7b85e91"
