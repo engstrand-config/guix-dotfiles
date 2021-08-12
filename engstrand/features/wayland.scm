@@ -2,6 +2,7 @@
                #:use-module (rde features)
                #:use-module (rde features predicates)
                #:use-module (guix gexp)
+               #:use-module (srfi srfi-1)
                #:use-module (gnu services)
                #:use-module (gnu packages wm)
                #:use-module (gnu packages image)
@@ -138,7 +139,7 @@
              (simple-service
                'add-foot-home-packages-to-profile
                home-profile-service-type
-               (pkgs '("foot")))
+               (list foot))
              (when (and set-default-terminal? (get-value 'dwl-guile config))
                (simple-service
                  'set-foot-as-default-terminal
@@ -147,7 +148,7 @@
                    (config =>
                            (dwl-config
                              (inherit config)
-                             (terminal '("foot")))))))))
+                             (terminal `(,(file-append foot "/bin/foot"))))))))))
 
          ; TODO: Allow configuration using Guile.
 
@@ -296,13 +297,23 @@
          (ensure-pred boolean? add-keybindings?)
 
          (define %grim-command
-           (format #f "grim -t ~a -q ~s ~@[~a~]"
-                   output-filetype
-                   output-quality
-                   (if include-cursors? "-c" #f)))
+           `(,(file-append grim "/bin/grim")
+              ,(if include-cursors? "-c" "")
+              "-t" ,output-filetype
+              "-q" ,(number->string output-quality)))
 
-         (define %grim-select-options "-g \"$(slurp)\"")
-         (define %grim-pipe-to-clipboard "- | wl-copy")
+         (define %grim-select-options
+           `("-g" "\"$(" ,(file-append slurp "/bin/slurp" ")\"")))
+
+         (define %grim-pipe-to-clipboard
+           `("-" "|" ,(file-append wl-clipboard "/bin/wl-copy")))
+
+         ; TODO: Cleanup this mess. A simple solution is to just use the executable name directly.
+         ;       Another (better) solution is to allow multiple arguments to dwl:shcmd.
+         ;       dwl:spawn does support n amount of arguments, but since shcmd runs the command
+         ;       in a shell context ("/bin/sh" "-c" <args>), the last argument must be a single string.
+         (define (make-screenshot-shcmd . params)
+           `(dwl:shcmd (string-join (list ,@(fold-right append '() (cons %grim-command params))))))
 
          (define (get-home-services config)
            "Return a list of home services required for screenshots."
@@ -325,18 +336,16 @@
                                    (dwl-key
                                      (modifiers screenshot-output-modifiers)
                                      (key screenshot-output-key)
-                                     (action `(dwl:shcmd ,%grim-command)))
+                                     (action (make-screenshot-shcmd)))
                                    (dwl-key
                                      (modifiers screenshot-select-modifiers)
                                      (key screenshot-select-key)
-                                     (action `(dwl:shcmd ,(string-join (list %grim-command
-                                                                             %grim-select-options)))))
+                                     (action (make-screenshot-shcmd %grim-select-options)))
                                    (dwl-key
                                      (modifiers screenshot-select-copy-modifiers)
                                      (key screenshot-select-copy-key)
-                                     (action `(dwl:shcmd ,(string-join (list %grim-command
-                                                                             %grim-select-options
-                                                                             %grim-pipe-to-clipboard))))))
+                                     (action (make-screenshot-shcmd %grim-select-options
+                                                                    %grim-pipe-to-clipboard))))
                                  (dwl-config-keys config))))))))))
 
          (feature
@@ -355,7 +364,7 @@
              (simple-service
                'add-bemenu-home-packages-to-profile
                home-profile-service-type
-               (pkgs '("bemenu")))
+               (list bemenu))
              (when (and set-default-menu? (get-value 'dwl-guile config))
                (simple-service
                  'set-bemenu-as-default-menu
@@ -364,7 +373,7 @@
                    (config =>
                            (dwl-config
                              (inherit config)
-                             (menu '("bemenu-run")))))))
+                             (menu `(,(file-append bemenu "/bin/bemenu-run"))))))))
 
              ; TODO: Convert options list into a configuration
              ;       and automatically transform when enabling feature.
