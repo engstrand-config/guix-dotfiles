@@ -4,6 +4,7 @@
                #:use-module (guix gexp)
                #:use-module (gnu services)
                #:use-module (gnu packages wm)
+               #:use-module (gnu packages image)
                #:use-module (gnu packages admin)
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages terminals)
@@ -23,6 +24,7 @@
                          feature-wayland-mako
                          feature-wayland-wbg
                          feature-wayland-wlsunset
+                         feature-wayland-screenshot
 
                          %engstrand-dwl-guile-patches
                          %engstrand-dwl-guile-config))
@@ -256,6 +258,79 @@
 
          (feature
            (name 'wayland-wlsunset)
+           (home-services-getter get-home-services)))
+
+(define* (feature-wayland-screenshot
+           #:key
+           (output-filetype "jpeg")
+           (output-quality 100)
+           (include-cursors? #f)
+           (screenshot-output-key "Print")
+           (screenshot-output-modifiers '())
+           (screenshot-select-key "Print")
+           (screenshot-select-modifiers '(SUPER))
+           (screenshot-select-copy-key "Print")
+           (screenshot-select-copy-modifiers '(SUPER SHIFT))
+           (add-keybindings? #t))
+         "Setup grim, slurp and wl-clipboard for taking screenshots in Wayland compositors."
+
+         (ensure-pred string? output-filetype)
+         (ensure-pred number? output-quality)
+         (ensure-pred boolean? include-cursors?)
+         (ensure-pred keycode? screenshot-output-key)
+         (ensure-pred keycode? screenshot-select-key)
+         (ensure-pred keycode? screenshot-select-copy-key)
+         (ensure-pred list-of-modifiers? screenshot-output-modifiers)
+         (ensure-pred list-of-modifiers? screenshot-select-modifiers)
+         (ensure-pred list-of-modifiers? screenshot-select-copy-modifiers)
+         (ensure-pred boolean? add-keybindings?)
+
+         (define %grim-command
+           (format #f "grim -t ~a -q ~s ~@[~a~]"
+                   output-filetype
+                   output-quality
+                   (if include-cursors? "-c" #f)))
+
+         (define %grim-select-options "-g \"$(slurp)\"")
+         (define %grim-pipe-to-clipboard "- | wl-copy")
+
+         (define (get-home-services config)
+           "Return a list of home services required for screenshots."
+           (make-service-list
+             (simple-service
+               'add-screenshot-home-packages-to-profile
+               home-profile-service-type
+               (pkgs '("grim" "slurp" "wl-clipboard")))
+             (when add-keybindings?
+               (simple-service
+                 'add-screenshot-dwl-keybindings
+                 home-dwl-guile-service-type
+                 (modify-dwl-guile-config
+                   (config =>
+                           (dwl-config
+                             (inherit config)
+                             (keys
+                               (append
+                                 (list
+                                   (dwl-key
+                                     (modifiers screenshot-output-modifiers)
+                                     (key screenshot-output-key)
+                                     (action `(dwl:shcmd ,%grim-command)))
+                                   (dwl-key
+                                     (modifiers screenshot-select-modifiers)
+                                     (key screenshot-select-key)
+                                     (action `(dwl:shcmd ,(string-join (list %grim-command
+                                                                             %grim-select-options)))))
+                                   (dwl-key
+                                     (modifiers screenshot-select-copy-modifiers)
+                                     (key screenshot-select-copy-key)
+                                     (action `(dwl:shcmd ,(string-join (list %grim-command
+                                                                             %grim-select-options
+                                                                             %grim-pipe-to-clipboard))))))
+                                 (dwl-config-keys config))))))))))
+
+         (feature
+           (name 'wayland-screenshots)
            (home-services-getter get-home-services)))
 
 (define* (feature-wayland-bemenu
