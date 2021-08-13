@@ -10,6 +10,7 @@
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages terminals)
                #:use-module (gnu home-services)
+               #:use-module (gnu home-services files)
                #:use-module (gnu home-services shepherd)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
@@ -155,6 +156,11 @@
                  'add-foot-home-packages-to-profile
                  home-profile-service-type
                  (list foot))
+               ; TODO: Allow configuration using Guile.
+               (simple-service
+                 'create-foot-config
+                 home-files-service-type
+                 `(("config/foot/foot.ini" ,(local-file "../files/foot.ini"))))
                (when (and set-default-terminal? has-dwl-guile?)
                  (simple-service
                    'set-foot-as-default-terminal
@@ -179,8 +185,6 @@
                                        (id "foot")
                                        (alpha window-alpha)))
                                    (dwl-config-rules config)))))))))))
-
-         ; TODO: Allow configuration using Guile.
 
          (feature
            (name 'wayland-foot)
