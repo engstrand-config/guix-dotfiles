@@ -57,6 +57,26 @@ bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 bindkey '^e' edit-command-line
 
+# Add support for OSC 7 escape sequence.
+# This is used to spawn new terminals with the same working directory in foot.
+function _urlencode() {
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:$i:1}"
+        case $c in
+            %) printf '%%%02X' "'$c" ;;
+            *) printf "%s" "$c" ;;
+        esac
+    done
+}
+
+function osc7_cwd() {
+    printf '\e]7;file://%s%s\e\\' "$HOSTNAME" "$(_urlencode "$PWD")"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook -Uz chpwd osc7_cwd
+
 # Change cursor shape for different vi modes.
 function zle-keymap-select() {
     case $KEYMAP in
