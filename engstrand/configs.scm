@@ -1,5 +1,6 @@
 (define-module (engstrand configs)
                #:use-module (guix gexp)
+               #:use-module (gnu packages fonts)
                #:use-module (rde features)
                #:use-module (rde features xdg)
                #:use-module (rde features ssh)
@@ -57,6 +58,9 @@
     (feature-base-services)
     (feature-desktop-services)
     (feature-switch-to-tty-on-boot)
+    ; TODO: Move to systems/*.scm?
+    (feature-hidpi
+      #:console-font (file-append font-terminus "/share/consolefonts/ter-120b"))
     (feature-git
       #:sign-commits? #t)
     (feature-fonts)
