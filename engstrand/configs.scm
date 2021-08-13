@@ -12,6 +12,7 @@
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
                #:use-module (engstrand features nix)
+               #:use-module (engstrand features base)
                #:use-module (engstrand features utils)
                #:use-module (engstrand features video)
                #:use-module (engstrand features state)
@@ -55,6 +56,7 @@
   (list
     (feature-base-services)
     (feature-desktop-services)
+    (feature-switch-to-tty-on-boot)
     (feature-git
       #:sign-commits? #t)
     (feature-fonts)
