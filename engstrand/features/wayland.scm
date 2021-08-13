@@ -57,6 +57,15 @@
                                (else (raise "invalid bemenu argument!")))))))
   (string-join (map make-cli-argument lst)))
 
+; Checks if SYMBOL corresponds to a patch that is/will
+; be applied to dwl-guile, based on the feature values in CONFIG.
+; SYMBOL should be the name of the patch, not including the ".patch" extension.
+; I.e. @code{(has-dwl-patch? 'xwayland config)}.
+(define (has-dwl-patch? symbol config)
+  (let ((patch-name (string-append (symbol->string 'attachabove) ".patch")))
+    (find (lambda (p) (equal? patch-name (local-file-name p)))
+          (get-value 'dwl-guile-patches config))))
+
 (define* (feature-wayland-dwl-guile
            #:key
            (dwl-guile-configuration (home-dwl-guile-configuration)))
@@ -72,7 +81,9 @@
 
          (feature
            (name 'wayland-dwl-guile)
-           (values `((dwl-guile . #t)))
+           (values `((dwl-guile . #t)
+                     (dwl-guile-patches
+                       . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
            (home-services-getter get-home-services)))
 
 (define* (feature-wayland-mako
@@ -129,25 +140,45 @@
 ; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
            #:key
-           (set-default-terminal? #t))
+           (set-default-terminal? #t)
+           (window-alpha 0.9))
          "Setup foot terminal."
+
+         (ensure-pred boolean? set-default-terminal?)
+         (ensure-pred number? window-alpha)
 
          (define (get-home-services config)
            "Return a list of home services required by foot."
-           (make-service-list
-             (simple-service
-               'add-foot-home-packages-to-profile
-               home-profile-service-type
-               (list foot))
-             (when (and set-default-terminal? (get-value 'dwl-guile config))
+           (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+             (make-service-list
                (simple-service
-                 'set-foot-as-default-terminal
-                 home-dwl-guile-service-type
-                 (modify-dwl-guile-config
-                   (config =>
-                           (dwl-config
-                             (inherit config)
-                             (terminal `(,(file-append foot "/bin/foot"))))))))))
+                 'add-foot-home-packages-to-profile
+                 home-profile-service-type
+                 (list foot))
+               (when (and set-default-terminal? has-dwl-guile?)
+                 (simple-service
+                   'set-foot-as-default-terminal
+                   home-dwl-guile-service-type
+                   (modify-dwl-guile-config
+                     (config =>
+                             (dwl-config
+                               (inherit config)
+                               (terminal `(,(file-append foot "/bin/foot"))))))))
+               (when (and has-dwl-guile? (has-dwl-patch? 'alpha config))
+                 (simple-service
+                   'set-foot-window-alpha
+                   home-dwl-guile-service-type
+                   (modify-dwl-guile-config
+                     (config =>
+                             (dwl-config
+                               (inherit config)
+                               (rules
+                                 (append
+                                   (list
+                                     (dwl-rule
+                                       (id "foot")
+                                       (alpha window-alpha)))
+                                   (dwl-config-rules config)))))))))))
 
          ; TODO: Allow configuration using Guile.
 
