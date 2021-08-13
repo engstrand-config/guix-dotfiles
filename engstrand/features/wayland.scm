@@ -94,7 +94,6 @@
 
          (define (get-home-services config)
            "Return a list of home services required by mako"
-           ; (make-service-list
            (make-service-list
              (simple-service
                'add-mako-home-packages-to-profile
@@ -158,7 +157,6 @@
 
 ; TODO: Move to farg?
 ; TODO: Copy file at PATH to store and restart shepherd service on change
-; TODO: Service must be restarted after restarting dwl-guile
 (define* (feature-wayland-wbg
            #:key
            (path #f))
@@ -168,24 +166,47 @@
 
          (define (get-home-services config)
            "Return a list of home services required by wbg"
-           (make-service-list
-             (simple-service
-               'add-wbg-home-packages-to-profile
-               home-profile-service-type
-               (list wbg))
-             (when path
+           (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+             (make-service-list
                (simple-service
-                 'add-wbg-shepherd-service
-                 home-shepherd-service-type
-                 (list
-                   (shepherd-service
-                     (documentation "Run wbg.")
-                     (provision '(wbg))
-                     (auto-start? #t)
-                     (start
-                       #~(make-forkexec-constructor
-                           (list #$(file-append wbg "/bin/wbg") #$path)))
-                     (stop #~(make-kill-destructor))))))))
+                 'add-wbg-home-packages-to-profile
+                 home-profile-service-type
+                 (list wbg))
+               (when path
+                 (simple-service
+                   'add-wbg-shepherd-service
+                   home-shepherd-service-type
+                   (list
+                     (shepherd-service
+                       (documentation "Run wbg.")
+                       (provision '(wbg))
+                       (requirement (if has-dwl-guile? '(dwl-guile) '()))
+                       (auto-start? #f)
+                       (respawn? #f)
+                       (start
+                         #~(make-forkexec-constructor
+                             (list #$(file-append wbg "/bin/wbg") #$path)))
+                       (stop #~(make-kill-destructor))))))
+               (when has-dwl-guile?
+                 (simple-service
+                   'start-wbg-on-dwl-guile-startup
+                   home-dwl-guile-service-type
+                   (modify-dwl-guile
+                     (config =>
+                             (home-dwl-guile-configuration
+                               (inherit config)
+                               (startup-commands
+                                 (cons
+                                   #~(begin
+                                       ; TODO: Figure out why the service is disabled after restarting dwl-guile.
+                                       ;       A shepherd service will automatically be disabled if it respawns
+                                       ;       and exists too frequently during a certain time period.
+                                       ;       I do not understand why this would happen though, since both auto-start?
+                                       ;       and respawn? has been set to false. I have also noticied that
+                                       ;       it usually works if you use start/stop rather than restart on dwl-guile.
+                                       (system* #$(file-append shepherd "/bin/herd") "enable" "wbg")
+                                       (system* #$(file-append shepherd "/bin/herd") "start" "wbg"))
+                                   (home-dwl-guile-configuration-startup-commands config)))))))))))
 
          (feature
            (name 'wayland-wbg)
@@ -212,60 +233,73 @@
 
          (define (get-home-services config)
            "Return a list of home services required by wlsunset"
-           ; (make-service-list
-           (make-service-list
-             (simple-service
-               'add-wlsunset-home-packages-to-profile
-               home-profile-service-type
-               (list wlsunset))
-             (simple-service
-               'add-wlsunset-shepherd-service
-               home-shepherd-service-type
-               (list
-                 (shepherd-service
-                   (documentation "Run wlsunset.")
-                   (provision '(wlsunset))
-                   (auto-start? #t)
-                   (start
-                     #~(make-forkexec-constructor
-                         (list
-                           #$(file-append wlsunset "/bin/wlsunset")
-                           ; TODO: For some reason, you can not start the service if
-                           ;       you do not use string-append. I.e. "-l" #$latitude.
-                           ;       It works like this, but it is not the cleanest of solutions.
-                           #$(string-append "-l" (number->string latitude))
-                           #$(string-append "-L" (number->string longitude))
-                           #$(string-append "-t" (number->string gamma-low))
-                           #$(string-append "-T" (number->string gamma-high)))))
-                   (actions
-                     (list
-                       (shepherd-action
-                         (name 'toggle)
-                         (documentation "Toggles the wlsunset service on/off.")
-                         (procedure #~(lambda (running?)
-                                        (if running?
-                                            (stop 'wlsunset)
-                                            (start 'wlsunset))
-                                        #t)))))
-                   (stop #~(make-kill-destructor)))))
-             (when (and add-keybindings? (get-value 'dwl-guile config))
+           (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+             (make-service-list
                (simple-service
-                 'add-wlsunset-dwl-keybindings
-                 home-dwl-guile-service-type
-                 (modify-dwl-guile-config
-                   (config =>
-                           (dwl-config
-                             (inherit config)
-                             (keys
-                               (append
-                                 (list
-                                   (dwl-key
-                                     (modifiers toggle-modifiers)
-                                     (key toggle-key)
-                                     (action `(system* ,(file-append shepherd "/bin/herd")
-                                                       "toggle"
-                                                       "wlsunset"))))
-                                 (dwl-config-keys config))))))))))
+                 'add-wlsunset-home-packages-to-profile
+                 home-profile-service-type
+                 (list wlsunset))
+               (simple-service
+                 'add-wlsunset-shepherd-service
+                 home-shepherd-service-type
+                 (list
+                   (shepherd-service
+                     (documentation "Run wlsunset.")
+                     (provision '(wlsunset))
+                     (requirement (if has-dwl-guile? '(dwl-guile) '()))
+                     (auto-start? #f)
+                     (respawn? #f)
+                     (start
+                       #~(make-forkexec-constructor
+                           (list
+                             #$(file-append wlsunset "/bin/wlsunset")
+                             #$(string-append "-l" (number->string latitude))
+                             #$(string-append "-L" (number->string longitude))
+                             #$(string-append "-t" (number->string gamma-low))
+                             #$(string-append "-T" (number->string gamma-high)))))
+                     (actions
+                       (list
+                         (shepherd-action
+                           (name 'toggle)
+                           (documentation "Toggles the wlsunset service on/off.")
+                           (procedure #~(lambda (running?)
+                                          (if running?
+                                              (stop 'wlsunset)
+                                              (start 'wlsunset))
+                                          #t)))))
+                     (stop #~(make-kill-destructor)))))
+               (when (and add-keybindings? has-dwl-guile?)
+                 (simple-service
+                   'add-wlsunset-dwl-keybindings
+                   home-dwl-guile-service-type
+                   (modify-dwl-guile-config
+                     (config =>
+                             (dwl-config
+                               (inherit config)
+                               (keys
+                                 (append
+                                   (list
+                                     (dwl-key
+                                       (modifiers toggle-modifiers)
+                                       (key toggle-key)
+                                       (action `(system* ,(file-append shepherd "/bin/herd")
+                                                         "toggle"
+                                                         "wlsunset"))))
+                                   (dwl-config-keys config))))))))
+               (when has-dwl-guile?
+                 (simple-service
+                   'start-wlsunset-on-dwl-guile-startup
+                   home-dwl-guile-service-type
+                   (modify-dwl-guile
+                     (config =>
+                             (home-dwl-guile-configuration
+                               (inherit config)
+                               (startup-commands
+                                 (cons
+                                   #~(begin
+                                       (system* #$(file-append shepherd "/bin/herd") "enable" "wlsunset")
+                                       (system* #$(file-append shepherd "/bin/herd") "start" "wlsunset"))
+                                   (home-dwl-guile-configuration-startup-commands config)))))))))))
 
          (feature
            (name 'wayland-wlsunset)
