@@ -9,9 +9,9 @@
 
 (define* (feature-tlp
            #:key
-           (config (tlp-configuration
-                     (cpu-scaling-governor-on-ac (list "performance"))
-                     (sched-powersave-on-bat? #t))))
+           (tlp-config (tlp-configuration
+                         (cpu-scaling-governor-on-ac (list "performance"))
+                         (sched-powersave-on-bat? #t))))
          "Setup TLP for power management on laptops."
 
          (define (get-system-services config)
@@ -21,7 +21,8 @@
                'add-tlp-system-packages-to-profile
                profile-service-type
                (pkgs '("tlp")))
-             (service tlp-service-type config)))
+             (service tlp-service-type
+                      tlp-config)))
 
          (feature
            (name 'tlp)
