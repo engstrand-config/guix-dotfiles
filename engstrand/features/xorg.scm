@@ -31,6 +31,18 @@
   EndSection
   ")
 
+; TODO: This can be a general purpose config for amdgpu.
+;       The backlight option should probably be removed, though.
+;       Consider adding a keyword to feature-xorg-dwm to automatically
+;       add the driver config.
+(define %xorg-amdgpu-config
+  "Section \"Device\"
+  Identifier  \"AMD\"
+  Driver      \"amdgpu\"
+  Option      \"TearFree\" \"true\"
+  Option      \"Backlight\" \"amdgpu_bl0\"
+  EndSection")
+
 (define %base-xorg-dwm-system-packages
   (list chili-sddm-theme engstrand-dwm))
 

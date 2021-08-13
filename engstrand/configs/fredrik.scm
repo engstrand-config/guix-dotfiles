@@ -4,19 +4,9 @@
                #:use-module (rde features gnupg)
                #:use-module (engstrand utils)
                #:use-module (engstrand configs)
-               #:use-module (engstrand features xorg)
                #:use-module (engstrand features state)
                #:use-module (engstrand features browsers)
                #:use-module (engstrand features wayland))
-
-; TODO: Remove xorg feature again.
-(define %xorg-amdgpu-config
-  "Section \"Device\"
-  Identifier  \"AMD\"
-  Driver      \"amdgpu\"
-  Option      \"TearFree\" \"true\"
-  Option      \"Backlight\" \"amdgpu_bl0\"
-  EndSection")
 
 (define-public %user-features
                (append
@@ -40,8 +30,6 @@
                      #:repos
                      `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
                        ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
-                   (feature-xorg-dwm
-                     #:extra-config (list %xorg-amdgpu-config))
                    (feature-qutebrowser)
                    (feature-wayland-wbg
                      #:path (string-append (getenv "HOME")
