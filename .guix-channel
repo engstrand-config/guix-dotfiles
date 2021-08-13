@@ -18,8 +18,8 @@
      (commit "33f86a4b48205c0dc19d7c036c85393f0766f806")
      (signer "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
   (channel
-   (name home-dwl-service)
-   (url "https://github.com/engstrand-config/home-dwl-service")
+   (name home-service-dwl-guile)
+   (url "https://github.com/engstrand-config/home-service-dwl-guile")
    (branch "main")
    (introduction
     (channel-introduction
