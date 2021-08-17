@@ -4,8 +4,32 @@
                #:use-module (gnu services)
                #:use-module (gnu services pm)
                #:use-module (gnu packages linux)
+               #:use-module (dwl-guile home-service)
                #:use-module (engstrand utils)
-               #:export (feature-tlp))
+               #:export (
+                         feature-tlp
+                         feature-laptop))
+
+(define* (feature-laptop)
+         "Setup general laptop functionality and configuration."
+
+         (define (get-home-services config)
+           "Return a list of home services required for laptops."
+           (make-service-list
+             (when (get-value 'dwl-guile config)
+               (simple-service
+                 'set-natural-scrolling-in-dwl-guile
+                 home-dwl-guile-service-type
+                 (modify-dwl-guile-config
+                   (config =>
+                           (dwl-config
+                             (inherit config)
+                             (natural-scrolling? #t))))))))
+
+         (feature
+           (name 'laptop)
+           (values `((laptop . #t)))
+           (home-services-getter get-home-services)))
 
 (define* (feature-tlp
            #:key
