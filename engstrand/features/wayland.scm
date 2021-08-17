@@ -40,7 +40,6 @@
 
 (define %engstrand-dwl-guile-config
   (dwl-config
-    (natural-scrolling? #t)
     (xkb-rules %engstrand-keyboard-layout)
     (colors
       (dwl-colors
