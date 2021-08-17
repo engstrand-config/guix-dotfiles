@@ -20,7 +20,7 @@
 ;; Generate a bootable image (e.g. for USB sticks, etc.) with:
 ;; $ guix system image -t iso9660 installer.scm
 
-(define-module (nongnu system install)
+(define-module (engstrand installer)
   #:use-module (gnu services)
   #:use-module (gnu system)
   #:use-module (gnu system install)
