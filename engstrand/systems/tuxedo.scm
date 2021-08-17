@@ -53,4 +53,5 @@
                        (device
                          (uuid "4484aa6c-d5ff-4964-b62d-c2572c701e66" 'ext4))
                        (type "ext4"))))
+                 (feature-laptop)
                  (feature-tlp)))

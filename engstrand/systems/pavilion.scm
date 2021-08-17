@@ -28,4 +28,5 @@
                          (uuid "6c3ee1c8-6ee6-4142-b2bf-a370854f63e7"
                                'ext4))
                        (type "ext4"))))
+                 (feature-laptop)
                  (feature-tlp)))
