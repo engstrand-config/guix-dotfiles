@@ -8,6 +8,7 @@
                #:use-module (gnu packages man)
                #:use-module (gnu packages image)
                #:use-module (gnu packages xdisorg)
+               #:use-module (gnu packages terminals)
                #:use-module (gnu packages pkg-config)
                #:use-module (gnu packages build-tools)
                #:use-module (gnu packages freedesktop)
@@ -76,3 +77,16 @@
                  (synopsis "Day/night gamma adjustments for Wayland compositors")
                  (description "Day/night gamma adjustments for Wayland compositors
                               supporting wlr-gamma-control-unstable-v1.")))
+
+(define-public foot-1.8.2
+               (package
+                 (inherit foot)
+                 (version "1.8.2")
+                 (source
+                   (origin
+                     (method git-fetch)
+                     (uri (git-reference (url (package-home-page foot)) (commit version)))
+                     (file-name (git-file-name (package-name foot) version))
+                     (sha256
+                       (base32
+                         "1k0alz991cslls4926c5gq02pdq0vfw9jfpprh2a1vb59xgikv7h"))))))
