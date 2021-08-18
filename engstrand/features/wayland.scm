@@ -139,10 +139,12 @@
 ; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
            #:key
+           (package foot-1.8.2)
            (set-default-terminal? #t)
            (window-alpha 0.9))
          "Setup foot terminal."
 
+         (ensure-pred package? package)
          (ensure-pred boolean? set-default-terminal?)
          (ensure-pred number? window-alpha)
 
@@ -153,7 +155,7 @@
                (simple-service
                  'add-foot-home-packages-to-profile
                  home-profile-service-type
-                 (list foot))
+                 (list package))
                ; TODO: Allow configuration using Guile.
                (simple-service
                  'create-foot-config
@@ -167,7 +169,7 @@
                      (config =>
                              (dwl-config
                                (inherit config)
-                               (terminal `(,(file-append foot "/bin/foot"))))))))
+                               (terminal `(,(file-append package "/bin/foot"))))))))
                (when (and has-dwl-guile? (has-dwl-patch? 'alpha config))
                  (simple-service
                    'set-foot-window-alpha
