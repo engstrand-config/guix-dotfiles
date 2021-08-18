@@ -34,11 +34,8 @@
 (define %engstrand-dwl-guile-patches
   (list %patch-xwayland
         %patch-alpha
-        %patch-focusmon
-        %patch-vanitygaps))
-        ; This patch does not support multiple monitors.
-        ; The question is, should we update the patch or just skip it?
-        ; %patch-attachabove))
+        %patch-vanitygaps
+        %patch-attachabove))
 
 (define %engstrand-dwl-guile-config
   (dwl-config
