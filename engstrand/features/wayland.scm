@@ -62,7 +62,7 @@
 ; SYMBOL should be the name of the patch, not including the ".patch" extension.
 ; I.e. @code{(has-dwl-patch? 'xwayland config)}.
 (define (has-dwl-patch? symbol config)
-  (let ((patch-name (string-append (symbol->string 'attachabove) ".patch")))
+  (let ((patch-name (string-append (symbol->string symbol) ".patch")))
     (find (lambda (p) (equal? patch-name (local-file-name p)))
           (get-value 'dwl-guile-patches config))))
 
