@@ -40,7 +40,7 @@
          ; If this is the case, we must extend the initial os to make sure
          ; that it is included in the system configuration.
          (define %initial-os
-           (if (null? %system-swap)
+           (if (or (unspecified? %system-swap) (null? %system-swap))
                initial-os
                (operating-system
                  (inherit initial-os)
