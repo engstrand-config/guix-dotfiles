@@ -15,6 +15,7 @@
                    #:host-name "pavilion"
                    #:timezone %engstrand-timezone
                    #:locale %engstrand-locale)
+		 (feature-bootloader)
                  (feature-file-systems
                    #:file-systems
                    (list

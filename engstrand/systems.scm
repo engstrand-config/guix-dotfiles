@@ -55,5 +55,4 @@
 (define-public %engstrand-system-base-features
                (list
                  (feature-keyboard
-                   #:keyboard-layout %engstrand-keyboard-layout)
-                 (feature-bootloader)))
+                   #:keyboard-layout %engstrand-keyboard-layout)))
