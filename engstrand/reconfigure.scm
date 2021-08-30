@@ -3,6 +3,7 @@
                #:use-module (ice-9 exceptions)
                #:use-module (ice-9 pretty-print)
                #:use-module (gnu system)
+               #:use-module (gnu system accounts)
                #:use-module (rde features)
                #:use-module (rde features predicates)
                #:use-module (engstrand systems)
@@ -60,7 +61,18 @@
            (rde-config-home-environment %generated-config))
 
          (define %engstrand-system
-           (rde-config-operating-system %generated-config))
+           (let ((os (rde-config-operating-system %generated-config)))
+             (operating-system
+               (inherit os)
+               (users
+                 (map
+                   (lambda (user)
+                     (user-account
+                       (inherit user)
+                       (supplementary-groups
+                         ; Temporary hack to allow user to run VMs
+                         '("wheel" "netdev" "audio" "video" "libvirt" "kvm"))))
+                   (operating-system-users os))))))
 
          (match target
                 ("home" %engstrand-he)
