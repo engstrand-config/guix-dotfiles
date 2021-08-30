@@ -14,6 +14,7 @@
                    #:host-name "p400s"
                    #:timezone %engstrand-timezone
                    #:locale %engstrand-locale)
+		 (feature-bootloader)
                  (feature-file-systems
                    #:file-systems
                    (list (file-system
