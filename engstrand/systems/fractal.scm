@@ -27,7 +27,7 @@
                    #:bootloader-configuration
                    (bootloader-configuration
                      (bootloader grub-efi-bootloader)
-                     (target "/boot/efi")
+                     (targets '("/boot/efi"))
                      (keyboard-layout %engstrand-keyboard-layout)))
                  (feature-file-systems
                    #:mapped-devices %mapped-devices

@@ -48,7 +48,7 @@
                  (keyboard-layout %engstrand-keyboard-layout)
                  (bootloader (bootloader-configuration
                                (bootloader grub-efi-bootloader)
-                               (target "/boot/efi")))
+                               (targets '("/boot/efi"))))
                  (services '())
                  (file-systems %base-file-systems)
                  (issue "This is the GNU/Engstrand system. Welcome.\n")))
