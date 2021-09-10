@@ -35,14 +35,12 @@
 ; TODO: Add feature for setting custom groups (preferrably directly in features).
 ;       This is required by certain services, e.g. virtualization.
 
-; TODO: Move these package lists into separate files (like manifests?)
-; TODO: Move neovim to feature?
 (define %engstrand-base-system-packages
   (pkgs '("git" "nss-certs")))
 
+; Move some of the packages to separate features?
 (define %engstrand-base-home-packages
-  ;"engstrand-utils"
-  (pkgs '("curl" "htop" "neovim"  "ncurses")))
+  (pkgs '("curl" "htop" "neovim"  "ncurses" "pulsemixer" "alsa-utils")))
 
 ; Dynamically create a configuration that can be reproduced
 ; without having the correct environment variables set.
