@@ -4,11 +4,18 @@
                #:use-module (engstrand features display)
                #:use-module (rde features system)
                #:use-module (dwl-guile home-service)
+               #:use-module (gnu bootloader)
+               #:use-module (gnu bootloader grub)
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
 
-(define-public %system-swap
-               (list (uuid "876933c5-e607-45cb-b39f-d009b803f41d")))
+(define %mapped-devices
+  (list
+    (mapped-device
+      (source
+        (uuid "367c5fe8-0388-49ad-9c88-04bcfe62c7b9"))
+      (target "cryptroot")
+      (type luks-device-mapping))))
 
 (define-public %system-features
                (list
@@ -16,8 +23,14 @@
                    #:host-name "fractal"
                    #:timezone %engstrand-timezone
                    #:locale %engstrand-locale)
-		 (feature-bootloader)
+                 (feature-bootloader
+                   #:bootloader-configuration
+                   (bootloader-configuration
+                     (bootloader grub-efi-bootloader)
+                     (target "/boot/efi")
+                     (keyboard-layout %engstrand-keyboard-layout)))
                  (feature-file-systems
+                   #:mapped-devices %mapped-devices
                    #:file-systems
                    (list
                      (file-system
@@ -26,10 +39,9 @@
                        (type "vfat"))
                      (file-system
                        (mount-point "/")
-                       (device
-                         (uuid "22d2ae9d-818a-411f-9577-9e6834b02a1d"
-                               'ext4))
-                       (type "ext4"))))
+                       (device "/dev/mapper/cryptroot")
+                       (type "ext4")
+                       (dependencies %mapped-devices))))
                  (feature-dwl-guile-monitor-config
                    #:monitors
                    (list
