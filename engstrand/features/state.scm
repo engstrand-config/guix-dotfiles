@@ -4,7 +4,6 @@
                #:use-module (gnu services)
                #:use-module (gnu services nix)
                #:use-module (gnu home-services state)
-               #:use-module (gnu home-services files)
                #:use-module (engstrand utils)
                #:export (
                          feature-dotfiles

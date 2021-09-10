@@ -10,7 +10,6 @@
                #:use-module (gnu packages xdisorg)
                #:use-module (gnu packages terminals)
                #:use-module (gnu home-services)
-               #:use-module (gnu home-services files)
                #:use-module (gnu home-services shepherd)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
