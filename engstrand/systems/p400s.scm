@@ -1,7 +1,9 @@
 (define-module (engstrand systems p400s)
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
+               #:use-module (engstrand features display)
                #:use-module (rde features system)
+	       #:use-module (dwl-guile home-service)
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
 
@@ -26,4 +28,13 @@
                            (device
                              (uuid "3d72e2f8-6474-4b99-8087-48094ed37f2b"
                                    'ext4))
-                           (type "ext4"))))))
+                           (type "ext4"))))
+                 (feature-dwl-guile-monitor-config
+                   #:monitors
+                   (list
+                     (dwl-monitor-rule
+                       (name "DP-1")
+                       (width 2560)
+                       (height 1440)
+                       (refresh-rate 144)
+                       (adaptive-sync? #t))))))
