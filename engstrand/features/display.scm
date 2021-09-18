@@ -11,6 +11,18 @@
                #:use-module (engstrand utils)
                #:export (feature-dwl-guile-monitor-config))
 
+;(define (feature-monitor-brightness)
+;  TODO: requires package ddcutil from (gnu packages hardware)
+;  please check if package i2c-tools from (gnu packages linux) is required
+;  TODO: add kernel module i2c-dev
+;  TODO: add user to group i2c-dev
+;  TODO: guile bindings for ddcutil?
+;  example commands that we have used before:
+;  ddcutil setvcp 10 $(echo -e "0\n50\n100" | bemenu -i -p "Set monitor brightness level:")
+;  or (increases brightness by 5 %):
+;  ddcutil setvcp 10 + 5
+;  )
+
 (define (list-of-monitor-rules? x)
   (every dwl-monitor-rule? x))
 
