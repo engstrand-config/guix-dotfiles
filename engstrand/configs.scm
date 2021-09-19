@@ -40,7 +40,9 @@
 
 ; Move some of the packages to separate features?
 (define %engstrand-base-home-packages
-  (pkgs '("curl" "htop" "neovim"  "ncurses" "pulsemixer" "alsa-utils")))
+  (pkgs '("curl" "htop" "neovim"  "ncurses"
+          "pulsemixer" "alsa-utils"
+          "hicolor-icon-theme" "adwaita-icon-theme" "gnome-themes-standard")))
 
 ; Dynamically create a configuration that can be reproduced
 ; without having the correct environment variables set.
@@ -62,7 +64,12 @@
       #:console-font (file-append font-terminus "/share/consolefonts/ter-120b"))
     (feature-git
       #:sign-commits? #t)
-    (feature-fonts)
+    (feature-fonts
+      #:font-packages (list font-jetbrains-mono)
+      #:font-monospace (font "JetBrains Mono" #:size 13)
+      ; #:font-sans (font "JetBrains Mono" #:size 13)
+      ; #:font-serif (font "JetBrains Mono" #:size 13)
+      )
     (feature-pipewire)
     (feature-backlight)
     (feature-zsh)
