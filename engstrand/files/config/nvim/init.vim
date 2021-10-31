@@ -82,6 +82,8 @@ let g:hardtime_default_on = 1
 let g:list_of_normal_keys = ["h", "l", "-", "+", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 let g:list_of_visual_keys = ["-", "+", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 let g:vimtex_compiler_latexmk_engine='xelatex'
+let g:vimtex_compiler_method='latexmk'
+let g:vimtex_view_method='zathura'
 let g:svelte_preprocessor_tags = [
   \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
   \ ]
