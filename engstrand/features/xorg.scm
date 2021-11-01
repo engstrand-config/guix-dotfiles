@@ -8,8 +8,7 @@
                #:use-module (gnu services)
                #:use-module (gnu services xorg)
                #:use-module (gnu services sddm)
-               #:use-module (gnu home-services)
-               #:use-module (gnu home-services base)
+               #:use-module (gnu home services)
                #:use-module (gnu packages display-managers)
                #:export (feature-xorg-dwm))
 

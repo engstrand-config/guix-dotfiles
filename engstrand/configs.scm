@@ -18,6 +18,7 @@
                #:use-module (engstrand features video)
                #:use-module (engstrand features state)
                #:use-module (engstrand features shells)
+               #:use-module (engstrand features neovim)
                #:use-module (engstrand features wayland)
                #:use-module (engstrand features browsers)
                #:use-module (engstrand features documents)
@@ -40,7 +41,7 @@
 
 ; Move some of the packages to separate features?
 (define %engstrand-base-home-packages
-  (pkgs '("curl" "htop" "neovim"  "ncurses"
+  (pkgs '("curl" "htop" "ncurses"
           "pulsemixer" "alsa-utils"
           "hicolor-icon-theme" "adwaita-icon-theme" "gnome-themes-standard")))
 
@@ -88,14 +89,14 @@
     (feature-base-packages
       #:system-packages %engstrand-base-system-packages
       #:home-packages %engstrand-base-home-packages)
-    (feature-state-git
-      #:repos
-      `(("engstrand-config/utils" .
-         "git@github.com:engstrand-config/utils.git")
-        ("engstrand-config/home-dwl-service" .
-         "git@github.com:engstrand-config/home-dwl-service.git")
-        ("engstrand-config/farg" .
-         "git@github.com:engstrand-config/farg.git")))
+    ; (feature-state-git
+    ;   #:repos
+    ;   `(("engstrand-config/utils" .
+    ;      "git@github.com:engstrand-config/utils.git")
+    ;     ("engstrand-config/home-dwl-service" .
+    ;      "git@github.com:engstrand-config/home-dwl-service.git")
+    ;     ("engstrand-config/farg" .
+    ;      "git@github.com:engstrand-config/farg.git")))
     (feature-dotfiles
       #:dotfiles
       `(("aliasrc" ,(local-file "files/aliasrc"))
@@ -108,9 +109,10 @@
         ("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
         ("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))
     (feature-nix)
-    (feature-mpv)
+    ; (feature-mpv)
     (feature-obs)
     (feature-imv)
+    (feature-neovim)
     (feature-zathura)
     (feature-firefox)
     (feature-wayland-bemenu)

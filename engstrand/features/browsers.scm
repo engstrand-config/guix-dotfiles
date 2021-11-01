@@ -3,7 +3,7 @@
                #:use-module (rde features predicates)
                #:use-module (guix gexp)
                #:use-module (gnu services)
-               #:use-module (gnu home-services)
+               #:use-module (gnu home services)
                #:use-module (nongnu packages mozilla)
                #:use-module (dwl-guile utils)
                #:use-module (dwl-guile home-service)

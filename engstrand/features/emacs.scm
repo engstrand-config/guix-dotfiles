@@ -1,6 +1,6 @@
 (define-module (engstrand features emacs)
                #:use-module (engstrand utils)
-               #:use-module (gnu home-services)
+               #:use-module (gnu home services)
                #:use-module (gnu services)
                #:use-module (flat packages emacs)
                #:use-module (gnu packages emacs)

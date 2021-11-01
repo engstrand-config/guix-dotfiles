@@ -4,7 +4,7 @@
                #:use-module (guix gexp)
                #:use-module (gnu services)
                #:use-module (gnu services shepherd)
-               #:use-module (gnu home-services)
+               #:use-module (gnu home services)
                #:use-module (gnu packages linux)
                #:use-module (engstrand utils)
                #:export (feature-switch-to-tty-on-boot))

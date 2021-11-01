@@ -4,7 +4,7 @@
                #:use-module (gnu packages pdf)
                #:use-module (gnu services)
                #:use-module (guix packages)
-               #:use-module (gnu home-services)
+               #:use-module (gnu home services)
                #:use-module (gnu packages tex)
                #:use-module (gnu packages python-xyz)
                #:use-module (engstrand utils)

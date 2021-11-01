@@ -28,10 +28,10 @@
                      #:gpg-primary-key "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
                      #:pinentry-flavor 'gtk2
                      #:gpg-smart-card? #f)
-                   (feature-state-git
-                     #:repos
-                     `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
-                       ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
+                   ; (feature-state-git
+                   ;   #:repos
+                   ;   `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
+                   ;     ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
                    (feature-xorg-dwm)
                    (feature-virtualization)
                    (feature-qutebrowser)
