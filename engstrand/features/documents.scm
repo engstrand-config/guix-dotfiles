@@ -5,8 +5,12 @@
                #:use-module (gnu services)
                #:use-module (guix packages)
                #:use-module (gnu home-services)
+               #:use-module (gnu packages tex)
+               #:use-module (gnu packages python-xyz)
                #:use-module (engstrand utils)
-               #:export (feature-zathura))
+               #:export (
+                         feature-zathura
+                         feature-latex))
 
 ; NOTE: zathura plugins uses the ZATHURA_PLUGINS_PATH environment variable
 ;       for linking to installed plugins. Therefore, you will need to restart
@@ -28,4 +32,16 @@
 
          (feature
            (name 'zathura)
+           (home-services-getter get-home-services)))
+
+(define* (feature-latex)
+         (define (get-home-services config)
+           (list
+             (simple-service
+               'add-latex-home-packages-to-profile
+               home-profile-service-type
+               (list texlive texlive-latex-base python-pygments))))
+
+         (feature
+           (name 'latex)
            (home-services-getter get-home-services)))
