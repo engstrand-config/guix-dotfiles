@@ -16,7 +16,7 @@
          (define (get-home-services config)
            "Return a list of home services required by zsh"
            (list
-             (service home-zsh-autosuggestions-service-type)
+             ; (service home-zsh-autosuggestions-service-type)
              (service home-zsh-service-type
                       (home-zsh-configuration
                         ; TODO: Use absolute paths
