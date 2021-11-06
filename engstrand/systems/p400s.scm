@@ -36,5 +36,5 @@
                        (name "DP-1")
                        (width 2560)
                        (height 1440)
-                       (refresh-rate 144)
+                       (refresh-rate 120)
                        (adaptive-sync? #t))))))
