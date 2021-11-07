@@ -31,10 +31,10 @@
     #:additional-elisp-packages (list emacs-evil emacs-evil-collection emacs-geiser emacs-geiser-guile)
     #:extra-config '((evil-mode 1)
                      (fringe-mode '(0 . 0))
+                     (setq-default display-line-numbers-type 'relative)
                      (global-display-line-numbers-mode)
-                     (setq display-line-numbers 'relative)
                      (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-                                        ; (evil-collection-init)
+                     ; (evil-collection-init)
                      ))
    (feature-emacs-guix)
    (feature-emacs-appearance
