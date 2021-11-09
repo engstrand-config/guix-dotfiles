@@ -6,6 +6,7 @@
                #:use-module (engstrand configs)
                #:use-module (engstrand features xorg)
                #:use-module (engstrand features state)
+               #:use-module (engstrand features emacs)
                #:use-module (engstrand features browsers)
                #:use-module (engstrand features virtualization)
                #:use-module (engstrand features wayland))
@@ -32,12 +33,12 @@
                    ;   #:repos
                    ;   `(("repos/pywalfox" . "git@github.com:frewacom/pywalfox.git")
                    ;     ("repos/pywalfox-native" . "git@github.com:frewacom/pywalfox-native.git")))
-                   (feature-xorg-dwm)
                    (feature-virtualization)
                    (feature-qutebrowser)
                    (feature-wayland-wbg
                      #:path (string-append (getenv "HOME")
                                            "/engstrand-config/wallpapers/default.jpg")))
+                 %engstrand-emacs-base-features
                  ; TODO: When Firefox feature is done, add it, but set (add-keybindings? #f)
                  (modify-features %engstrand-base-features
                                   (delete 'firefox))))
