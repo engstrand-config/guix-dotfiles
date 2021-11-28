@@ -1,5 +1,6 @@
 (define-module (engstrand packages python)
                #:use-module (gnu packages libffi)
+               #:use-module (gnu packages python-xyz)
                #:use-module (guix packages)
                #:use-module (guix download)
                #:use-module (guix build-system python)
@@ -60,4 +61,26 @@
     (home-page "http://python-sounddevice.readthedocs.io/")
     (synopsis "Play and Record Sound with Python")
     (description "Play and Record Sound with Python")
+    (license license:expat)))
+
+(define-public
+  python-tikzplotlib
+  (package
+    (name "python-tikzplotlib")
+    (version "0.9.15")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "tikzplotlib" version))
+        (sha256
+          (base32 "0f6cwnb51fnds2x9cycjk5gw5xnp0g3bdv8439xij8y0hijfwjcl"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-importlib-metadata" ,python-importlib-metadata)
+        ("python-matplotlib" ,python-matplotlib)
+        ("python-numpy" ,python-numpy)
+        ("python-pillow" ,python-pillow)))
+    (home-page "https://github.com/nschloe/tikzplotlib")
+    (synopsis "Convert matplotlib figures into TikZ/PGFPlots")
+    (description "Convert matplotlib figures into TikZ/PGFPlots")
     (license license:expat)))
