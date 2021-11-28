@@ -1,10 +1,13 @@
 (define-module (engstrand configs johan)
+               #:use-module (gnu services)
                #:use-module (rde features base)
                #:use-module (rde features gnupg)
                #:use-module (engstrand features browsers)
                #:use-module (engstrand features emacs)
                #:use-module (engstrand features virtualization)
                #:use-module (engstrand features wayland)
+               #:use-module (dwl-guile utils)
+               #:use-module (dwl-guile home-service)
                #:use-module (engstrand utils)
                #:use-module (engstrand configs))
 
@@ -25,6 +28,17 @@
                    (feature-virtualization)
                    (feature-qutebrowser
                      #:add-keybindings? #f)
+                   (feature-custom-services
+                     #:home-services
+                     (list
+                       (simple-service
+                         'change-dwl-guile-borderpx
+                         home-dwl-guile-service-type
+                         (modify-dwl-guile-config
+                           (config =>
+                                   (dwl-config
+                                     (inherit config)
+                                     (border-px 2)))))))
                    (feature-wayland-wbg
                      #:path (string-append (getenv "HOME")
                                            "/engstrand-config/wallpapers/default.jpg")))
