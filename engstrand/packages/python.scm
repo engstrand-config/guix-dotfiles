@@ -27,6 +27,24 @@
     (license #f)))
 
 (define-public
+  python-soundfile
+  (package
+    (name "python-soundfile")
+    (version "0.10.3.post1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "SoundFile" version))
+        (sha256
+          (base32 "0yqhrfz7xkvqrwdxdx2ydy4h467sk7z3gf984y1x2cq7cm1gy329"))))
+    (build-system python-build-system)
+    (propagated-inputs `(("python-cffi" ,python-cffi)))
+    (home-page "https://github.com/bastibe/PySoundFile")
+    (synopsis "An audio library based on libsndfile, CFFI and NumPy")
+    (description "An audio library based on libsndfile, CFFI and NumPy")
+    (license #f)))
+
+(define-public
   python-sounddevice
   (package
     (name "python-sounddevice")
