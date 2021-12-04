@@ -2,6 +2,7 @@
 	       #:use-module (engstrand utils)
 	       #:use-module (engstrand systems)
 	       #:use-module (engstrand features display)
+               #:use-module (engstrand features bluetooth)
 	       #:use-module (rde features system)
 	       #:use-module (gnu bootloader)
 	       #:use-module (gnu bootloader grub)
@@ -28,20 +29,21 @@
 		   (bootloader-configuration
 		     (bootloader grub-bootloader)
 		     (targets '("/dev/nvme0n1"))
-		     (keyboard-layout %engstrand-keyboard-layout)))
-		 (feature-file-systems
-		   #:mapped-devices %mapped-devices
-		   #:file-systems
-		   (list
-		     (file-system
-		       (mount-point "/boot/efi")
-		       (device (uuid "F6B6-B394" 'fat32))
-		       (type "vfat"))
-		     (file-system
-		       (mount-point "/")
-		       (device "/dev/mapper/cryptroot")
-		       (type "ext4")
-		       (dependencies %mapped-devices))))
+                     (keyboard-layout %engstrand-keyboard-layout)))
+                 (feature-bluetooth)
+                 (feature-file-systems
+                   #:mapped-devices %mapped-devices
+                   #:file-systems
+                   (list
+                     (file-system
+                       (mount-point "/boot/efi")
+                       (device (uuid "F6B6-B394" 'fat32))
+                       (type "vfat"))
+                     (file-system
+                       (mount-point "/")
+                       (device "/dev/mapper/cryptroot")
+                       (type "ext4")
+                       (dependencies %mapped-devices))))
                  (feature-dwl-guile-monitor-config
                    #:monitors
                    (list

@@ -71,7 +71,7 @@
                        (inherit user)
                        (supplementary-groups
                          ; Temporary hack to allow user to run VMs
-                         '("wheel" "netdev" "audio" "video" "libvirt" "kvm"))))
+                         '("wheel" "netdev" "audio" "video" "libvirt" "kvm" "lp"))))
                    (operating-system-users os))))))
 
          (match target
