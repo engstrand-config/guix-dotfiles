@@ -2,6 +2,7 @@
                #:use-module (gnu services)
                #:use-module (rde features base)
                #:use-module (rde features gnupg)
+               #:use-module (engstrand features sync)
                #:use-module (engstrand features browsers)
                #:use-module (engstrand features emacs)
                #:use-module (engstrand features virtualization)
@@ -26,6 +27,7 @@
                      #:pinentry-flavor 'gtk2
                      #:gpg-smart-card? #f)
                    (feature-virtualization)
+                   (feature-kdeconnect)
                    (feature-qutebrowser
                      #:add-keybindings? #f)
                    (feature-custom-services
