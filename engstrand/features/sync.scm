@@ -15,24 +15,26 @@
          "Install and configure KDE Connect."
 
          (define (get-home-services config)
-           (list
-             (simple-service
-               'kdeconnect-add-home-packages-to-profile
-               home-profile-service-type
-               (pkgs '("kdeconnect")))))
-
-           ; TODO: shepherd daemon does not work for some reason
-           ; (list
-           ;   (simple-service
-           ;     'kdeconnect-add-shepherd-daemons
-           ;     home-shepherd-service-type
-           ;     (list
-           ;       (shepherd-service
-           ;         (requirement '(dbus-home))
-           ;         (provision '(kdeconnect))
-           ;         (stop  #~(make-kill-destructor))
-           ;         (start #~(make-forkexec-constructor
-           ;                    (list #$(file-append package "/bin/kdeconnectd")))))))))
+           "Return a list of home services required by KDE Connect."
+           (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+             (make-service-list
+               (simple-service
+                 'kdeconnect-add-home-packages-to-profile
+                 home-profile-service-type
+                 (list kdeconnect))
+               (simple-service
+                 'kdeconnect-add-shepherd-daemons
+                 home-shepherd-service-type
+                 (list
+                   (shepherd-service
+                     (documentation "Run the KDE Connect daemon.")
+                     (requirement (if has-dwl-guile? '(dwl-guile) '() ))
+                     (provision '(kdeconnect))
+                     (auto-start? #t)
+                     (respawn? #t)
+                     (start #~(make-forkexec-constructor
+                                (list #$(file-append kdeconnect "/libexec/kdeconnectd"))))
+                     (stop  #~(make-kill-destructor))))))))
 
          (feature
            (name 'kdeconnect)
