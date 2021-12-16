@@ -31,8 +31,7 @@
                          "182cyp97lxwxl5r6f25irvm62ii0j1knmpwlpwa1w00j2xchx89w"))))
                  (build-system meson-build-system)
                  (arguments
-                   `(#:meson ,meson-0.55
-                     #:build-type "release"))
+                   `(#:build-type "release"))
                  (native-inputs
                    `(("pkg-config" ,pkg-config)
                      ("wayland-protocols" ,wayland-protocols)
