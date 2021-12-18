@@ -31,15 +31,15 @@
 	(sha256
 	  (base32 "07clvwvwjxs1gwhnmbd3gq6rzyr0cphxk3ibkzmd53xikrighlm9"))))
     (propagated-inputs
-         `(("xrdb", xrdb)
-           ("maim", maim)
-           ("xclip", xclip)
-           ("xprop", xprop)
-           ("xsetroot", xsetroot)
-           ("fontawesome", font-awesome)
-           ("font-jetbrains-mono", font-jetbrains-mono)
-           ("picom", picom)
-           ("xwallpaper", xwallpaper)))
+         (list xrdb
+               maim
+               xclip
+               xprop
+               xsetroot
+               font-awesome
+               font-jetbrains-mono
+               picom
+               xwallpaper))
     (home-page "https://github.com/engstrand-config/dwm")
     (synopsis "Engstrand dwm")))
 
@@ -67,7 +67,7 @@
 	      #:phases
 	      (modify-phases %standard-phases (delete 'configure))))
         (propagated-inputs
-             `(("engstrand-dwm", engstrand-dwm)))
+             (list engstrand-dwm))
 	(home-page "https://github.com/engstrand-config/dmenu")
 	(synopsis "Engstrand dmenu")))
 
@@ -94,18 +94,11 @@
 	  #:phases
 	  (modify-phases %standard-phases (delete 'configure))))
     (native-inputs
-     `(("pkg-config" ,pkg-config)))
+     (list pkg-config))
     (inputs
-	`(("libx11" ,libx11)
-	  ("libxft" ,libxft)
-       	  ("libxinerama" ,libxinerama)
-       	  ("freetype" ,freetype)))
+	(list libx11 libxft libxinerama freetype))
     (propagated-inputs
-         `(("mpd", mpd)
-           ("glib", glib)
-           ("kdeconnect", kdeconnect)
-           ("engstrand-dwm", engstrand-dwm)
-           ("libmpdclient", libmpdclient)))
+         (list mpd glib kdeconnect engstrand-dwm libmpdclient))
     (home-page "https://github.com/engstrand-config/dsblocks")
     (description "Custom statusbar for dwm with blocks written in C. Based on dwmblocks")
     (synopsis "Engstrand dsblocks")))
@@ -124,10 +117,7 @@
 		    (base32 "127wxailsfqjlycjad7jaxx1ib4655k3w6c03fc7q3q8y9fd7j4x"))))
 	(home-page "https://github.com/engstrand-config/st")
     	(inputs
-     	    `(("libx11" ,libx11)
-       	      ("libxft" ,libxft)
-	      ("freetype" ,freetype)
-	      ("harfbuzz" ,harfbuzz)))
+     	(list libx11 libxft freetype harfbuzz))
         (propagated-inputs
-             `(("engstrand-dwm", engstrand-dwm)))
+             (list engstrand-dwm))
 	(synopsis "Engstrand st")))

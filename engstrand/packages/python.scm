@@ -39,7 +39,7 @@
         (sha256
           (base32 "0yqhrfz7xkvqrwdxdx2ydy4h467sk7z3gf984y1x2cq7cm1gy329"))))
     (build-system python-build-system)
-    (propagated-inputs `(("python-cffi" ,python-cffi)))
+    (propagated-inputs (list python-cffi))
     (home-page "https://github.com/bastibe/PySoundFile")
     (synopsis "An audio library based on libsndfile, CFFI and NumPy")
     (description "An audio library based on libsndfile, CFFI and NumPy")
@@ -57,7 +57,7 @@
         (sha256
           (base32 "083crfkrx0y9gqybqcixzhrp7swqjr78nrmz9r6aqpxncxs7lrpi"))))
     (build-system python-build-system)
-    (propagated-inputs `(("python-cffi" ,python-cffi)))
+    (propagated-inputs (list python-cffi))
     (home-page "http://python-sounddevice.readthedocs.io/")
     (synopsis "Play and Record Sound with Python")
     (description "Play and Record Sound with Python")
@@ -76,10 +76,8 @@
           (base32 "0f6cwnb51fnds2x9cycjk5gw5xnp0g3bdv8439xij8y0hijfwjcl"))))
     (build-system python-build-system)
     (propagated-inputs
-      `(("python-importlib-metadata" ,python-importlib-metadata)
-        ("python-matplotlib" ,python-matplotlib)
-        ("python-numpy" ,python-numpy)
-        ("python-pillow" ,python-pillow)))
+      (list python-importlib-metadata python-matplotlib python-numpy
+            python-pillow))
     (home-page "https://github.com/nschloe/tikzplotlib")
     (synopsis "Convert matplotlib figures into TikZ/PGFPlots")
     (description "Convert matplotlib figures into TikZ/PGFPlots")

@@ -23,15 +23,15 @@
 		  (base32 "14xg4zw90axcqdwrl5l3ixk044f4rsvnk8rd8vgl6mmi0iviq28z"))))
         (build-system copy-build-system)
         (propagated-inputs
-                `(("xcape", xcape)
-                  ("setxkbmap", setxkbmap)
-                  ("xprop", xprop)
-                  ("xset", xset)
-                  ("xclip", xclip)
-                  ("xdotool", xdotool)
-                  ("maim", maim)
-                  ("xwallpaper", xwallpaper)
-                  ("xrdb", xrdb)))
+                (list xcape
+                      setxkbmap
+                      xprop
+                      xset
+                      xclip
+                      xdotool
+                      maim
+                      xwallpaper
+                      xrdb))
 	(home-page "https://github.com/engstrand-config/utils")
 	(synopsis "Engstrand utilities and scripts")
         (license license:gpl3)))
