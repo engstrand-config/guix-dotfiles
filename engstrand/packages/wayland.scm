@@ -33,59 +33,11 @@
                  (arguments
                    `(#:build-type "release"))
                  (native-inputs
-                   `(("pkg-config" ,pkg-config)
-                     ("wayland-protocols" ,wayland-protocols)
-                     ("gcc" ,gcc-10)
-                     ("tllist" ,tllist)))
+                   (list pkg-config wayland-protocols gcc-10 tllist))
                  (inputs
-                   `(("wlroots" ,wlroots)
-                     ("wayland" ,wayland)
-                     ("pixman" ,pixman)
-                     ("libpng" ,libpng)
-                     ("libjpeg" ,libjpeg-turbo)))
+                   (list wlroots wayland pixman libpng libjpeg-turbo))
                  (license license:expat)
                  (home-page "https://codeberg.org/dnkl/wbg")
                  (synopsis "Super simple wallpaper application for Wayland compositors")
                  (description "Super simple wallpaper application for
                               Wayland compositors implementing the layer-shell protocol.")))
-
-(define-public wlsunset
-               (package
-                 (name "wlsunset")
-                 (version "0.2.0")
-                 (source
-                   (origin
-                     (method git-fetch)
-                     (uri (git-reference
-                            (url "https://git.sr.ht/~kennylevinsen/wlsunset")
-                            (commit version)))
-                     (file-name (git-file-name name version))
-                     (sha256
-                       (base32
-                         "0hhsddh3rs066rbsjksr8kcwg8lvglbvs67dq0r5wx5c1xcwb51w"))))
-                 (build-system meson-build-system)
-                 (native-inputs
-                   `(("pkg-config" ,pkg-config)
-                     ("wayland-protocols" ,wayland-protocols)
-                     ("scdoc" ,scdoc)))
-                 (inputs
-                   `(("wayland" ,wayland)
-                     ("gcc" ,gcc-10)))
-                 (license license:expat)
-                 (home-page "https://git.sr.ht/~kennylevinsen/wlsunset")
-                 (synopsis "Day/night gamma adjustments for Wayland compositors")
-                 (description "Day/night gamma adjustments for Wayland compositors
-                              supporting wlr-gamma-control-unstable-v1.")))
-
-(define-public foot-1.8.2
-               (package
-                 (inherit foot)
-                 (version "1.8.2")
-                 (source
-                   (origin
-                     (method git-fetch)
-                     (uri (git-reference (url (package-home-page foot)) (commit version)))
-                     (file-name (git-file-name (package-name foot) version))
-                     (sha256
-                       (base32
-                         "1k0alz991cslls4926c5gq02pdq0vfw9jfpprh2a1vb59xgikv7h"))))))

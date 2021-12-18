@@ -138,7 +138,7 @@
 ; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
            #:key
-           (package foot-1.8.2)
+           (package foot)
            (set-default-terminal? #t)
            (window-alpha 0.9))
          "Setup foot terminal."
@@ -248,6 +248,7 @@
 
 (define* (feature-wayland-wlsunset
            #:key
+           (package wlsunset)
            (toggle-key "End")
            (toggle-modifiers '(SUPER))
            (latitude 59.8)
@@ -257,6 +258,7 @@
            (add-keybindings? #t))
          "Setup wlsunset for adjusting day/night gamma for Wayland compositors."
 
+         (ensure-pred package? wlsunset)
          (ensure-pred keycode? toggle-key)
          (ensure-pred number? latitude)
          (ensure-pred number? longitude)
@@ -272,7 +274,7 @@
                (simple-service
                  'add-wlsunset-home-packages-to-profile
                  home-profile-service-type
-                 (list wlsunset))
+                 (list package))
                (simple-service
                  'add-wlsunset-shepherd-service
                  home-shepherd-service-type
