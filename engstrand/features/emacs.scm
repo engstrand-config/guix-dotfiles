@@ -27,15 +27,15 @@
 (define %engstrand-emacs-base-features
   (list
    (feature-emacs
-    #:package emacs-next-pgtk
+    #:emacs emacs-next-pgtk
     #:additional-elisp-packages (list emacs-evil emacs-evil-collection emacs-geiser emacs-geiser-guile)
-    #:extra-config '((evil-mode 1)
-                     (fringe-mode '(0 . 0))
-                     (setq-default display-line-numbers-type 'relative)
-                     (global-display-line-numbers-mode)
-                     (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-                     ; (evil-collection-init)
-                     ))
+    #:extra-init-el '((evil-mode 1)
+                      (fringe-mode '(0 . 0))
+                      (setq-default display-line-numbers-type 'relative)
+                      (global-display-line-numbers-mode)
+                      (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+                      ; (evil-collection-init)
+                      ))
    (feature-emacs-guix)
    (feature-emacs-appearance
     #:margin 8)
