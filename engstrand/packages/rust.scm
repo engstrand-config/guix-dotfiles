@@ -1243,6 +1243,57 @@ variable.
 ")
     (license license:expat)))
 
+(define-public rust-time-macros-0.2
+  (package
+    (name "rust-time-macros")
+    (version "0.2.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "time-macros" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1mj7pv8y9j2csrh1l8aabras36pgysbnfy18330srh4g8sihrsr5"))))
+    (build-system cargo-build-system)
+    (home-page "https://github.com/time-rs/time")
+    (synopsis "Procedural macros for the time crate.")
+    (description "Procedural macros for the time crate.")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-time-0.3
+  (package
+    (name "rust-time")
+    (version "0.3.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "time" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1b943jf54q1667i328x3z73fsjdhcqdqccxckx1nzwwaz9ygxvs1"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-itoa" ,rust-itoa-0.4)
+         ("rust-libc" ,rust-libc-0.2)
+         ("rust-quickcheck" ,rust-quickcheck-1)
+         ("rust-rand" ,rust-rand-0.8)
+         ("rust-serde" ,rust-serde-1)
+         ("rust-time-macros" ,rust-time-macros-0.2))
+        #:cargo-development-inputs
+        (("rust-criterion" ,rust-criterion-0.3)
+         ("rust-criterion-cycles-per-byte" ,rust-criterion-cycles-per-byte-0.1)
+         ("rust-rand" ,rust-rand-0.8)
+         ("rust-serde" ,rust-serde-1)
+         ("rust-serde-test" ,rust-serde-test-1)
+         ("rust-trybuild" ,rust-trybuild-1))))
+    (home-page "https://time-rs.github.io")
+    (synopsis
+      "Date and time library. Fully interoperable with the standard library. Mostly compatible with #![no_std].")
+    (description
+      "Date and time library.  Fully interoperable with the standard library.  Mostly compatible with #![no_std].")
+    (license (list license:expat license:asl2.0))))
+
 (define-public rust-tracing-subscriber-0.3
   (package
     (name "rust-tracing-subscriber")
