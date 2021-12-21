@@ -96,7 +96,7 @@
                                    (dwl-key
                                      (modifiers open-modifiers)
                                      (key open-key)
-                                     (action `(dwl:spawn ,(file-append qutebrowser "/bin/qutebrowser")))))
+                                     (action `(dwl:spawn ,(file-append package "/bin/qutebrowser")))))
                                  (dwl-config-keys config))))))))))
 
          (feature
