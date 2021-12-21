@@ -9,6 +9,7 @@
                #:use-module (dwl-guile home-service)
                #:use-module (dwl-guile configuration)
                #:use-module (gnu packages web-browsers)
+               #:use-module (engstrand packages browsers)
                #:use-module (engstrand utils)
                #:export (
                          feature-qutebrowser
@@ -62,11 +63,13 @@
 
 (define* (feature-qutebrowser
            #:key
+           (package qutebrowser-with-scripts)
            (open-key "w")
            (open-modifiers '(SUPER SHIFT))
            (add-keybindings? #t))
          "Setup qutebrowser, a keyboard-focused browser with a minimal GUI."
 
+         (ensure-pred package? package)
          (ensure-pred keycode? open-key)
          (ensure-pred list-of-modifiers? open-modifiers)
          (ensure-pred boolean? add-keybindings?)
@@ -78,7 +81,7 @@
              (simple-service
                'add-qutebrowser-home-packages-to-profile
                home-profile-service-type
-               (list qutebrowser))
+               (list package))
              (when (and add-keybindings? (get-value 'dwl-guile config))
                (simple-service
                  'add-qutebrowser-dwl-keybindings

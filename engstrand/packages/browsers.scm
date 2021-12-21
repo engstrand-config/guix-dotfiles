@@ -1,6 +1,7 @@
 (define-module (engstrand packages browsers)
                #:use-module (guix gexp)
                #:use-module (guix utils)
+               #:use-module (guix download)
                #:use-module (guix packages)
                #:use-module (gnu packages web-browsers))
 
@@ -12,8 +13,8 @@
 (define-public
   qutebrowser-with-scripts
   (package
-    (name "qutebrowser-with-scripts")
     (inherit qutebrowser)
+    (name "qutebrowser-with-scripts")
     (version "2.3.1")
     (source
       (origin
