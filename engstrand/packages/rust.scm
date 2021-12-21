@@ -1197,6 +1197,53 @@ variable.
     (description "Stackfull Generator Library in Rust")
     (license (list license:expat license:asl2.0))))
 
+(define-public rust-tracing-subscriber-0.3
+  (package
+    (name "rust-tracing-subscriber")
+    (version "0.3.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "tracing-subscriber" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1lxl7ksj72mb0xa5g357sazg32bpnm6312s17ygp5i3zrjaacp94"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-ansi-term" ,rust-ansi-term-0.12)
+         ("rust-lazy-static" ,rust-lazy-static-1)
+         ("rust-matchers" ,rust-matchers-0.1)
+         ("rust-parking-lot" ,rust-parking-lot-0.11)
+         ("rust-regex" ,rust-regex-1)
+         ("rust-serde" ,rust-serde-1)
+         ("rust-serde-json" ,rust-serde-json-1)
+         ("rust-sharded-slab" ,rust-sharded-slab-0.1)
+         ("rust-smallvec" ,rust-smallvec-1)
+         ("rust-thread-local" ,rust-thread-local-1)
+         ("rust-time" ,rust-time-0.3)
+         ("rust-tracing" ,rust-tracing-0.1)
+         ("rust-tracing-core" ,rust-tracing-core-0.1)
+         ("rust-tracing-log" ,rust-tracing-log-0.1)
+         ("rust-tracing-serde" ,rust-tracing-serde-0.1))
+        #:cargo-development-inputs
+        (("rust-criterion" ,rust-criterion-0.3)
+         ("rust-log" ,rust-log-0.4)
+         ("rust-regex" ,rust-regex-1)
+         ("rust-time" ,rust-time-0.3)
+         ("rust-tokio" ,rust-tokio-0.2)
+         ("rust-tracing" ,rust-tracing-0.1)
+         ("rust-tracing-futures" ,rust-tracing-futures-0.2)
+         ("rust-tracing-log" ,rust-tracing-log-0.1))))
+    (home-page "https://tokio.rs")
+    (synopsis
+      "Utilities for implementing and composing `tracing` subscribers.
+")
+    (description
+      "Utilities for implementing and composing `tracing` subscribers.
+")
+    (license license:expat)))
+
 (define-public rust-loom-0.5
   (package
     (name "rust-loom")
