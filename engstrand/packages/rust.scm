@@ -1154,6 +1154,49 @@ variable.
 ")
     (license (list license:expat license:asl2.0))))
 
+(define-public rust-rustversion-1
+  (package
+    (name "rust-rustversion")
+    (version "1.0.6")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "rustversion" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0gxj6skypbk0wlbks3pdqb0lclpwbzmyv9xbqkijsvk6zbl3ik7j"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-development-inputs (("rust-trybuild" ,rust-trybuild-1))))
+    (home-page "https://github.com/dtolnay/rustversion")
+    (synopsis "Conditional compilation according to rustc compiler version")
+    (description "Conditional compilation according to rustc compiler version")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-generator-0.7
+  (package
+    (name "rust-generator")
+    (version "0.7.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "generator" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1vhj3f0rf4mlh5vz7pz5rxmgry1cc62x21mf9ld1r292m2f2gnf1"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-cc" ,rust-cc-1)
+         ("rust-libc" ,rust-libc-0.2)
+         ("rust-log" ,rust-log-0.4)
+         ("rust-rustversion" ,rust-rustversion-1)
+         ("rust-winapi" ,rust-winapi-0.3))))
+    (home-page "https://github.com/Xudong-Huang/generator-rs.git")
+    (synopsis "Stackfull Generator Library in Rust")
+    (description "Stackfull Generator Library in Rust")
+    (license (list license:expat license:asl2.0))))
+
 (define-public rust-loom-0.5
   (package
     (name "rust-loom")
