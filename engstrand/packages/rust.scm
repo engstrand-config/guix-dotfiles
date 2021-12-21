@@ -1222,6 +1222,27 @@ variable.
       "Library for ANSI terminal colours and styles (bold, underline)")
     (license license:expat)))
 
+(define-public rust-matchers-0.1
+  (package
+    (name "rust-matchers")
+    (version "0.1.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "matchers" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0n2mbk7lg2vf962c8xwzdq96yrc9i0p8dbmm4wa1nnkcp1dhfqw2"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs (("rust-regex-automata" ,rust-regex-automata-0.1))))
+    (home-page "https://github.com/hawkw/matchers")
+    (synopsis "Regex matching on character and byte streams.
+")
+    (description "Regex matching on character and byte streams.
+")
+    (license license:expat)))
+
 (define-public rust-tracing-subscriber-0.3
   (package
     (name "rust-tracing-subscriber")
