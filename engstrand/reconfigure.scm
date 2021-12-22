@@ -64,6 +64,7 @@
            (let ((os (rde-config-operating-system %generated-config)))
              (operating-system
                (inherit os)
+               (issue (operating-system-issue %initial-os))
                (users
                  (map
                    (lambda (user)
