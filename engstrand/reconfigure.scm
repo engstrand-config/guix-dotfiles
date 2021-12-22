@@ -45,7 +45,8 @@
                initial-os
                (operating-system
                  (inherit initial-os)
-                 (swap-devices %system-swap))))
+                 (swap-devices
+                   (list %system-swap)))))
 
          ; All is good, create the configuration
          (define %generated-config

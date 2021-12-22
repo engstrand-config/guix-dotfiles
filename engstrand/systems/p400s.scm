@@ -8,7 +8,8 @@
                #:use-module (gnu system mapped-devices))
 
 (define-public %system-swap
-               (list (uuid "2e1cafae-8f43-4938-be21-fc525250f915")))
+               (swap-space
+                 (target (uuid "2e1cafae-8f43-4938-be21-fc525250f915"))))
 
 (define-public %system-features
                (list

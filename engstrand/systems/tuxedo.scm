@@ -22,7 +22,8 @@
 ; rde does not support this out of the box. Instead, we
 ; must pass it using the initial-os field of rde-config.
 (define-public %system-swap
-               (list (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))
+               (swap-space
+                 (target (uuid "40c98866-74b1-4e99-9c32-24d584fe0617"))))
 
 (define-public %system-features
                (list
