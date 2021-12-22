@@ -1,5 +1,9 @@
 (define-module (engstrand packages rust)
             #:use-module (gnu packages crates-io)
+            #:use-module (gnu packages rust)
+            #:use-module (gnu packages rust-apps)
+            #:use-module (gnu packages crates-graphics)
+            #:use-module (gnu packages crates-gtk)
             #:use-module (guix download)
             #:use-module (guix packages)
             #:use-module (guix build-system cargo)
@@ -152,6 +156,422 @@ including support for AES in counter mode (a.k.a. AES-CTR)
 including support for AES in counter mode (a.k.a.  AES-CTR)
 ")
     (license (list license:expat license:asl2.0))))
+
+(define-public rust-fixed-hash-0.7
+  (package
+    (name "rust-fixed-hash")
+    (version "0.7.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "fixed-hash" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0g29r0zwf09kg70nprn0s444bn6nfsglmiafhl1pm8ajzvbhxkyg"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-arbitrary" ,rust-arbitrary-0.4)
+         ("rust-byteorder" ,rust-byteorder-1)
+         ("rust-quickcheck" ,rust-quickcheck-0.9)
+         ("rust-rand" ,rust-rand-0.8)
+         ("rust-rustc-hex" ,rust-rustc-hex-2)
+         ("rust-static-assertions" ,rust-static-assertions-1))
+        #:cargo-development-inputs
+        (("rust-criterion" ,rust-criterion-0.3)
+         ("rust-rand" ,rust-rand-0.8)
+         ("rust-rand-xorshift" ,rust-rand-xorshift-0.2))))
+    (home-page "https://github.com/paritytech/parity-common")
+    (synopsis "Macros to define custom fixed-size hash types")
+    (description "Macros to define custom fixed-size hash types")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-radium-0.6
+  (package
+    (name "rust-radium")
+    (version "0.6.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "radium" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1ys4bpp2l701ghdniz90zhkvb5ykmfw2pj0m8pfcbi7bm10qygv4"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-development-inputs
+        (("rust-static-assertions" ,rust-static-assertions-1))))
+    (home-page "https://github.com/bitvecto-rs/radium")
+    (synopsis "Portable interfaces for maybe-atomic types")
+    (description "Portable interfaces for maybe-atomic types")
+    (license license:expat)))
+
+(define-public rust-bitvec-0.20
+  (package
+    (name "rust-bitvec")
+    (version "0.20.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "bitvec" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0j3qn0z31j06c965hs3kh41l78hxbzzsf1h46xvs3ym48i1i8x3p"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-funty" ,rust-funty-1)
+         ("rust-radium" ,rust-radium-0.6)
+         ("rust-serde" ,rust-serde-1)
+         ("rust-tap" ,rust-tap-1)
+         ("rust-wyz" ,rust-wyz-0.2))
+        #:cargo-development-inputs
+        (("rust-bincode" ,rust-bincode-1)
+         ("rust-criterion" ,rust-criterion-0.3)
+         ("rust-serde" ,rust-serde-1)
+         ("rust-serde-json" ,rust-serde-json-1)
+         ("rust-serde-test" ,rust-serde-test-1)
+         ("rust-static-assertions" ,rust-static-assertions-1))))
+    (home-page "https://bitvecto-rs.github.io/bitvec")
+    (synopsis "Addresses memory by bits, for packed collections and bitfields")
+    (description
+      "Addresses memory by bits, for packed collections and bitfields")
+    (license license:expat)))
+
+(define-public rust-byte-slice-cast-1
+  (package
+    (name "rust-byte-slice-cast")
+    (version "1.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "byte-slice-cast" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "162618ai9pnsim49lkjpq2yi2b3wssclvqxwwycw8xrbb58wfc0x"))))
+    (build-system cargo-build-system)
+    (home-page "https://github.com/sdroege/bytes-num-slice-cast")
+    (synopsis
+      "Safely cast bytes slices from/to slices of built-in fundamental numeric types")
+    (description
+      "Safely cast bytes slices from/to slices of built-in fundamental numeric types")
+    (license license:expat)))
+
+(define-public rust-impl-trait-for-tuples-0.2
+  (package
+    (name "rust-impl-trait-for-tuples")
+    (version "0.2.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "impl-trait-for-tuples" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1vii634v1zvb680h28md42xpdrj1j1d50ix3dga95fxkql8cpnnm"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-proc-macro2" ,rust-proc-macro2-1)
+         ("rust-quote" ,rust-quote-1)
+         ("rust-syn" ,rust-syn-1))
+        #:cargo-development-inputs
+        (("rust-trybuild" ,rust-trybuild-1))))
+    (home-page "https://github.com/bkchr/impl-trait-for-tuples")
+    (synopsis "Attribute macro to implement a trait for tuples
+")
+    (description "Attribute macro to implement a trait for tuples
+")
+    (license (list license:asl2.0 license:expat))))
+
+(define-public rust-parity-scale-codec-derive-2
+  (package
+    (name "rust-parity-scale-codec-derive")
+    (version "2.3.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "parity-scale-codec-derive" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "09zdgdqalc8d2zsjc9v1ayqxwg5rh7xxq5ldasdmqng0fq202mqm"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-proc-macro-crate" ,rust-proc-macro-crate-1)
+         ("rust-proc-macro2" ,rust-proc-macro2-1)
+         ("rust-quote" ,rust-quote-1)
+         ("rust-syn" ,rust-syn-1))))
+    (home-page "")
+    (synopsis
+      "Serialization and deserialization derive macro for Parity SCALE Codec")
+    (description
+      "Serialization and deserialization derive macro for Parity SCALE Codec")
+    (license license:asl2.0)))
+
+(define-public rust-parity-scale-codec-2
+  (package
+    (name "rust-parity-scale-codec")
+    (version "2.3.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "parity-scale-codec" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "02g95fp56sfpxixpy3x2h2yvcnmbpl8klfx53wywvn9q2d61lfrp"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-arbitrary" ,rust-arbitrary-1)
+         ("rust-arrayvec" ,rust-arrayvec-0.7)
+         ("rust-bitvec" ,rust-bitvec-0.20)
+         ("rust-byte-slice-cast" ,rust-byte-slice-cast-1)
+         ("rust-generic-array" ,rust-generic-array-0.14)
+         ("rust-impl-trait-for-tuples" ,rust-impl-trait-for-tuples-0.2)
+         ("rust-parity-scale-codec-derive" ,rust-parity-scale-codec-derive-2)
+         ("rust-serde" ,rust-serde-1))
+        #:cargo-development-inputs
+        (("rust-criterion" ,rust-criterion-0.3)
+         ("rust-quickcheck" ,rust-quickcheck-1)
+         ("rust-serde-derive" ,rust-serde-derive-1)
+         ("rust-trybuild" ,rust-trybuild-1))))
+    (home-page "https://github.com/paritytech/parity-scale-codec")
+    (synopsis "SCALE - Simple Concatenating Aggregated Little Endians")
+    (description "SCALE - Simple Concatenating Aggregated Little Endians")
+    (license license:asl2.0)))
+
+(define-public rust-impl-codec-0.5
+  (package
+    (name "rust-impl-codec")
+    (version "0.5.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "impl-codec" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0hy4svffnw9idy9ipp0hkmbzk97fl583akqwyqmvbqy8qgzbs7hn"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-parity-scale-codec" ,rust-parity-scale-codec-2))))
+    (home-page "https://github.com/paritytech/parity-common")
+    (synopsis "Parity Codec serialization support for uint and fixed hash.")
+    (description "Parity Codec serialization support for uint and fixed hash.")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-impl-rlp-0.3
+  (package
+    (name "rust-impl-rlp")
+    (version "0.3.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "impl-rlp" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "021869d5s47ili9kmhm9y80qpsbf0wwdap14qzfpb84pjbw210pj"))))
+    (build-system cargo-build-system)
+    (arguments `(#:cargo-inputs (("rust-rlp" ,rust-rlp-0.5))))
+    (home-page "https://github.com/paritytech/parity-common")
+    (synopsis "RLP serialization support for uint and fixed hash.")
+    (description "RLP serialization support for uint and fixed hash.")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-integer-sqrt-0.1
+  (package
+    (name "rust-integer-sqrt")
+    (version "0.1.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "integer-sqrt" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0w6pzmgvs1mldkhafbwg9x7wzr0af3ngkimyb1gy97jarcdw6vi7"))))
+    (build-system cargo-build-system)
+    (arguments `(#:cargo-inputs (("rust-num-traits" ,rust-num-traits-0.2))))
+    (home-page "https://github.com/derekdreery/integer-sqrt-rs")
+    (synopsis
+      "An implementation of integer square root algorithm for primitive rust types")
+    (description
+      "An implementation of integer square root algorithm for primitive rust types")
+    (license (list license:asl2.0 license:expat))))
+
+(define-public rust-gmp-mpfr-sys-1
+  (package
+    (name "rust-gmp-mpfr-sys")
+    (version "1.4.7")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "gmp-mpfr-sys" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1ysvdf352vcnb5ygmbwf5pkndqb0p6clmz0nqkf3nmz9ghssfim1"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-libc" ,rust-libc-0.2) ("rust-winapi" ,rust-winapi-0.3))))
+    (home-page "https://gitlab.com/tspiteri/gmp-mpfr-sys")
+    (synopsis "Rust FFI bindings for GMP, MPFR and MPC")
+    (description "Rust FFI bindings for GMP, MPFR and MPC")
+    (license license:lgpl3+)))
+
+(define-public rust-rug-1
+  (package
+    (name "rust-rug")
+    (version "1.14.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "rug" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1iw52gyw0hshymqa04g76m7qnrds5vkgc5s8svqx5nv1jz1wrdgm"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-az" ,rust-az-1)
+         ("rust-gmp-mpfr-sys" ,rust-gmp-mpfr-sys-1)
+         ("rust-libc" ,rust-libc-0.2)
+         ("rust-serde" ,rust-serde-1))
+        #:cargo-development-inputs
+        (("rust-bincode" ,rust-bincode-1)
+         ("rust-byteorder" ,rust-byteorder-1)
+         ("rust-serde-json" ,rust-serde-json-1)
+         ("rust-serde-test" ,rust-serde-test-1))))
+    (home-page "https://gitlab.com/tspiteri/rug")
+    (synopsis
+      "Arbitrary-precision integers, rational, floating-point and complex numbers based on GMP, MPFR and MPC")
+    (description
+      "Arbitrary-precision integers, rational, floating-point and complex numbers based on GMP, MPFR and MPC")
+    (license license:lgpl3+)))
+
+(define-public rust-uint-0.9
+  (package
+    (name "rust-uint")
+    (version "0.9.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "uint" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0pys10znj928lijvsq2rvnzns90a91j7199pl2afigc2yi8anw34"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-arbitrary" ,rust-arbitrary-1)
+         ("rust-byteorder" ,rust-byteorder-1)
+         ("rust-crunchy" ,rust-crunchy-0.2)
+         ("rust-hex" ,rust-hex-0.4)
+         ("rust-quickcheck" ,rust-quickcheck-0.9)
+         ("rust-rand" ,rust-rand-0.7)
+         ("rust-static-assertions" ,rust-static-assertions-1))
+        #:cargo-development-inputs
+        (("rust-criterion" ,rust-criterion-0.3)
+         ("rust-num-bigint" ,rust-num-bigint-0.4)
+         ("rust-rug" ,rust-rug-1))))
+    (home-page "http://parity.io")
+    (synopsis "Large fixed-size integer arithmetic")
+    (description "Large fixed-size integer arithmetic")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-impl-num-traits-0.1
+  (package
+    (name "rust-impl-num-traits")
+    (version "0.1.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "impl-num-traits" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0rjlic3z684l37qm7zywmxhhllnf982y3ilyslyxb6jiddyhbdiq"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-integer-sqrt" ,rust-integer-sqrt-0.1)
+         ("rust-num-traits" ,rust-num-traits-0.2)
+         ("rust-uint" ,rust-uint-0.9))))
+    (home-page "https://github.com/paritytech/parity-common")
+    (synopsis "num-traits implementation for uint.")
+    (description "num-traits implementation for uint.")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-impl-serde-0.3
+  (package
+    (name "rust-impl-serde")
+    (version "0.3.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "impl-serde" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0p2zy8ikdxd28s3vb22nwqgnwjn8gx920sr2svdn93j3yd1g0la5"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-serde" ,rust-serde-1))
+        #:cargo-development-inputs
+        (("rust-criterion" ,rust-criterion-0.3)
+         ("rust-serde-derive" ,rust-serde-derive-1)
+         ("rust-serde-json" ,rust-serde-json-1)
+         ("rust-uint" ,rust-uint-0.9))))
+    (home-page "https://github.com/paritytech/parity-common")
+    (synopsis "Serde serialization support for uint and fixed hash.")
+    (description "Serde serialization support for uint and fixed hash.")
+    (license (list license:expat license:asl2.0))))
+
+(define-public rust-scale-info-derive-1
+  (package
+    (name "rust-scale-info-derive")
+    (version "1.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "scale-info-derive" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "1k8z7y6181yjdnggbhnqr8mfnpw197pa8ni0hqpmk003d602gsxs"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-proc-macro-crate" ,rust-proc-macro-crate-1)
+         ("rust-proc-macro2" ,rust-proc-macro2-1)
+         ("rust-quote" ,rust-quote-1)
+         ("rust-syn" ,rust-syn-1))))
+    (home-page "https://www.parity.io/")
+    (synopsis "Derive type info for SCALE encodable types")
+    (description "Derive type info for SCALE encodable types")
+    (license license:asl2.0)))
+
+(define-public rust-scale-info-1
+  (package
+    (name "rust-scale-info")
+    (version "1.0.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (crate-uri "scale-info" version))
+        (file-name (string-append name "-" version ".tar.gz"))
+        (sha256
+          (base32 "0bvq3a9im6c20xmx8lipr5px9y4x22dpilm0ccnm69cw752bfmaw"))))
+    (build-system cargo-build-system)
+    (arguments
+      `(#:cargo-inputs
+        (("rust-bitvec" ,rust-bitvec-0.20)
+         ("rust-cfg-if" ,rust-cfg-if-1)
+         ("rust-derive-more" ,rust-derive-more-0.99)
+         ("rust-parity-scale-codec" ,rust-parity-scale-codec-2)
+         ("rust-scale-info-derive" ,rust-scale-info-derive-1)
+         ("rust-serde" ,rust-serde-1))))
+    (home-page "https://www.parity.io/")
+    (synopsis "Info about SCALE encodable Rust types")
+    (description "Info about SCALE encodable Rust types")
+    (license license:asl2.0)))
 
 (define-public rust-primitive-types-0.10
   (package
