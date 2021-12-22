@@ -29,10 +29,7 @@
                  ; TODO: Changing a single value in this feature requires
                  ;       you to define the entire feature again. Perhaps add a helper for this?
                  (feature-kernel
-                   ; Latest kernel 5.13.8 seems to have some issues with suspend/resume.
-                   ; For example, suspending the computer will result in a screen full of static.
-                   ; This is most likely some issue with the amdgpu driver.
-                   #:kernel linux-lts
+                   #:kernel linux
                    #:firmware (list linux-firmware)
                    #:kernel-arguments %engstrand-kernel-arguments
                    #:kernel-loadable-modules (kernel-modules->list (list tuxedo-keyboard-module)
