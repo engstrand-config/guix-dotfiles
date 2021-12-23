@@ -5,9 +5,6 @@
                #:use-module (gnu services virtualization)
                #:export (feature-virtualization))
 
-; TODO: Add groups to users
-;       (if virt? (list "libvirt" "kvm") '()))))
-
 (define* (feature-virtualization
            #:key
            (unix-sock-group "libvirt"))
@@ -25,4 +22,5 @@
 
          (feature
            (name 'virtualization)
+           (values `((virtualization-groups . ,(list "libvirt" "kvm"))))
            (system-services-getter get-system-services)))

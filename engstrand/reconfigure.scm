@@ -20,6 +20,12 @@
                      (string-append "reconfigure: could not load module '" mod "'"))))
                (variable-ref var))))
 
+; Finds a list of needed user supplementary groups for feature with
+; a value of name. Returns an empty list if no groups are found.
+(define (get-feature-groups name config)
+  (let ((groups (get-value name config)))
+    (if groups groups '())))
+
 ; Create a system or home configuration based on some parameters.
 ; Generally, you want to call this procedure with no arguments.
 (define* (make-config
@@ -72,8 +78,12 @@
                      (user-account
                        (inherit user)
                        (supplementary-groups
-                         ; Temporary hack to allow user to run VMs
-                         '("wheel" "netdev" "audio" "video" "libvirt" "kvm" "lp"))))
+                         (append
+                           (user-account-supplementary-groups user)
+                           (get-feature-groups 'virtualization-groups
+                                               %generated-config)
+                           (get-feature-groups 'bluetooth-groups
+                                               %generated-config)))))
                    (operating-system-users os))))))
 
          (match target

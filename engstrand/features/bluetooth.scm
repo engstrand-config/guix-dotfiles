@@ -6,7 +6,6 @@
                #:use-module (engstrand utils)
                #:export (feature-bluetooth))
 
-; TODO: add user to group lp
 (define* (feature-bluetooth
            #:key
            (auto-enable? #t))
@@ -20,4 +19,5 @@
 
          (feature
            (name 'bluetooth)
+           (values `((bluetooth-groups . ,(list "lp"))))
            (system-services-getter get-system-services)))
