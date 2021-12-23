@@ -32,8 +32,8 @@
 
 (define %engstrand-dwl-guile-patches
   (list %patch-xwayland
-        %patch-alpha
-        %patch-vanitygaps
+        %patch-swallow
+        %patch-movestack
         %patch-attachabove))
 
 (define %engstrand-dwl-guile-config
