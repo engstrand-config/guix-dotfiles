@@ -140,12 +140,14 @@
            #:key
            (package foot)
            (set-default-terminal? #t)
-           (window-alpha 0.9))
+           (window-alpha 0.9)
+           (swallow-clients? #t)) ;; TODO: Active swallow patch automatically if #t?
          "Setup foot terminal."
 
          (ensure-pred package? package)
          (ensure-pred boolean? set-default-terminal?)
          (ensure-pred number? window-alpha)
+         (ensure-pred boolean? swallow-clients?)
 
          (define (get-home-services config)
            "Return a list of home services required by foot."
@@ -169,9 +171,9 @@
                              (dwl-config
                                (inherit config)
                                (terminal `(,(file-append package "/bin/foot"))))))))
-               (when (and has-dwl-guile? (has-dwl-patch? 'alpha config))
+               (when has-dwl-guile?
                  (simple-service
-                   'set-foot-window-alpha
+                   'set-foot-window-rule
                    home-dwl-guile-service-type
                    (modify-dwl-guile-config
                      (config =>
@@ -182,7 +184,8 @@
                                    (list
                                      (dwl-rule
                                        (id "foot")
-                                       (alpha window-alpha)))
+                                       (alpha window-alpha)
+                                       (terminal swallow-clients?)))
                                    (dwl-config-rules config)))))))))))
 
          (feature
