@@ -10,9 +10,12 @@
                #:use-module (gnu home services shepherd)
                #:export (feature-kdeconnect))
 
-(define* (feature-kdeconnect)
-         ; TODO: add key for phone ID?
+(define* (feature-kdeconnect
+           #:key
+           (device-id #f))
          "Install and configure KDE Connect."
+
+         (ensure-pred maybe-string? device-id)
 
          (define (get-home-services config)
            "Return a list of home services required by KDE Connect."
@@ -39,4 +42,5 @@
 
          (feature
            (name 'kdeconnect)
+           (values `((kdeconnect-device-id . ,device-id)))
            (home-services-getter get-home-services)))
