@@ -109,7 +109,7 @@
         ("config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
         ("config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))
     (feature-nix)
-    ; (feature-mpv)
+    (feature-mpv)
     (feature-obs)
     (feature-imv)
     (feature-neovim)
