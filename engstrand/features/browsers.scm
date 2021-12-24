@@ -15,13 +15,11 @@
                          feature-qutebrowser
                          feature-firefox))
 
-; TODO: Complete this feature. Currently, it is only used to add a dwl keybinding.
 (define* (feature-firefox
            #:key
            (open-key "w")
            (open-modifiers '(SUPER SHIFT))
            (spawn-parameters '("firefox"))
-           ; (spawn-parameters `(,(file-append firefox "/bin/firefox")))
            (add-keybindings? #t))
          "Setup Firefox."
 
@@ -33,13 +31,11 @@
          (define (get-home-services config)
            "Return a list of home services required by Firefox."
            (make-service-list
-             ; How do we want to install Firefox?
-             ; Installing it from nongnu will require you to manually compile it,
-             ; which takes a huge amount of time.
-             ; (simple-service
-             ;   'add-firefox-home-packages-to-profile
-             ;   home-profile-service-type
-             ;   (list firefox))
+             (simple-service
+               'add-firefox-home-packages-to-profile
+               home-profile-service-type
+               (list
+                 (if (get-value 'wayland config) firefox-wayland firefox)))
              (when (and add-keybindings? (get-value 'dwl-guile config))
                (simple-service
                  'add-firefox-dwl-keybindings
