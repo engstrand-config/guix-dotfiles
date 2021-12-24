@@ -30,6 +30,7 @@
                    (feature-kdeconnect)
                    (feature-qutebrowser
                      #:add-keybindings? #f)
+                   (feature-firefox)
                    (feature-custom-services
                      #:home-services
                      (list
