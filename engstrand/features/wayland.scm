@@ -79,7 +79,8 @@
 
          (feature
            (name 'wayland-dwl-guile)
-           (values `((dwl-guile . #t)
+           (values `((wayland . #t)
+                     (dwl-guile . #t)
                      (dwl-guile-patches
                        . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
            (home-services-getter get-home-services)))
