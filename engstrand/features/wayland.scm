@@ -186,6 +186,7 @@
                                      (dwl-rule
                                        (id "foot")
                                        (alpha window-alpha)
+                                       (no-swallow (not swallow-clients?))
                                        (terminal swallow-clients?)))
                                    (dwl-config-rules config)))))))))))
 
