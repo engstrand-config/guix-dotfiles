@@ -1,48 +1,72 @@
 (define-module (engstrand features emacs)
-               #:use-module (engstrand utils)
-               #:use-module (gnu home services)
-               #:use-module (gnu services)
-               #:use-module (flat packages emacs)
-               #:use-module (gnu packages emacs)
-               #:use-module (gnu packages emacs-xyz)
-               #:use-module (rde features)
-               #:use-module (rde features emacs)
-               #:export (%engstrand-emacs-base-features feature-emacs-guix))
+  #:use-module (engstrand utils)
+  #:use-module (gnu home services)
+  #:use-module (gnu services)
+  #:use-module (flat packages emacs)
+  #:use-module (gnu packages emacs)
+  #:use-module (gnu packages emacs-xyz)
+  #:use-module (rde features)
+  #:use-module (rde features emacs)
+  #:export (feature-emacs-evil
+            %engstrand-emacs-base-features))
 
+(define* (feature-emacs-evil
+          #:key
+          (evil-collection? #t)
+          (evil-surround? #t))
+  "Add and configure evil-mode for Emacs."
+  (ensure-pred boolean? evil-collection?)
+  (ensure-pred boolean? evil-surround?)
+  (define emacs-f-name 'evil)
+  (define f-name (symbol-append 'emacs- emacs-f-name))
 
-(define* (feature-emacs-guix)
-         "Add the emacs-guix package."
+  (define (get-home-services config)
+    (list
+     (elisp-configuration-service
+      emacs-f-name
+      `((setq evil-want-keybinding nil)
+        (require 'evil)
+        (evil-mode 1)
+        (when (require 'evil-collection nil t)
+          (evil-collection-init))
+        (require 'evil-surround)
+        (global-evil-surround-mode 1)
+        (setq evil-insert-state-message nil))
+     #:elisp-packages (list emacs-evil (if evil-collection? emacs-evil-collection) (if evil-surround? emacs-evil-surround)))))
 
-         (define (get-home-services config)
-           (list
-             (simple-service
-               'add-emacs-home-packages-to-profile
-               home-profile-service-type
-               (pkgs '("emacs-guix")))))
-
-         (feature
-           (name 'emacs-guix)
-           (home-services-getter get-home-services)))
+  (feature
+   (name f-name)
+   (values `((,f-name . #t)))
+   (home-services-getter get-home-services)))
 
 (define %engstrand-emacs-base-features
   (list
    (feature-emacs
     #:emacs emacs-next-pgtk
-    #:additional-elisp-packages (list emacs-evil emacs-evil-collection emacs-geiser emacs-geiser-guile)
-    #:extra-init-el '((evil-mode 1)
+    #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
+    #:extra-init-el '(
                       (fringe-mode '(0 . 0))
+                      ; This might be fixed by some extra evil-mode package
+                      ; (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+                      ; Undo the top modeline of emacs-appearance
+                      (setq-default mode-line-format header-line-format)
+                      (setq-default header-line-format nil)
+                      ; Relative line numbers, but only when relevant
                       (setq-default display-line-numbers-type 'relative)
-                      (global-display-line-numbers-mode)
-                      (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-                      ; (evil-collection-init)
+                      (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+                      ; Nicer mouse scrolling
+                      (setq mouse-wheel-scroll-amount '(3))
+                      (setq mouse-wheel-progressive-speed nil)
                       ))
-   (feature-emacs-guix)
    (feature-emacs-appearance
-    #:margin 8)
+    #:margin 5)
+   (feature-emacs-evil)
    (feature-emacs-monocle)
    (feature-emacs-dired)
    (feature-emacs-faces)
-   (feature-emacs-completion)
+   (feature-emacs-completion
+    #:mini-frame? #f)
+   (feature-emacs-vertico)
    (feature-emacs-project)
    (feature-emacs-perspective)
    (feature-emacs-input-methods)
@@ -51,5 +75,6 @@
    (feature-emacs-keycast)
    (feature-emacs-pdf-tools)
    (feature-emacs-org)
+   (feature-emacs-org-agenda)
    (feature-emacs-org-roam
     #:org-roam-directory "~/roam/"))) ; TODO: add roam dir in guix home

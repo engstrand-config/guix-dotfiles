@@ -38,4 +38,4 @@
                        (width 2560)
                        (height 1440)
                        (refresh-rate 60)
-                       (adaptive-sync? #t))))))
+                       (adaptive-sync? #f))))))
