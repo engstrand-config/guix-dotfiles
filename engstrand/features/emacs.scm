@@ -29,11 +29,14 @@
         (evil-mode 1)
         (when (require 'evil-collection nil t)
           (evil-collection-init))
+        (require 'evil-commentary)
+        (evil-commentary-mode)
         (require 'evil-surround)
         (global-evil-surround-mode 1)
         (setq evil-insert-state-message nil))
       #:elisp-packages (list
                         emacs-evil
+                        emacs-evil-commentary
                         (if evil-collection? emacs-evil-collection)
                         (if evil-surround? emacs-evil-surround)))))
 
