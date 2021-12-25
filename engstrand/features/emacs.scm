@@ -32,7 +32,10 @@
         (require 'evil-surround)
         (global-evil-surround-mode 1)
         (setq evil-insert-state-message nil))
-     #:elisp-packages (list emacs-evil (if evil-collection? emacs-evil-collection) (if evil-surround? emacs-evil-surround)))))
+      #:elisp-packages (list
+                        emacs-evil
+                        (if evil-collection? emacs-evil-collection)
+                        (if evil-surround? emacs-evil-surround)))))
 
   (feature
    (name f-name)
@@ -44,20 +47,20 @@
    (feature-emacs
     #:emacs emacs-next-pgtk
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
-    #:extra-init-el '(
-                      (fringe-mode '(0 . 0))
-                      ; This might be fixed by some extra evil-mode package
-                      ; (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+    #:extra-init-el '((fringe-mode '(0 . 0))
                       ; Undo the top modeline of emacs-appearance
                       (setq-default mode-line-format header-line-format)
                       (setq-default header-line-format nil)
                       ; Relative line numbers, but only when relevant
                       (setq-default display-line-numbers-type 'relative)
                       (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+                      ; Olivetti mode when working with text
+                      (add-hook 'text-mode-hook 'olivetti-mode)
                       ; Nicer mouse scrolling
                       (setq mouse-wheel-scroll-amount '(3))
                       (setq mouse-wheel-progressive-speed nil)
-                      ))
+                      ; Allow execution of src blocks without asking
+                      (setq org-confirm-babel-evaluate nil)))
    (feature-emacs-appearance
     #:margin 5)
    (feature-emacs-evil)
@@ -77,4 +80,4 @@
    (feature-emacs-org)
    (feature-emacs-org-agenda)
    (feature-emacs-org-roam
-    #:org-roam-directory "~/roam/"))) ; TODO: add roam dir in guix home
+    #:org-roam-directory "~/roam/")))
