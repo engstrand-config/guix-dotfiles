@@ -65,6 +65,94 @@
    (values `((,f-name . #t)))
    (home-services-getter get-home-services)))
 
+(define* (feature-emacs-modus-themes
+          ;; #:key
+          ;; ()
+          )
+  "Add and configure the Modus themes for Emacs."
+  (define emacs-f-name 'modus-themes)
+  (define f-name (symbol-append 'emacs- emacs-f-name))
+
+  (define (get-home-services config)
+    (list
+     (elisp-configuration-service
+      emacs-f-name
+      `((require 'modus-themes)
+        (setq modus-themes-italic-constructs t
+              modus-themes-bold-constructs t
+              modus-themes-mixed-fonts t
+              modus-themes-subtle-line-numbers t
+              modus-themes-intense-markup t
+
+              ;; Options for `modus-themes-lang-checkers' are either nil (the
+              ;; default), or a list of properties that may include any of those
+              ;; symbols: `straight-underline', `text-also', `background',
+              ;; `intense' OR `faint'.
+              modus-themes-lang-checkers nil
+
+              ;; Options for `modus-themes-mode-line' are either nil, or a list
+              ;; that can combine any of `3d' OR `moody', `borderless',
+              ;; `accented', and a natural number for extra padding
+              modus-themes-mode-line '(borderless)
+
+              ;; Options for `modus-themes-syntax' are either nil (the default),
+              ;; or a list of properties that may include any of those symbols:
+              ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
+              modus-themes-syntax nil
+
+              ;; Options for `modus-themes-hl-line' are either nil (the default),
+              ;; or a list of properties that may include any of those symbols:
+              ;; `accented', `underline', `intense'
+              modus-themes-hl-line '(underline intense)
+
+              ;; Options for `modus-themes-paren-match' are either nil (the
+              ;; default), or a list of properties that may include any of those
+              ;; symbols: `bold', `intense', `underline'
+              modus-themes-paren-match nil
+
+              ;; Options for `modus-themes-links' are either nil (the default),
+              ;; or a list of properties that may include any of those symbols:
+              ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
+              ;; `bold', `italic', `background'
+              modus-themes-links nil
+
+              ;; Options for `modus-themes-prompts' are either nil (the
+              ;; default), or a list of properties that may include any of those
+              ;; symbols: `background', `bold', `gray', `intense', `italic'
+              modus-themes-prompts nil
+
+              modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
+
+              ;; Options for `modus-themes-region' are either nil (the default),
+              ;; or a list of properties that may include any of those symbols:
+              ;; `no-extend', `bg-only', `accented'
+              modus-themes-region '(bg-only accented)
+
+              ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
+              modus-themes-diffs 'nil
+
+              modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+
+              modus-themes-org-agenda ; this is an alist: read the manual or its doc string
+              '((header-block . (variable-pitch 1.3))
+                (header-date . (grayscale workaholic bold-today 1.1))
+                (event . (accented varied))
+                (scheduled . uniform)
+                (habit . traffic-light))
+
+              modus-themes-headings ; this is an alist: read the manual or its doc string
+              '((1 . (background variable-pitch 1.3))
+                (2 . (rainbow overline 1.1))
+                (t . (semibold))))
+        (modus-themes-load-themes))
+      #:elisp-packages (list
+                        emacs-modus-themes))))
+
+  (feature
+   (name f-name)
+   (values `((,f-name . #t)))
+   (home-services-getter get-home-services)))
+
 (define* (feature-emacs-evil
           #:key
           (evil-collection? #t)
@@ -90,7 +178,10 @@
         (evil-commentary-mode)
         (require 'evil-surround)
         (global-evil-surround-mode 1)
-        (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+        ;; Make the Escape key behave more nicely for evil-mode
+	(global-set-key (kbd "<escape>") 'keyboard-quit)
+        (define-key query-replace-map (kbd "<escape>") 'quit)
+
         (setq evil-insert-state-message nil))
       #:elisp-packages (list
                         emacs-evil
@@ -120,6 +211,10 @@
                       ;; Nicer mouse scrolling
                       (setq mouse-wheel-progressive-speed nil)
                       (setq mouse-wheel-scroll-amount '(3))
+                      ;; Configure the look of  tabs
+                      (setq tab-bar-close-button-show nil
+                            tab-bar-new-button-show nil
+                            tab-bar-new-tab-choice "*scratch*")
                       ;; Allow execution of src blocks without asking
                       (setq org-confirm-babel-evaluate nil)))
    (feature-emacs-appearance
@@ -132,6 +227,7 @@
     #:mini-frame? #f)
    ;; (feature-emacs-auto-complete)
    ;; (feature-emacs-company)
+   (feature-emacs-modus-themes)
    (feature-emacs-corfu)
    (feature-emacs-vertico)
    (feature-emacs-project)
