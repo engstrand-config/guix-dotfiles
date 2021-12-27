@@ -34,11 +34,17 @@
   (list %patch-xwayland
         %patch-swallow
         %patch-movestack
+        ;; %patch-smartborders
         %patch-attachabove))
 
 (define %engstrand-dwl-guile-config
   (dwl-config
     (xkb-rules %engstrand-keyboard-layout)
+    (rules
+      (list
+        (dwl-rule (id "emacs")
+                  (title "emacs")
+                  (alpha 0.8))))
     (colors
       (dwl-colors
         (root '(0 0 1 1))))))
