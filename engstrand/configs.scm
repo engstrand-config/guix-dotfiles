@@ -65,10 +65,10 @@
     (feature-git
       #:sign-commits? #t)
     (feature-fonts
-      #:font-packages (list font-jetbrains-mono)
+      #:font-packages (list font-jetbrains-mono font-iosevka-aile)
       #:font-monospace (font "JetBrains Mono" #:size 13)
-      ; #:font-sans (font "JetBrains Mono" #:size 13)
-      ; #:font-serif (font "JetBrains Mono" #:size 13)
+      #:font-sans (font "Iosevka Aile" #:size 13)
+      #:font-serif (font "Iosevka Aile" #:size 13)
       )
     (feature-pipewire)
     (feature-backlight)
