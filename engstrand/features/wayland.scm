@@ -47,7 +47,10 @@
                   (alpha 0.8))))
     (colors
       (dwl-colors
-        (root '(0 0 1 1))))))
+       (root '(0.1 0.1 0.1 1))
+       (border '(0.5 0.5 0.5 1))
+       (focus '(1 0.8 0 1))
+       ))))
 
 ;; rewrite with match
 (define (transform-bemenu-options lst)
