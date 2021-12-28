@@ -162,6 +162,7 @@
     #:emacs emacs-pgtk-native-comp
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
     #:extra-init-el '((fringe-mode 0)
+                      (setq native-comp-async-report-warnings-errors nil)
                       ;; Undo the top modeline of emacs-appearance
                       (setq-default mode-line-format header-line-format)
                       (setq-default header-line-format nil)
