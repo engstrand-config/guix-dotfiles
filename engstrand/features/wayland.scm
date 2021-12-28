@@ -40,6 +40,7 @@
 (define %engstrand-dwl-guile-config
   (dwl-config
     (xkb-rules %engstrand-keyboard-layout)
+    (border-px 2)
     (rules
       (list
         (dwl-rule (id "emacs")
@@ -49,8 +50,7 @@
       (dwl-colors
        (root '(0.1 0.1 0.1 1))
        (border '(0.5 0.5 0.5 1))
-       (focus '(1 0.8 0 1))
-       ))))
+       (focus '(1 0.8 0 1))))))
 
 ;; rewrite with match
 (define (transform-bemenu-options lst)
@@ -64,10 +64,10 @@
                                (else (raise "invalid bemenu argument!")))))))
   (string-join (map make-cli-argument lst)))
 
-; Checks if SYMBOL corresponds to a patch that is/will
-; be applied to dwl-guile, based on the feature values in CONFIG.
-; SYMBOL should be the name of the patch, not including the ".patch" extension.
-; I.e. @code{(has-dwl-patch? 'xwayland config)}.
+;; Checks if SYMBOL corresponds to a patch that is/will
+;; be applied to dwl-guile, based on the feature values in CONFIG.
+;; SYMBOL should be the name of the patch, not including the ".patch" extension.
+;; I.e. @code{(has-dwl-patch? 'xwayland config)}.
 (define (has-dwl-patch? symbol config)
   (let ((patch-name (string-append (symbol->string symbol) ".patch")))
     (find (lambda (p) (equal? patch-name (local-file-name p)))
@@ -109,7 +109,7 @@
          (ensure-pred list-of-modifiers? dismiss-all-modifiers)
          (ensure-pred boolean? add-keybindings?)
 
-         ; TODO: Allow configuration using Guile.
+         ;; TODO: Allow configuration using Guile.
 
          (define (get-home-services config)
            "Return a list of home services required by mako"
@@ -145,7 +145,7 @@
            (name 'wayland-mako)
            (home-services-getter get-home-services)))
 
-; TODO: Move to features/terminals.scm?
+;; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
            #:key
            (package foot)
@@ -167,7 +167,7 @@
                  'add-foot-home-packages-to-profile
                  home-profile-service-type
                  (list package))
-               ; TODO: Allow configuration using Guile.
+               ;; TODO: Allow configuration using Guile.
                (simple-service
                  'create-foot-config
                  home-files-service-type
@@ -203,8 +203,8 @@
            (name 'wayland-foot)
            (home-services-getter get-home-services)))
 
-; TODO: Move to farg?
-; TODO: Copy file at PATH to store and restart shepherd service on change
+;; TODO: Move to farg?
+;; TODO: Copy file at PATH to store and restart shepherd service on change
 (define* (feature-wayland-wbg
            #:key
            (path #f))
@@ -246,12 +246,12 @@
                                (startup-commands
                                  (cons
                                    #~(begin
-                                       ; TODO: Figure out why the service is disabled after restarting dwl-guile.
-                                       ;       A shepherd service will automatically be disabled if it respawns
-                                       ;       and exists too frequently during a certain time period.
-                                       ;       I do not understand why this would happen though, since both auto-start?
-                                       ;       and respawn? has been set to false. I have also noticied that
-                                       ;       it usually works if you use start/stop rather than restart on dwl-guile.
+                                       ;; TODO: Figure out why the service is disabled after restarting dwl-guile.
+                                       ;;       A shepherd service will automatically be disabled if it respawns
+                                       ;;       and exists too frequently during a certain time period.
+                                       ;;       I do not understand why this would happen though, since both auto-start?
+                                       ;;       and respawn? has been set to false. I have also noticied that
+                                       ;;       it usually works if you use start/stop rather than restart on dwl-guile.
                                        (system* #$(file-append shepherd "/bin/herd") "enable" "wbg")
                                        (system* #$(file-append shepherd "/bin/herd") "start" "wbg"))
                                    (home-dwl-guile-configuration-startup-commands config)))))))))))
@@ -392,10 +392,10 @@
          (define %grim-pipe-to-clipboard
            `("-" "|" ,(file-append wl-clipboard "/bin/wl-copy")))
 
-         ; TODO: Cleanup this mess. A simple solution is to just use the executable name directly.
-         ;       Another (better) solution is to allow multiple arguments to dwl:shcmd.
-         ;       dwl:spawn does support n amount of arguments, but since shcmd runs the command
-         ;       in a shell context ("/bin/sh" "-c" <args>), the last argument must be a single string.
+         ;; TODO: Cleanup this mess. A simple solution is to just use the executable name directly.
+         ;;       Another (better) solution is to allow multiple arguments to dwl:shcmd.
+         ;;       dwl:spawn does support n amount of arguments, but since shcmd runs the command
+         ;;       in a shell context ("/bin/sh" "-c" <args>), the last argument must be a single string.
          (define (make-screenshot-shcmd . params)
            `(dwl:shcmd (string-join (list ,@(fold-right append '() (cons %grim-command params))))))
 
@@ -459,8 +459,8 @@
                              (inherit config)
                              (menu `(,(file-append bemenu "/bin/bemenu-run"))))))))
 
-             ; TODO: Convert options list into a configuration
-             ;       and automatically transform when enabling feature.
+             ;; TODO: Convert options list into a configuration
+             ;;       and automatically transform when enabling feature.
              (simple-service
                'bemenu-options
                home-environment-variables-service-type
