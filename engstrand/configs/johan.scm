@@ -42,16 +42,17 @@
                                     (block-spacing 5)
                                     (bottom? #t)
                                     (use-dwl-guile-colorscheme? #t)
-                                    (sub-align 'ALIGN-LEFT)
-                                    (sub-blocks
+                                    (left-blocks
                                      (list
                                       (dtao-block
-                                       (render " A very cool website name right here - Mozilla Firefox"))
+                                       (events? #t)
+                                       (render `(string-append " 🐧 " (dtao:title monitor))))))
+                                    (right-blocks
+                                     (list
                                       (dtao-block
                                        (interval 1)
                                        (render `(strftime "%A, %d %b (w.%W) %T" (localtime (current-time)))))))
-                                    (title-align 'ALIGN-CENTER)
-                                    (title-blocks
+                                    (center-blocks
                                      (map (lambda (tag)
                                             (dtao-block
                                              (interval 0)
@@ -61,8 +62,7 @@
                                                                  "")
                                                              (number->string tag)
                                                              (if (eq? tag 1)
-                                                                 (string-append "^fg()^bg()"
-                                                                                "^sx()^p(-10;-10)^bg(#000000)^p(5;5)^bg()^p()^rx()")
+                                                                 (string-append "^fg()^bg()")
                                                                  "")))))
                                           (iota 9 1)))))))
                        (simple-service
