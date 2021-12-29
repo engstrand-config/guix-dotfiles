@@ -9,6 +9,7 @@
                #:use-module (engstrand features wayland)
                #:use-module (dwl-guile utils)
                #:use-module (dwl-guile home-service)
+               #:use-module (dtao-guile home-service)
                #:use-module (engstrand utils)
                #:use-module (engstrand configs))
 
@@ -34,16 +35,46 @@
                    (feature-custom-services
                      #:home-services
                      (list
+                       (service home-dtao-guile-service-type
+                                (home-dtao-guile-configuration
+                                  (config
+                                   (dtao-config
+                                    (block-spacing 5)
+                                    (bottom? #t)
+                                    (use-dwl-guile-colorscheme? #t)
+                                    (sub-align 'ALIGN-LEFT)
+                                    (sub-blocks
+                                     (list
+                                      (dtao-block
+                                       (render " A very cool website name right here - Mozilla Firefox"))
+                                      (dtao-block
+                                       (interval 1)
+                                       (render `(strftime "%A, %d %b (w.%W) %T" (localtime (current-time)))))))
+                                    (title-align 'ALIGN-CENTER)
+                                    (title-blocks
+                                     (map (lambda (tag)
+                                            (dtao-block
+                                             (interval 0)
+                                             (render (format #f "~a ~a ~a"
+                                                             (if (eq? tag 1)
+                                                                 "^bg(#ffcc00)^fg(#191919)"
+                                                                 "")
+                                                             (number->string tag)
+                                                             (if (eq? tag 1)
+                                                                 (string-append "^fg()^bg()"
+                                                                                "^sx()^p(-10;-10)^bg(#000000)^p(5;5)^bg()^p()^rx()")
+                                                                 "")))))
+                                          (iota 9 1)))))))
                        (simple-service
-                         'change-dwl-guile-borderpx
-                         home-dwl-guile-service-type
-                         (modify-dwl-guile-config
-                           (config =>
-                                   (dwl-config
-                                     (inherit config)
-                                     (border-px 2)))))))
+                        'change-dwl-guile-borderpx
+                        home-dwl-guile-service-type
+                        (modify-dwl-guile-config
+                         (config =>
+                                 (dwl-config
+                                  (inherit config)
+                                  (border-px 2)))))))
                    (feature-wayland-wbg
-                     #:path (string-append (getenv "HOME")
-                                           "/engstrand-config/wallpapers/default.jpg")))
+                    #:path (string-append (getenv "HOME")
+                                          "/engstrand-config/wallpapers/default.jpg")))
                  %engstrand-emacs-base-features
                  %engstrand-base-features))
