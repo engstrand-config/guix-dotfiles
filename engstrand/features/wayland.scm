@@ -18,6 +18,7 @@
                #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
                #:use-module (dwl-guile configuration)
+               #:use-module (dwl-guile configuration default-config)
                #:export (
                          feature-wayland-dwl-guile
                          feature-wayland-bemenu
@@ -46,6 +47,26 @@
         (dwl-rule (id "emacs")
                   (title "emacs")
                   (alpha 0.8))))
+    (keys
+     (append
+      (list
+       (dwl-key
+        (modifiers '(SUPER))
+        (key "KP_Up")
+        (action '(dwl:increase-masters +1)))
+       (dwl-key
+        (modifiers '(SUPER))
+        (key "KP_Down")
+        (action '(dwl:increase-masters -1)))
+       (dwl-key
+        (modifiers '(SUPER))
+        (key "0")
+        (action '(dwl:cycle-layout)))
+       (dwl-key
+        (modifiers '(SUPER))
+        (key "Tab")
+        (action '(dwl:view-previous))))
+       %dwl-base-keys))
     (colors
       (dwl-colors
        (root '(0.1 0.1 0.1 1))
