@@ -35,7 +35,7 @@
                'add-firefox-home-packages-to-profile
                home-profile-service-type
                (list
-                 (if (get-value 'wayland config) firefox/wayland firefox)))
+                 (if (get-value 'wayland config) firefox/wayland-95.0.2 firefox)))
              (when (and add-keybindings? (get-value 'dwl-guile config))
                (simple-service
                  'add-firefox-dwl-keybindings
