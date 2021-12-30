@@ -15,15 +15,6 @@
   (package
     (inherit qutebrowser)
     (name "qutebrowser-with-scripts")
-    (version "2.3.1")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (string-append "https://github.com/qutebrowser/"
-                            "qutebrowser/releases/download/v" version "/"
-                            "qutebrowser-" version ".tar.gz"))
-        (sha256
-          (base32 "05n64mw9lzzxpxr7lhakbkm9ir3x8p0rwk6vbbg01aqg5iaanyj0"))))
     (arguments
       `(,@(substitute-keyword-arguments
             (package-arguments qutebrowser)
