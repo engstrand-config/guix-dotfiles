@@ -9,7 +9,7 @@
                #:use-module (engstrand features wayland)
                #:use-module (dwl-guile utils)
                #:use-module (dwl-guile home-service)
-               #:use-module (dtao-guile home-service)
+               ; #:use-module (dtao-guile home-service)
                #:use-module (engstrand utils)
                #:use-module (engstrand configs))
 
@@ -35,36 +35,36 @@
                    (feature-custom-services
                      #:home-services
                      (list
-                       (service home-dtao-guile-service-type
-                                (home-dtao-guile-configuration
-                                  (config
-                                   (dtao-config
-                                    (block-spacing 5)
-                                    (bottom? #t)
-                                    (use-dwl-guile-colorscheme? #t)
-                                    (left-blocks
-                                     (list
-                                      (dtao-block
-                                       (events? #t)
-                                       (render `(string-append " 🐧 " (dtao:title monitor))))))
-                                    (right-blocks
-                                     (list
-                                      (dtao-block
-                                       (interval 1)
-                                       (render `(strftime "%A, %d %b (w.%W) %T" (localtime (current-time)))))))
-                                    (center-blocks
-                                     (map (lambda (tag)
-                                            (dtao-block
-                                             (interval 0)
-                                             (render (format #f "~a ~a ~a"
-                                                             (if (eq? tag 1)
-                                                                 "^bg(#ffcc00)^fg(#191919)"
-                                                                 "")
-                                                             (number->string tag)
-                                                             (if (eq? tag 1)
-                                                                 (string-append "^fg()^bg()")
-                                                                 "")))))
-                                          (iota 9 1)))))))
+                       ; (service home-dtao-guile-service-type
+                       ;          (home-dtao-guile-configuration
+                       ;            (config
+                       ;             (dtao-config
+                       ;              (block-spacing 5)
+                       ;              (bottom? #t)
+                       ;              (use-dwl-guile-colorscheme? #t)
+                       ;              (left-blocks
+                       ;               (list
+                       ;                (dtao-block
+                       ;                 (events? #t)
+                       ;                 (render `(string-append " 🐧 " (dtao:title monitor))))))
+                       ;              (right-blocks
+                       ;               (list
+                       ;                (dtao-block
+                       ;                 (interval 1)
+                       ;                 (render `(strftime "%A, %d %b (w.%W) %T" (localtime (current-time)))))))
+                       ;              (center-blocks
+                       ;               (map (lambda (tag)
+                       ;                      (dtao-block
+                       ;                       (interval 0)
+                       ;                       (render (format #f "~a ~a ~a"
+                       ;                                       (if (eq? tag 1)
+                       ;                                           "^bg(#ffcc00)^fg(#191919)"
+                       ;                                           "")
+                       ;                                       (number->string tag)
+                       ;                                       (if (eq? tag 1)
+                       ;                                           (string-append "^fg()^bg()")
+                       ;                                           "")))))
+                       ;                    (iota 9 1)))))))
                        (simple-service
                         'change-dwl-guile-borderpx
                         home-dwl-guile-service-type
