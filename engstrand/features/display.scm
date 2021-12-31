@@ -29,22 +29,18 @@
 (define* (feature-dwl-guile-monitor-config
            #:key
            (monitors '())
-           (focus-left-key "Left")
-           (focus-right-key "Right")
-           (focus-modifiers '(SUPER))
-           (move-left-key "Left")
-           (move-right-key "Right")
-           (move-modifiers '(SUPER SHIFT))
+           (focus-left-key "s-<left>")
+           (focus-right-key "s-<right>")
+           (move-left-key "S-s-<left>")
+           (move-right-key "S-s-<right>")
            (add-keybindings? #t))
          "Configure monitor settings for dwl-guile."
 
          (ensure-pred list-of-monitor-rules? monitors)
-         (ensure-pred keycode? focus-left-key)
-         (ensure-pred keycode? focus-right-key)
-         (ensure-pred keycode? move-left-key)
-         (ensure-pred keycode? move-right-key)
-         (ensure-pred list-of-modifiers? focus-modifiers)
-         (ensure-pred list-of-modifiers? move-modifiers)
+         (ensure-pred string? focus-left-key)
+         (ensure-pred string? focus-right-key)
+         (ensure-pred string? move-left-key)
+         (ensure-pred string? move-right-key)
 
          (define (get-home-services config)
            "Return a list of home services required for configuring monitors in dwl-guile."
@@ -84,19 +80,15 @@
                                    (list
                                      (dwl-key
                                        (key focus-left-key)
-                                       (modifiers focus-modifiers)
                                        (action `(dwl:focus-monitor DIRECTION-LEFT)))
                                      (dwl-key
                                        (key focus-right-key)
-                                       (modifiers focus-modifiers)
                                        (action `(dwl:focus-monitor DIRECTION-RIGHT)))
                                      (dwl-key
                                        (key move-left-key)
-                                       (modifiers move-modifiers)
                                        (action `(dwl:tag-monitor DIRECTION-LEFT)))
                                      (dwl-key
                                        (key move-right-key)
-                                       (modifiers move-modifiers)
                                        (action `(dwl:tag-monitor DIRECTION-RIGHT))))
                                    (dwl-config-keys config)))))))))))
 

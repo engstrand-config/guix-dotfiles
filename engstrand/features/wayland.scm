@@ -51,20 +51,16 @@
      (append
       (list
        (dwl-key
-        (modifiers '(SUPER))
-        (key "KP_Up")
+        (key "s-<kp-up>")
         (action '(dwl:increase-masters +1)))
        (dwl-key
-        (modifiers '(SUPER))
-        (key "KP_Down")
+        (key "s-<kp-down>")
         (action '(dwl:increase-masters -1)))
        (dwl-key
-        (modifiers '(SUPER))
-        (key "0")
+        (key "s-0")
         (action '(dwl:cycle-layout)))
        (dwl-key
-        (modifiers '(SUPER))
-        (key "Tab")
+        (key "s-<tab>")
         (action '(dwl:view-previous))))
        %dwl-base-keys))
     (colors
@@ -117,17 +113,13 @@
 
 (define* (feature-wayland-mako
            #:key
-           (dismiss-key "d")
-           (dismiss-modifiers '(SUPER CTRL))
-           (dismiss-all-key "d")
-           (dismiss-all-modifiers '(SUPER CTRL SHIFT))
+           (dismiss-key "C-s-d")
+           (dismiss-all-key "C-S-s-d")
            (add-keybindings? #t))
          "Setup mako, a lightweight notification daemon for Wayland"
 
          (ensure-pred string? dismiss-key)
          (ensure-pred string? dismiss-all-key)
-         (ensure-pred list-of-modifiers? dismiss-modifiers)
-         (ensure-pred list-of-modifiers? dismiss-all-modifiers)
          (ensure-pred boolean? add-keybindings?)
 
          ;; TODO: Allow configuration using Guile.
@@ -197,12 +189,10 @@ format=~a
                            (append
                             (list
                              (dwl-key
-                              (modifiers dismiss-modifiers)
                               (key dismiss-key)
                               (action `(system* ,(file-append mako "/bin/makoctl")
                                                 "dismiss")))
                              (dwl-key
-                              (modifiers dismiss-all-modifiers)
                               (key dismiss-all-key)
                               (action `(system* ,(file-append mako "/bin/makoctl")
                                                 "dismiss" "--all"))))
@@ -330,8 +320,7 @@ format=~a
 (define* (feature-wayland-wlsunset
           #:key
           (package wlsunset)
-          (toggle-key "End")
-          (toggle-modifiers '(SUPER))
+          (toggle-key "s-<end>")
           (latitude 59.8)
           (longitude 17.6)
           (gamma-low 2000)
@@ -340,12 +329,11 @@ format=~a
   "Setup wlsunset for adjusting day/night gamma for Wayland compositors."
 
   (ensure-pred package? wlsunset)
-  (ensure-pred keycode? toggle-key)
+  (ensure-pred string? toggle-key)
   (ensure-pred number? latitude)
   (ensure-pred number? longitude)
   (ensure-pred number? gamma-low)
   (ensure-pred number? gamma-high)
-  (ensure-pred list-of-modifiers? toggle-modifiers)
   (ensure-pred boolean? add-keybindings?)
 
   (define (get-home-services config)
@@ -397,7 +385,6 @@ format=~a
                      (append
                       (list
                        (dwl-key
-                        (modifiers toggle-modifiers)
                         (key toggle-key)
                         (action `(system* ,(file-append shepherd "/bin/herd")
                                           "toggle"
@@ -411,6 +398,7 @@ format=~a
            (config =>
                    (home-dwl-guile-configuration
                     (inherit config)
+                    ;; TODO: Replace with autostart in shepherd?
                     (startup-commands
                      (cons
                       #~(begin
@@ -427,24 +415,18 @@ format=~a
           (output-filetype "jpeg")
           (output-quality 100)
           (include-cursors? #f)
-          (screenshot-output-key "Print")
-          (screenshot-output-modifiers '())
-          (screenshot-select-key "Print")
-          (screenshot-select-modifiers '(SUPER))
-          (screenshot-select-copy-key "Print")
-          (screenshot-select-copy-modifiers '(SUPER SHIFT))
+          (screenshot-output-key "<print>")
+          (screenshot-select-key "s-<print>")
+          (screenshot-select-copy-key "S-s-<print>")
           (add-keybindings? #t))
   "Setup grim, slurp and wl-clipboard for taking screenshots in Wayland compositors."
 
   (ensure-pred string? output-filetype)
   (ensure-pred number? output-quality)
   (ensure-pred boolean? include-cursors?)
-  (ensure-pred keycode? screenshot-output-key)
-  (ensure-pred keycode? screenshot-select-key)
-  (ensure-pred keycode? screenshot-select-copy-key)
-  (ensure-pred list-of-modifiers? screenshot-output-modifiers)
-  (ensure-pred list-of-modifiers? screenshot-select-modifiers)
-  (ensure-pred list-of-modifiers? screenshot-select-copy-modifiers)
+  (ensure-pred string? screenshot-output-key)
+  (ensure-pred string? screenshot-select-key)
+  (ensure-pred string? screenshot-select-copy-key)
   (ensure-pred boolean? add-keybindings?)
 
   (define %grim-command
@@ -485,15 +467,12 @@ format=~a
                    (append
                     (list
                      (dwl-key
-                      (modifiers screenshot-output-modifiers)
                       (key screenshot-output-key)
                       (action (make-screenshot-shcmd)))
                      (dwl-key
-                      (modifiers screenshot-select-modifiers)
                       (key screenshot-select-key)
                       (action (make-screenshot-shcmd %grim-select-options)))
                      (dwl-key
-                      (modifiers screenshot-select-copy-modifiers)
                       (key screenshot-select-copy-key)
                       (action (make-screenshot-shcmd %grim-select-options
                                                      %grim-pipe-to-clipboard))))

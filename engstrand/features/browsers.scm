@@ -17,14 +17,12 @@
 
 (define* (feature-firefox
            #:key
-           (open-key "w")
-           (open-modifiers '(SUPER SHIFT))
+           (open-key "S-s-w")
            (spawn-parameters '("firefox"))
            (add-keybindings? #t))
          "Setup Firefox."
 
-         (ensure-pred keycode? open-key)
-         (ensure-pred list-of-modifiers? open-modifiers)
+         (ensure-pred string? open-key)
          (ensure-pred start-parameters? spawn-parameters)
          (ensure-pred boolean? add-keybindings?)
 
@@ -48,7 +46,6 @@
                                (append
                                  (list
                                    (dwl-key
-                                     (modifiers open-modifiers)
                                      (key open-key)
                                      (action `(dwl:spawn ,spawn-parameters))))
                                  (dwl-config-keys config))))))))))
@@ -60,14 +57,12 @@
 (define* (feature-qutebrowser
            #:key
            (package qutebrowser-with-scripts)
-           (open-key "w")
-           (open-modifiers '(SUPER SHIFT))
+           (open-key "S-s-w")
            (add-keybindings? #t))
          "Setup qutebrowser, a keyboard-focused browser with a minimal GUI."
 
          (ensure-pred package? package)
-         (ensure-pred keycode? open-key)
-         (ensure-pred list-of-modifiers? open-modifiers)
+         (ensure-pred string? open-key)
          (ensure-pred boolean? add-keybindings?)
          ; TODO: Add configuration in Guile
 
@@ -90,7 +85,6 @@
                                (append
                                  (list
                                    (dwl-key
-                                     (modifiers open-modifiers)
                                      (key open-key)
                                      (action `(dwl:spawn ,(file-append package "/bin/qutebrowser")))))
                                  (dwl-config-keys config))))))))))
