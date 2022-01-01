@@ -4,6 +4,7 @@
                #:use-module (guix gexp)
                #:use-module (srfi srfi-1)
                #:use-module (gnu services)
+               #:use-module (gnu services xorg)
                #:use-module (gnu packages wm)
                #:use-module (gnu packages image)
                #:use-module (gnu packages admin)
@@ -27,6 +28,7 @@
                          feature-wayland-wbg
                          feature-wayland-wlsunset
                          feature-wayland-screenshot
+                         feature-wayland-swaylock
 
                          %engstrand-dwl-guile-patches
                          %engstrand-dwl-guile-config))
@@ -549,3 +551,50 @@ format=~a
   (feature
    (name 'wayland-bemenu)
    (home-services-getter get-home-services)))
+
+;; TODO: Add options?
+(define* (feature-wayland-swaylock)
+  "Install and configure swaylock."
+
+  (define (get-home-services config)
+    (list
+     (simple-service
+      'create-swaylock-config
+      home-files-service-type
+      `(("config/swaylock/config"
+         ,(plain-file "swaylock-config"
+                      (serialize-ini-config
+                       `(("clock")
+                         ("screenshots")
+                         ("indicator")
+                         ("daemonize")
+                         ("hide-keyboard-layout")
+                         ("color" . "000000AA")
+                         ("font" . "JetBrains Mono:style=bold")
+                         ("font-size" . 40)
+                         ("indicator-thickness" . 8)
+                         ("indicator-radius" . 125)
+                         ("key-hl-color" . "FF8800")
+                         ("key-hl-color" . "FF8800")
+                         ("inside-color" . "00000000")
+                         ("inside-clear-color" . "00000000")
+                         ("inside-ver-color" . "00000000")
+                         ("inside-wrong-color" . "00000000")
+                         ("ring-color" . "FFCC00")
+                         ("ring-wrong-color" . "FF0000")
+                         ("text-clear-color" . "00000000")
+                         ("text-ver-color" . "00000000")
+                         ("text-wrong-color" . "00000000")
+                         ("separator-color" . "00000000")
+                         ("effect-blur" . "5x5")
+                         ("fade-in" . 0)
+                         ("datestr" . "")))))))))
+
+  (define (get-system-services config)
+   (list
+     (screen-locker-service swaylock-effects "swaylock")))
+
+  (feature
+   (name 'wayland-swaylock)
+   (home-services-getter get-home-services)
+   (system-services-getter get-system-services)))

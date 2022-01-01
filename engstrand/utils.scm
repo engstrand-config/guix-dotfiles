@@ -60,3 +60,31 @@
      (filter-map (lambda (feature)
                    (%modify-feature feature clauses ...))
                  features))))
+
+;; Serializes an alist with key-value pairs into an ini configuration file.
+;; If no value is specified, only the key will be returned.
+;;
+;; @example
+;; (serialize-ini-config
+;;  `(("foo" . "bar")
+;;    ("key-with-no-value")))
+;; @end
+;; yields a string containing newlines:
+;; foo=bar
+;; key-with-no-value
+(define-public (serialize-ini-config lst)
+  (fold
+   (lambda (entry acc)
+     (let ((key (car entry))
+           (value (cdr entry)))
+       (string-append
+        key
+        (if (null? value)
+            ""
+            (string-append "="
+                           (if (number? value)
+                               (number->string value)
+                               value)))
+        "\n" acc)))
+   ""
+   lst))

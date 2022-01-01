@@ -118,6 +118,7 @@
     (feature-wayland-mako)
     (feature-wayland-wlsunset)
     (feature-wayland-screenshot)
+    (feature-wayland-swaylock)
     (feature-wayland-dwl-guile
       #:dwl-guile-configuration
       (home-dwl-guile-configuration
