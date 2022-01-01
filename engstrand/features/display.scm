@@ -1,15 +1,20 @@
 (define-module (engstrand features display)
+               #:use-module (guix gexp)
                #:use-module (srfi srfi-1)
                #:use-module (rde features)
                #:use-module (rde features predicates)
                #:use-module (gnu services)
+               #:use-module (gnu home services)
+               #:use-module (gnu packages linux)
                #:use-module (dwl-guile utils)
                #:use-module (dwl-guile patches)
                #:use-module (dwl-guile home-service)
                #:use-module (dwl-guile configuration)
                #:use-module (dwl-guile configuration records)
                #:use-module (engstrand utils)
-               #:export (feature-dwl-guile-monitor-config))
+               #:export (
+                         feature-dwl-guile-monitor-config
+                         feature-laptop-monitor-brightness))
 
 ;(define (feature-monitor-brightness)
 ;  TODO: requires package ddcutil from (gnu packages hardware)
@@ -94,4 +99,49 @@
 
          (feature
            (name 'dwl-guile-monitor-config)
+           (home-services-getter get-home-services)))
+
+(define* (feature-laptop-monitor-brightness
+         #:key
+         (step 10)
+         (decrease-brightness-key "<XF86MonBrightnessDown>")
+         (increase-brightness-key "<XF86MonBrightnessUp>")
+         (add-keybindings? #t))
+  "Install and configure brightnessctl for laptops"
+
+  (ensure-pred number? step)
+  (ensure-pred string? decrease-brightness-key)
+  (ensure-pred string? increase-brightness-key)
+  (ensure-pred boolean? add-keybindings?)
+
+  (define (get-home-services config)
+    (make-service-list
+     (simple-service
+      'add-brightnessctl-home-packages-to-profile
+      home-profile-service-type
+      (list brightnessctl))
+     (when (and add-keybindings?
+                (get-value 'dwl-guile config))
+       (let ((bin (file-append brightnessctl "/bin/brightnessctl"))
+             (change (string-append (number->string step) "%")))
+       (simple-service
+        'add-dwl-guile-brightness-keys
+        home-dwl-guile-service-type
+        (modify-dwl-guile-config
+         (config =>
+                 (dwl-config
+                  (inherit config)
+                  (keys
+                   (append
+                    (list
+                     (dwl-key
+                      (key decrease-brightness-key)
+                      (action `(system* ,bin "s" ,(string-append change "-"))))
+                     (dwl-key
+                      (key increase-brightness-key)
+                      (action `(system* ,bin "s" ,(string-append "+" change)))))
+                    (dwl-config-keys config)))))))))))
+
+         (feature
+           (name 'laptop-monitor-brightness)
            (home-services-getter get-home-services)))
