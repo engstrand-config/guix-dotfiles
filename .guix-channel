@@ -26,9 +26,17 @@
      (version 0)
      (commit "314453a87634d67e914cfdf51d357638902dd9fe")
      (signer "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
-  ; TODO: Remove when Guix home has been upstreamed
   (channel
-   (name rde) ; no quote needed here
+   (name home-service-dtao-guile)
+   (url "https://github.com/engstrand-config/home-service-dtao-guile")
+   (branch "main")
+   (introduction
+    (channel-introduction
+     (version 0)
+     (commit "64d0b70c547095ddc840dd07424b9a46ccc2e64e")
+     (signer "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
+  (channel
+   (name rde)
    (url "https://git.sr.ht/~abcdw/rde")
    (introduction
     (channel-introduction
