@@ -6,7 +6,6 @@
   #:use-module (gnu services)
   #:use-module (gnu services databases)
   #:use-module (gnu home-services ssh) ;; rde home-service
-  #:use-module (dtao-guile home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand features xorg)
