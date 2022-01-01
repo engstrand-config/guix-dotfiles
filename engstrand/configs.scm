@@ -10,6 +10,7 @@
   #:use-module (rde features version-control)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
+  #:use-module (dtao-guile home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
   #:use-module (engstrand features nix)
@@ -22,6 +23,7 @@
   #:use-module (engstrand features neovim)
   #:use-module (engstrand features wayland)
   #:use-module (engstrand features documents)
+  #:use-module (engstrand features statusbar)
   #:export (
             %engstrand-base-system-packages
             %engstrand-base-home-packages
@@ -120,6 +122,10 @@
    (feature-wayland-wlsunset)
    (feature-wayland-screenshot)
    (feature-wayland-swaylock)
+   (feature-statusbar-dtao-guile
+    #:dtao-guile-configuration
+    (home-dtao-guile-configuration
+     (config %engstrand-dtao-guile-config)))
    (feature-wayland-dwl-guile
     #:dwl-guile-configuration
     (home-dwl-guile-configuration
