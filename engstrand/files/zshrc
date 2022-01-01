@@ -22,6 +22,9 @@ HISTSIZE=5000
 SAVEHIST=$HISTSIZE
 HISTFILE=${XDG_CACHE_HOME:-$HOME/.cache}/.zhistory
 
+# Set autosuggestions highlight
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=4"
+
 for dump in ${ZDOTDIR}/.zcompdump(N.mh+24); do
   compinit
 done
