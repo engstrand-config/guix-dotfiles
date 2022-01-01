@@ -3,6 +3,7 @@
                #:use-module (engstrand systems)
                #:use-module (engstrand packages linux)
                #:use-module (engstrand features laptop)
+               #:use-module (engstrand features display)
                #:use-module (engstrand features bluetooth)
                #:use-module (rde features system)
                #:use-module (nongnu packages linux)
@@ -40,7 +41,7 @@
                    #:host-name "tuxedo"
                    #:timezone %engstrand-timezone
                    #:locale %engstrand-locale)
-		 (feature-bootloader)
+                 (feature-bootloader)
                  (feature-file-systems
                    #:file-systems
                    (list
@@ -54,5 +55,6 @@
                          (uuid "4484aa6c-d5ff-4964-b62d-c2572c701e66" 'ext4))
                        (type "ext4"))))
                  (feature-laptop)
+                 (feature-laptop-monitor-brightness)
                  (feature-bluetooth)
                  (feature-tlp)))

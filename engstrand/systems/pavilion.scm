@@ -2,6 +2,7 @@
                #:use-module (engstrand utils)
                #:use-module (engstrand systems)
                #:use-module (engstrand features laptop)
+               #:use-module (engstrand features display)
                #:use-module (rde features system)
                #:use-module (gnu system file-systems)
                #:use-module (gnu system mapped-devices))
@@ -31,4 +32,5 @@
                                'ext4))
                        (type "ext4"))))
                  (feature-laptop)
+                 (feature-laptop-monitor-brightness)
                  (feature-tlp)))
