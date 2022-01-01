@@ -27,8 +27,13 @@
       (interval 0)
       (events? #t)
       (render
-       `(format #f "~a ~a ^fg()^bg()"
-                (if (dtao:selected-tag? ,tag) "^bg(#ffcc00)^fg(#191919)" "")
+       `(format #f "~a^p(8)~a^p(8)^fg()^bg()"
+                (let ((index (- ,tag 1)))
+                  (cond
+                   ((dtao:selected-tag? index) "^bg(#ffcc00)^fg(#191919)")
+                   ((dtao:urgent-tag? index) "^bg(#ff0000)^fg(#ffffff)")
+                   ((dtao:active-tag? index) "^bg(#323232)^fg(#ffffff)")
+                   (else "")))
                 ,(number->string tag)))))
    (iota 9 1)))
 
@@ -41,7 +46,7 @@
 ;; General dtao-guile configuration
 (define %engstrand-dtao-guile-config
   (dtao-config
-   (block-spacing 5)
+   (block-spacing 0)
    (bottom? #t)
    (use-dwl-guile-colorscheme? #t)
    (left-blocks %engstrand-dtao-guile-left-blocks)
