@@ -1,37 +1,37 @@
 (define-module (engstrand features wayland)
-               #:use-module (rde features)
-               #:use-module (rde features predicates)
-               #:use-module (guix gexp)
-               #:use-module (srfi srfi-1)
-               #:use-module (gnu services)
-               #:use-module (gnu services xorg)
-               #:use-module (gnu packages wm)
-               #:use-module (gnu packages image)
-               #:use-module (gnu packages admin)
-               #:use-module (gnu packages xdisorg)
-               #:use-module (gnu packages terminals)
-               #:use-module (gnu home services)
-               #:use-module (gnu home services shepherd)
-               #:use-module (engstrand utils)
-               #:use-module (engstrand systems)
-               #:use-module (engstrand packages wayland)
-               #:use-module (dwl-guile utils)
-               #:use-module (dwl-guile patches)
-               #:use-module (dwl-guile home-service)
-               #:use-module (dwl-guile configuration)
-               #:use-module (dwl-guile configuration default-config)
-               #:export (
-                         feature-wayland-dwl-guile
-                         feature-wayland-bemenu
-                         feature-wayland-foot
-                         feature-wayland-mako
-                         feature-wayland-wbg
-                         feature-wayland-wlsunset
-                         feature-wayland-screenshot
-                         feature-wayland-swaylock
+  #:use-module (rde features)
+  #:use-module (rde features predicates)
+  #:use-module (guix gexp)
+  #:use-module (srfi srfi-1)
+  #:use-module (gnu services)
+  #:use-module (gnu services xorg)
+  #:use-module (gnu packages wm)
+  #:use-module (gnu packages image)
+  #:use-module (gnu packages admin)
+  #:use-module (gnu packages xdisorg)
+  #:use-module (gnu packages terminals)
+  #:use-module (gnu home services)
+  #:use-module (gnu home services shepherd)
+  #:use-module (engstrand utils)
+  #:use-module (engstrand systems)
+  #:use-module (engstrand packages wayland)
+  #:use-module (dwl-guile utils)
+  #:use-module (dwl-guile patches)
+  #:use-module (dwl-guile home-service)
+  #:use-module (dwl-guile configuration)
+  #:use-module (dwl-guile configuration default-config)
+  #:export (
+            feature-wayland-dwl-guile
+            feature-wayland-bemenu
+            feature-wayland-foot
+            feature-wayland-mako
+            feature-wayland-wbg
+            feature-wayland-wlsunset
+            feature-wayland-screenshot
+            feature-wayland-swaylock
 
-                         %engstrand-dwl-guile-patches
-                         %engstrand-dwl-guile-config))
+            %engstrand-dwl-guile-patches
+            %engstrand-dwl-guile-config))
 
 (define %engstrand-dwl-guile-patches
   (list %patch-xwayland
@@ -42,34 +42,34 @@
 
 (define %engstrand-dwl-guile-config
   (dwl-config
-    (xkb-rules %engstrand-keyboard-layout)
-    (border-px 2)
-    (rules
-      (list
-        (dwl-rule (id "emacs")
-                  (title "emacs")
-                  (alpha 0.9))))
-    (keys
-     (append
-      (list
-       (dwl-key
-        (key "s-<kp-up>")
-        (action '(dwl:increase-masters +1)))
-       (dwl-key
-        (key "s-<kp-down>")
-        (action '(dwl:increase-masters -1)))
-       (dwl-key
-        (key "s-0")
-        (action '(dwl:cycle-layout)))
-       (dwl-key
-        (key "s-<tab>")
-        (action '(dwl:view-previous))))
-       %dwl-base-keys))
-    (colors
-      (dwl-colors
-       (root '(0.1 0.1 0.1 1))
-       (border '(0.5 0.5 0.5 1))
-       (focus '(1 0.8 0 1))))))
+   (xkb-rules %engstrand-keyboard-layout)
+   (border-px 2)
+   (rules
+    (list
+     (dwl-rule (id "emacs")
+               (title "emacs")
+               (alpha 0.9))))
+   (keys
+    (append
+     (list
+      (dwl-key
+       (key "s-<kp-up>")
+       (action '(dwl:increase-masters +1)))
+      (dwl-key
+       (key "s-<kp-down>")
+       (action '(dwl:increase-masters -1)))
+      (dwl-key
+       (key "s-0")
+       (action '(dwl:cycle-layout)))
+      (dwl-key
+       (key "s-<tab>")
+       (action '(dwl:view-previous))))
+     %dwl-base-keys))
+   (colors
+    (dwl-colors
+     (root '(0.1 0.1 0.1 1))
+     (border '(0.5 0.5 0.5 1))
+     (focus '(1 0.8 0 1))))))
 
 ;; rewrite with match
 (define (transform-bemenu-options lst)
@@ -93,53 +93,53 @@
           (get-value 'dwl-guile-patches config))))
 
 (define* (feature-wayland-dwl-guile
-           #:key
-           (dwl-guile-configuration (home-dwl-guile-configuration)))
-         "Setup dwl-guile."
+          #:key
+          (dwl-guile-configuration (home-dwl-guile-configuration)))
+  "Setup dwl-guile."
 
-         (ensure-pred home-dwl-guile-configuration? dwl-guile-configuration)
+  (ensure-pred home-dwl-guile-configuration? dwl-guile-configuration)
 
-         (define (get-home-services config)
-           "Return a list of home services required by dwl."
-           (list
-             (service home-dwl-guile-service-type
-                      dwl-guile-configuration)))
+  (define (get-home-services config)
+    "Return a list of home services required by dwl."
+    (list
+     (service home-dwl-guile-service-type
+              dwl-guile-configuration)))
 
-         (feature
-           (name 'wayland-dwl-guile)
-           (values `((wayland . #t)
-                     (dwl-guile . #t)
-                     (dwl-guile-patches
-                       . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
-           (home-services-getter get-home-services)))
+  (feature
+   (name 'wayland-dwl-guile)
+   (values `((wayland . #t)
+             (dwl-guile . #t)
+             (dwl-guile-patches
+              . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
+   (home-services-getter get-home-services)))
 
 (define* (feature-wayland-mako
-           #:key
-           (dismiss-key "C-s-d")
-           (dismiss-all-key "C-S-s-d")
-           (add-keybindings? #t))
-         "Setup mako, a lightweight notification daemon for Wayland"
+          #:key
+          (dismiss-key "C-s-d")
+          (dismiss-all-key "C-S-s-d")
+          (add-keybindings? #t))
+  "Setup mako, a lightweight notification daemon for Wayland"
 
-         (ensure-pred string? dismiss-key)
-         (ensure-pred string? dismiss-all-key)
-         (ensure-pred boolean? add-keybindings?)
+  (ensure-pred string? dismiss-key)
+  (ensure-pred string? dismiss-all-key)
+  (ensure-pred boolean? add-keybindings?)
 
-         ;; TODO: Allow configuration using Guile.
+  ;; TODO: Allow configuration using Guile.
 
-         (define (get-home-services config)
-           "Return a list of home services required by mako"
-           (make-service-list
-             (simple-service
-               'add-mako-home-packages-to-profile
-               home-profile-service-type
-               (pkgs '("mako" "libnotify")))
-             (simple-service
-                 'create-foot-config
-                 home-files-service-type
-                 `(("config/mako/config"
-                    ;; TODO: Move to separate file and call as a procedure
-                    ,(plain-file "mako-config"
-                                 (format #f "
+  (define (get-home-services config)
+    "Return a list of home services required by mako"
+    (make-service-list
+     (simple-service
+      'add-mako-home-packages-to-profile
+      home-profile-service-type
+      (pkgs '("mako" "libnotify")))
+     (simple-service
+      'create-foot-config
+      home-files-service-type
+      `(("config/mako/config"
+         ;; TODO: Move to separate file and call as a procedure
+         ,(plain-file "mako-config"
+                      (format #f "
 font=~a
 background-color=~a
 text-color=~a
@@ -162,47 +162,47 @@ format=~a
 format=~a
 
 "
-                                         "sans 10"
-                                         "#F0F0F0FF"
-                                         "#222222FF"
-                                         "500"
-                                         "85"
-                                         "#A0A0A0FF"
-                                         "2"
-                                         "8"
-                                         "0,0,25"
-                                         "10"
-                                         "15000"
-                                         "bottom-center"
-                                         "2"
-                                         "<b>%s (%a)</b>\\n%b"
-                                         "<b>%s (%a, %g)</b>\\n%b"
-                                         "(%h more notifications)"
-                                         "")))))
-             (when (and add-keybindings? (get-value 'dwl-guile config))
-               (simple-service
-                'add-mako-dwl-keybindings
-                home-dwl-guile-service-type
-                (modify-dwl-guile-config
-                 (config =>
-                         (dwl-config
-                          (inherit config)
-                          (keys
-                           (append
-                            (list
-                             (dwl-key
-                              (key dismiss-key)
-                              (action `(system* ,(file-append mako "/bin/makoctl")
-                                                "dismiss")))
-                             (dwl-key
-                              (key dismiss-all-key)
-                              (action `(system* ,(file-append mako "/bin/makoctl")
-                                                "dismiss" "--all"))))
-                            (dwl-config-keys config))))))))))
+                              "sans 10"
+                              "#F0F0F0FF"
+                              "#222222FF"
+                              "500"
+                              "85"
+                              "#A0A0A0FF"
+                              "2"
+                              "8"
+                              "0,0,25"
+                              "10"
+                              "15000"
+                              "bottom-center"
+                              "2"
+                              "<b>%s (%a)</b>\\n%b"
+                              "<b>%s (%a, %g)</b>\\n%b"
+                              "(%h more notifications)"
+                              "")))))
+     (when (and add-keybindings? (get-value 'dwl-guile config))
+       (simple-service
+        'add-mako-dwl-keybindings
+        home-dwl-guile-service-type
+        (modify-dwl-guile-config
+         (config =>
+                 (dwl-config
+                  (inherit config)
+                  (keys
+                   (append
+                    (list
+                     (dwl-key
+                      (key dismiss-key)
+                      (action `(system* ,(file-append mako "/bin/makoctl")
+                                        "dismiss")))
+                     (dwl-key
+                      (key dismiss-all-key)
+                      (action `(system* ,(file-append mako "/bin/makoctl")
+                                        "dismiss" "--all"))))
+                    (dwl-config-keys config))))))))))
 
-         (feature
-          (name 'wayland-mako)
-          (home-services-getter get-home-services)))
+  (feature
+   (name 'wayland-mako)
+   (home-services-getter get-home-services)))
 
 ;; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
@@ -591,7 +591,7 @@ format=~a
                          ("datestr" . "")))))))))
 
   (define (get-system-services config)
-   (list
+    (list
      (screen-locker-service swaylock-effects "swaylock")))
 
   (feature
