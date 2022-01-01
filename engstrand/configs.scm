@@ -14,6 +14,7 @@
                #:use-module (engstrand systems)
                #:use-module (engstrand features nix)
                #:use-module (engstrand features base)
+               #:use-module (engstrand features audio)
                #:use-module (engstrand features utils)
                #:use-module (engstrand features video)
                #:use-module (engstrand features state)
@@ -41,7 +42,6 @@
 ; Move some of the packages to separate features?
 (define %engstrand-base-home-packages
   (pkgs '("curl" "htop" "ncurses"
-          "pulsemixer" "alsa-utils"
           "hicolor-icon-theme" "adwaita-icon-theme" "gnome-themes-standard")))
 
 ; Dynamically create a configuration that can be reproduced
@@ -71,6 +71,7 @@
       #:font-serif (font "Iosevka Aile" #:size 13)
       )
     (feature-pipewire)
+    (feature-alsa-control)
     (feature-backlight)
     (feature-zsh)
     (feature-ssh)
