@@ -59,6 +59,9 @@
    (use-dwl-guile-colorscheme? #t)
    (modules '((ice-9 match)))
    (padding-left 0)
+   (padding-top 0)
+   (padding-bottom 0)
+   (height 25)
    (left-blocks %engstrand-dtao-guile-left-blocks)
    (center-blocks %engstrand-dtao-guile-center-blocks)
    (right-blocks %engstrand-dtao-guile-right-blocks)))
@@ -70,6 +73,10 @@
 
   (ensure-pred home-dtao-guile-configuration? dtao-guile-configuration)
 
+  ;; dtao-config
+  (define dtao
+    (home-dtao-guile-configuration-config dtao-guile-configuration))
+
   (define (get-home-services config)
     "Return a list of home services required by dtao-guile."
     (list
@@ -79,5 +86,6 @@
   (feature
    (name 'statusbar-dtao-guile)
    (values `((statusbar? . #t)
+             (statusbar-height . ,(dtao-config-height dtao))
              (dtao-guile . #t)))
    (home-services-getter get-home-services)))
