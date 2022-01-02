@@ -18,26 +18,27 @@
   (append
    (map
     (lambda (tag)
+      (let ((str (string-append "^p(8)" (number->string tag) "^p(8)"))
+            (index (- tag 1)))
       (dtao-block
        (interval 0)
        (events? #t)
        (click `(match button
-                 (0 (dtao:view ,(- tag 1)))))
-       (render
-        `(format #f "~a^p(8)~a^p(8)^fg()^bg()"
-                 (let ((index ,(- tag 1)))
-                   (cond
-                    ((dtao:selected-tag? index) "^bg(#ffcc00)^fg(#191919)")
-                    ((dtao:urgent-tag? index) "^bg(#ff0000)^fg(#ffffff)")
-                    ((dtao:active-tag? index) "^bg(#323232)^fg(#ffffff)")
-                    (else "")))
-                 ,(number->string tag)))))
+                 (0 (dtao:view ,index))))
+       (render `(cond
+                 ((dtao:selected-tag? ,index)
+                  ,(string-append "^bg(#ffcc00)^fg(#191919)" str "^fg()^bg()"))
+                 ((dtao:urgent-tag? ,index)
+                  ,(string-append "^bg(#ff0000)^fg(#ffffff)" str "^fg()^bg()"))
+                 ((dtao:active-tag? ,index)
+                  ,(string-append "^bg(#323232)^fg(#ffffff)" str "^fg()^bg()"))
+                 (else ,str))))))
     (iota 9 1))
    (list
     (dtao-block
      (events? #t)
      (click `(dtao:next-layout))
-     (render `(dtao:get-layout))))))
+     (render `(string-append "^p(4)" (dtao:get-layout)))))))
 
 (define %engstrand-dtao-guile-center-blocks
   (list
@@ -57,6 +58,7 @@
    (block-spacing 0)
    (use-dwl-guile-colorscheme? #t)
    (modules '((ice-9 match)))
+   (padding-left 0)
    (left-blocks %engstrand-dtao-guile-left-blocks)
    (center-blocks %engstrand-dtao-guile-center-blocks)
    (right-blocks %engstrand-dtao-guile-right-blocks)))
