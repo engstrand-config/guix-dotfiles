@@ -537,10 +537,10 @@
   "Install and configure bemenu power prompt."
 
   (define actions
-    (let ((bin (file-append elogind "/bin/loginctl"))
-          (seat (getenv "XDG_SESSION_ID")))
+    (let ((bin (file-append elogind "/bin/loginctl")))
       `(("suspend" . (system* ,bin "suspend"))
-        ("logout" . (system* ,bin "terminate-session" ,seat))
+        ("logout" . (system* ,bin "terminate-session"
+                             (getenv "XDG_SESSION_ID")))
         ("reboot" . (system* ,bin "reboot"))
         ("shutdown" . (system* ,bin "shutdown")))))
 
