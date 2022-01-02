@@ -117,6 +117,7 @@
    (feature-neovim)
    (feature-zathura)
    (feature-wayland-bemenu)
+   (feature-wayland-bemenu-power)
    (feature-wayland-foot)
    (feature-wayland-mako)
    (feature-wayland-wlsunset)
