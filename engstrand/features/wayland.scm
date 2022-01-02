@@ -10,9 +10,11 @@
   #:use-module (gnu packages admin)
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages terminals)
+  #:use-module (gnu packages freedesktop)
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (engstrand utils)
+  #:use-module (engstrand utils bemenu-prompt)
   #:use-module (engstrand systems)
   #:use-module (engstrand packages wayland)
   #:use-module (dwl-guile utils)
@@ -23,6 +25,7 @@
   #:export (
             feature-wayland-dwl-guile
             feature-wayland-bemenu
+            feature-wayland-bemenu-power
             feature-wayland-foot
             feature-wayland-mako
             feature-wayland-wbg
@@ -526,6 +529,50 @@
 
   (feature
    (name 'wayland-bemenu)
+   (home-services-getter get-home-services)))
+
+(define* (feature-wayland-bemenu-power
+          #:key
+          (open-key "S-s-<backspace>"))
+  "Install and configure bemenu power prompt."
+
+  (define actions
+    (let ((bin (file-append elogind "/bin/loginctl"))
+          (seat (getenv "XDG_SESSION_ID")))
+      `(("suspend" . (system* ,bin "suspend"))
+        ("logout" . (system* ,bin "terminate-session" ,seat))
+        ("reboot" . (system* ,bin "reboot"))
+        ("shutdown" . (system* ,bin "shutdown")))))
+
+  (define (get-home-services config)
+    (let ((executable
+           (compute-bemenu-prompt
+            "bemenu.scm"
+            "What do you want to do?"
+            actions)))
+      (make-service-list
+       (simple-service
+        'create-bemenu-power-executable
+        home-files-service-type
+        `(("config/bemenu.scm" ,executable)))
+       (when (get-value 'dwl-guile config)
+         (simple-service
+          'add-bemenu-power-dwl-keybinding
+          home-dwl-guile-service-type
+          (modify-dwl-guile-config
+           (config =>
+                   (dwl-config
+                    (inherit config)
+                    (keys
+                     (append
+                      (list
+                       (dwl-key
+                        (key open-key)
+                        (action `(dwl:shcmd ,executable))))
+                      (dwl-config-keys config)))))))))))
+
+  (feature
+   (name 'wayland-bemenu-power)
    (home-services-getter get-home-services)))
 
 ;; TODO: Add options?
