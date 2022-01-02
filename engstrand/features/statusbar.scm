@@ -43,7 +43,7 @@
   (list
    (dtao-block
     (interval 1)
-    (render `(strftime "%A, %d %b (w.%W) %T" (localtime (current-time)))))))
+    (render `(strftime "%A, %d %b (w.%V) %T" (localtime (current-time)))))))
 
 ;; General dtao-guile configuration
 (define %engstrand-dtao-guile-config
