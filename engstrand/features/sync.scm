@@ -37,7 +37,10 @@
           (auto-start? #t)
           (respawn? #t)
           (start #~(make-forkexec-constructor
-                    (list #$(file-append kdeconnect "/libexec/kdeconnectd"))))
+                    (list #$(file-append kdeconnect "/libexec/kdeconnectd"))
+                    #:log-file #$(string-append (or (getenv "XDG_LOG_HOME")
+                                                    (getenv "HOME"))
+                                                "/kdeconnect.log")))
           (stop  #~(make-kill-destructor))))))))
 
   (feature
