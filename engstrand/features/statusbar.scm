@@ -15,29 +15,35 @@
             %engstrand-dtao-guile-right-blocks))
 
 (define %engstrand-dtao-guile-left-blocks
+  (append
+   (map
+    (lambda (tag)
+      (dtao-block
+       (interval 0)
+       (events? #t)
+       (click `(match button
+                 (0 (dtao:view ,(- tag 1)))))
+       (render
+        `(format #f "~a^p(8)~a^p(8)^fg()^bg()"
+                 (let ((index ,(- tag 1)))
+                   (cond
+                    ((dtao:selected-tag? index) "^bg(#ffcc00)^fg(#191919)")
+                    ((dtao:urgent-tag? index) "^bg(#ff0000)^fg(#ffffff)")
+                    ((dtao:active-tag? index) "^bg(#323232)^fg(#ffffff)")
+                    (else "")))
+                 ,(number->string tag)))))
+    (iota 9 1))
+   (list
+    (dtao-block
+     (events? #t)
+     (click `(dtao:next-layout))
+     (render `(dtao:get-layout))))))
+
+(define %engstrand-dtao-guile-center-blocks
   (list
    (dtao-block
     (events? #t)
     (render `(dtao:title)))))
-
-(define %engstrand-dtao-guile-center-blocks
-  (map
-   (lambda (tag)
-     (dtao-block
-      (interval 0)
-      (events? #t)
-      (click `(match button
-                (0 (dtao:view ,(- tag 1)))))
-      (render
-       `(format #f "~a^p(8)~a^p(8)^fg()^bg()"
-                (let ((index ,(- tag 1)))
-                  (cond
-                   ((dtao:selected-tag? index) "^bg(#ffcc00)^fg(#191919)")
-                   ((dtao:urgent-tag? index) "^bg(#ff0000)^fg(#ffffff)")
-                   ((dtao:active-tag? index) "^bg(#323232)^fg(#ffffff)")
-                   (else "")))
-                ,(number->string tag)))))
-   (iota 9 1)))
 
 (define %engstrand-dtao-guile-right-blocks
   (list
@@ -49,7 +55,6 @@
 (define %engstrand-dtao-guile-config
   (dtao-config
    (block-spacing 0)
-   (bottom? #t)
    (use-dwl-guile-colorscheme? #t)
    (modules '((ice-9 match)))
    (left-blocks %engstrand-dtao-guile-left-blocks)
