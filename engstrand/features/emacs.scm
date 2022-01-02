@@ -52,6 +52,7 @@
      (elisp-configuration-service
       emacs-f-name
       `((require 'modus-themes)
+        (window-divider-mode 0)
         (setq modus-themes-italic-constructs t
               modus-themes-bold-constructs t
               modus-themes-mixed-fonts t
@@ -77,7 +78,8 @@
               modus-themes-headings '((1 . (background variable-pitch 1.3))
                                       (2 . (rainbow overline 1.1))
                                       (t . (semibold))))
-        (modus-themes-load-themes))
+        (modus-themes-load-themes)
+        (modus-themes-load-vivendi))
       #:elisp-packages (list
                         emacs-modus-themes))))
 
@@ -190,6 +192,10 @@
                       (add-hook 'before-save-hook 'whitespace-cleanup)
                       ;; Allow execution of src blocks without asking
                       (setq org-confirm-babel-evaluate nil)))
+   ;; Load custom theme before rde emacs-appearance feature.
+   ;; This make sures that our custom settings overrides
+   ;; any values set in rde.
+   (feature-emacs-modus-themes)
    (feature-emacs-appearance
     #:margin 5)
    (feature-emacs-evil)
@@ -198,7 +204,6 @@
    (feature-emacs-faces)
    (feature-emacs-completion
     #:mini-frame? #f)
-   (feature-emacs-modus-themes)
    (feature-emacs-corfu)
    (feature-emacs-vertico)
    (feature-emacs-project)
