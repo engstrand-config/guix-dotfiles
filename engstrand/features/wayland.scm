@@ -138,11 +138,11 @@
       `(("config/mako/config"
          ,(alist->ini "mako-config"
                       `(("font" . "sans 10")
-                        ("background-color" . "#F0F0F0FF")
-                        ("text-color" . "#222222FF")
+                        ("background-color" . "#252525FF")
+                        ("text-color" . "#FFFFFFFF")
                         ("width" . 500)
                         ("height" . 85)
-                        ("border-color" . "#A0A0A0FF")
+                        ("border-color" . "#555555FF")
                         ("border-size" . 1)
                         ("border-radius" . 0)
                         ("margin" . "0,0,10")
