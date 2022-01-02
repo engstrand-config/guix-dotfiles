@@ -37,7 +37,6 @@
   (list %patch-xwayland
         %patch-swallow
         %patch-movestack
-        ;; %patch-smartborders
         %patch-attachabove))
 
 (define %engstrand-dwl-guile-config
@@ -137,48 +136,25 @@
       'create-foot-config
       home-files-service-type
       `(("config/mako/config"
-         ;; TODO: Move to separate file and call as a procedure
-         ,(plain-file "mako-config"
-                      (format #f "
-font=~a
-background-color=~a
-text-color=~a
-width=~a
-height=~a
-border-color=~a
-border-size=~a
-border-radius=~a
-margin=~a
-padding=~a
-default-timeout=~a
-anchor=~a
-max-visible=~a
-format=~a
-
-[grouped=true]
-format=~a
-
-[hidden]
-format=~a
-
-"
-                              "sans 10"
-                              "#F0F0F0FF"
-                              "#222222FF"
-                              "500"
-                              "85"
-                              "#A0A0A0FF"
-                              "2"
-                              "8"
-                              "0,0,25"
-                              "10"
-                              "15000"
-                              "bottom-center"
-                              "2"
-                              "<b>%s (%a)</b>\\n%b"
-                              "<b>%s (%a, %g)</b>\\n%b"
-                              "(%h more notifications)"
-                              "")))))
+         ,(alist->ini "mako-config"
+                      `(("font" . "sans 10")
+                        ("background-color" . "#F0F0F0FF")
+                        ("text-color" . "#222222FF")
+                        ("width" . 500)
+                        ("height" . 85)
+                        ("border-color" . "#A0A0A0FF")
+                        ("border-size" . 1)
+                        ("border-radius" . 0)
+                        ("margin" . "0,0,10")
+                        ("padding" . 10)
+                        ("default-timeout" . 15000)
+                        ("anchor" . "bottom-center")
+                        ("max-visible" . 2)
+                        ("format" . "<b>%s (%a)</b>\\n%b")
+                        ("[grouped=true]")
+                        ("format" . "<b>%s (%a, %g)</b>\\n%b")
+                        ("[hidden]")
+                        ("format" . "(%h more notifications)"))))))
      (when (and add-keybindings? (get-value 'dwl-guile config))
        (simple-service
         'add-mako-dwl-keybindings
@@ -562,33 +538,32 @@ format=~a
       'create-swaylock-config
       home-files-service-type
       `(("config/swaylock/config"
-         ,(plain-file "swaylock-config"
-                      (serialize-ini-config
-                       `(("clock")
-                         ("screenshots")
-                         ("indicator")
-                         ("daemonize")
-                         ("hide-keyboard-layout")
-                         ("color" . "000000AA")
-                         ("font" . "JetBrains Mono:style=bold")
-                         ("font-size" . 40)
-                         ("indicator-thickness" . 8)
-                         ("indicator-radius" . 125)
-                         ("key-hl-color" . "FF8800")
-                         ("key-hl-color" . "FF8800")
-                         ("inside-color" . "00000000")
-                         ("inside-clear-color" . "00000000")
-                         ("inside-ver-color" . "00000000")
-                         ("inside-wrong-color" . "00000000")
-                         ("ring-color" . "FFCC00")
-                         ("ring-wrong-color" . "FF0000")
-                         ("text-clear-color" . "00000000")
-                         ("text-ver-color" . "00000000")
-                         ("text-wrong-color" . "00000000")
-                         ("separator-color" . "00000000")
-                         ("effect-blur" . "5x5")
-                         ("fade-in" . 0)
-                         ("datestr" . "")))))))))
+         ,(alist->ini "swaylock-config"
+                      `(("clock")
+                        ("screenshots")
+                        ("indicator")
+                        ("daemonize")
+                        ("hide-keyboard-layout")
+                        ("color" . "000000AA")
+                        ("font" . "JetBrains Mono:style=bold")
+                        ("font-size" . 40)
+                        ("indicator-thickness" . 8)
+                        ("indicator-radius" . 125)
+                        ("key-hl-color" . "FF8800")
+                        ("key-hl-color" . "FF8800")
+                        ("inside-color" . "00000000")
+                        ("inside-clear-color" . "00000000")
+                        ("inside-ver-color" . "00000000")
+                        ("inside-wrong-color" . "00000000")
+                        ("ring-color" . "FFCC00")
+                        ("ring-wrong-color" . "FF0000")
+                        ("text-clear-color" . "00000000")
+                        ("text-ver-color" . "00000000")
+                        ("text-wrong-color" . "00000000")
+                        ("separator-color" . "00000000")
+                        ("effect-blur" . "5x5")
+                        ("fade-in" . 0)
+                        ("datestr" . ""))))))))
 
   (define (get-system-services config)
     (list
