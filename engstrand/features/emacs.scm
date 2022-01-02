@@ -90,13 +90,13 @@
 
 (define* (feature-emacs-evil
           #:key
-          (insert-state-message? #f)
+          (no-insert-state-message? #t)
           (leader? #t)
           (commentary? #t)
           (collection? #t)
           (surround? #t))
   "Add and configure evil-mode for Emacs."
-  (ensure-pred boolean? insert-state-message?)
+  (ensure-pred boolean? no-insert-state-message?)
   (ensure-pred boolean? leader?)
   (ensure-pred boolean? collection?)
   (ensure-pred boolean? surround?)
@@ -110,12 +110,12 @@
       `(;; Make the Escape key behave more nicely for evil-mode
         (global-set-key (kbd "<escape>") 'keyboard-quit)
         (define-key query-replace-map (kbd "<escape>") 'quit)
-        ;; Required by the additional packages... should we toggle this?
-        (setq evil-want-keybinding nil)
         ;; Hide ``-- INSERT --'' message
-        ,@(if insert-state-message?
+        ,@(if no-insert-state-message?
               `((setq evil-insert-state-message nil))
               '())
+        ;; Required by the additional packages... should we toggle this?
+        (setq evil-want-keybinding nil)
         ;; Use C-u to scroll up
         (setq evil-want-C-u-scroll t)
         ;; The packages below must be loaded and configured in a certain order
