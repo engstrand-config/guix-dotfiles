@@ -67,6 +67,7 @@
               modus-themes-mail-citations 'faint
               modus-themes-region '(bg-only accented)
               modus-themes-diffs 'nil
+              modus-themes-vivendi-color-overrides '((bg-main . "#0A0A0A"))
               modus-themes-org-blocks 'gray-background
               modus-themes-org-agenda '((header-block . (variable-pitch 1.3))
                                         (header-date . (grayscale workaholic bold-today 1.1))
