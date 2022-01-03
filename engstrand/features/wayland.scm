@@ -233,10 +233,12 @@
 ;; TODO: Copy file at PATH to store and restart shepherd service on change
 (define* (feature-wayland-wbg
           #:key
-          (path #f))
+          (path #f)
+          (auto-start? #t))
   "Setup wbg for setting wallpaper in Wayland compositors."
 
   (ensure-pred maybe-string? path)
+  (ensure-pred boolean? auto-start?)
 
   (define (get-home-services config)
     "Return a list of home services required by wbg"
@@ -255,32 +257,13 @@
             (documentation "Run wbg.")
             (provision '(wbg))
             (requirement (if has-dwl-guile? '(dwl-guile) '()))
-            (auto-start? #f)
-            (respawn? #f)
+            (auto-start? auto-start?)
+            (respawn? #t)
             (start
              #~(make-forkexec-constructor
-                (list #$(file-append wbg "/bin/wbg") #$path)))
-            (stop #~(make-kill-destructor))))))
-       (when has-dwl-guile?
-         (simple-service
-          'start-wbg-on-dwl-guile-startup
-          home-dwl-guile-service-type
-          (modify-dwl-guile
-           (config =>
-                   (home-dwl-guile-configuration
-                    (inherit config)
-                    (startup-commands
-                     (cons
-                      #~(begin
-                          ;; TODO: Figure out why the service is disabled after restarting dwl-guile.
-                          ;;       A shepherd service will automatically be disabled if it respawns
-                          ;;       and exists too frequently during a certain time period.
-                          ;;       I do not understand why this would happen though, since both auto-start?
-                          ;;       and respawn? has been set to false. I have also noticied that
-                          ;;       it usually works if you use start/stop rather than restart on dwl-guile.
-                          (system* #$(file-append shepherd "/bin/herd") "enable" "wbg")
-                          (system* #$(file-append shepherd "/bin/herd") "start" "wbg"))
-                      (home-dwl-guile-configuration-startup-commands config)))))))))))
+                (list #$(file-append wbg "/bin/wbg") #$path)
+                #:log-file #$(make-log-file "wbg")))
+            (stop #~(make-kill-destructor)))))))))
 
   (feature
    (name 'wayland-wbg)
@@ -289,6 +272,7 @@
 (define* (feature-wayland-wlsunset
           #:key
           (package wlsunset)
+          (auto-start? #t)
           (toggle-key "s-<end>")
           (latitude 59.8)
           (longitude 17.6)
@@ -298,6 +282,7 @@
   "Setup wlsunset for adjusting day/night gamma for Wayland compositors."
 
   (ensure-pred package? wlsunset)
+  (ensure-pred boolean? auto-start?)
   (ensure-pred string? toggle-key)
   (ensure-pred number? latitude)
   (ensure-pred number? longitude)
@@ -321,8 +306,8 @@
           (documentation "Run wlsunset.")
           (provision '(wlsunset))
           (requirement (if has-dwl-guile? '(dwl-guile) '()))
-          (auto-start? #f)
-          (respawn? #f)
+          (auto-start? auto-start?)
+          (respawn? #t)
           (start
            #~(make-forkexec-constructor
               (list
@@ -330,7 +315,8 @@
                #$(string-append "-l" (number->string latitude))
                #$(string-append "-L" (number->string longitude))
                #$(string-append "-t" (number->string gamma-low))
-               #$(string-append "-T" (number->string gamma-high)))))
+               #$(string-append "-T" (number->string gamma-high)))
+              #:log-file #$(make-log-file "wlsunset")))
           (actions
            (list
             (shepherd-action
@@ -358,22 +344,7 @@
                         (action `(system* ,(file-append shepherd "/bin/herd")
                                           "toggle"
                                           "wlsunset"))))
-                      (dwl-config-keys config))))))))
-       (when has-dwl-guile?
-         (simple-service
-          'start-wlsunset-on-dwl-guile-startup
-          home-dwl-guile-service-type
-          (modify-dwl-guile
-           (config =>
-                   (home-dwl-guile-configuration
-                    (inherit config)
-                    ;; TODO: Replace with autostart in shepherd?
-                    (startup-commands
-                     (cons
-                      #~(begin
-                          (system* #$(file-append shepherd "/bin/herd") "enable" "wlsunset")
-                          (system* #$(file-append shepherd "/bin/herd") "start" "wlsunset"))
-                      (home-dwl-guile-configuration-startup-commands config)))))))))))
+                      (dwl-config-keys config)))))))))))
 
   (feature
    (name 'wayland-wlsunset)
