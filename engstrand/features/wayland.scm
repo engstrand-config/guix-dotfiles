@@ -73,18 +73,6 @@
      (border '(0.5 0.5 0.5 1))
      (focus '(1 0.8 0 1))))))
 
-;; rewrite with match
-(define (transform-bemenu-options lst)
-  (define (make-cli-argument config-pair)
-    (let ((argument (car config-pair)) (value (cdr config-pair)))
-      (if (not value) ""
-          (string-append "--" argument
-                         (cond ((eq? value #t) "")
-                               ((string? value) (string-append " " "'" value "'"))
-                               ((number? value) (string-append " " (number->string value)))
-                               (else (raise "invalid bemenu argument!")))))))
-  (string-join (map make-cli-argument lst)))
-
 ;; Checks if SYMBOL corresponds to a patch that is/will
 ;; be applied to dwl-guile, based on the feature values in CONFIG.
 ;; SYMBOL should be the name of the patch, not including the ".patch" extension.
@@ -486,46 +474,42 @@
                   (inherit config)
                   (menu `(,(file-append bemenu "/bin/bemenu-run"))))))))
 
-     ;; TODO: Convert options list into a configuration
-     ;;       and automatically transform when enabling feature.
      (simple-service
       'bemenu-options
       home-environment-variables-service-type
-      `(("BEMENU_OPTS" . ,(string-append
-                           "\""
-                           (transform-bemenu-options
-                            `(("ignorecase" . #t)
-                              ("line-height"
-                               . ,(get-value 'statusbar-height config 25))
-                              ("filter" . #f)
-                              ("wrap" . #f)
-                              ("list" . #f)
-                              ("prompt" . #f)
-                              ("prefix" . #f)
-                              ("index" . #f)
-                              ("password" . #f)
-                              ("scrollbar" . #f)
-                              ("ifne" . #f)
-                              ("fork" . #f)
-                              ("no-exec" . #f)
-                              ("bottom" . #f)
-                              ("grab" . #f)
-                              ("no-overlap" . #f)
-                              ("monitor" . #f)
-                              ("fn" . "JetBrains Mono Bold 10")
-                              ("tb" . "#FFCC00")
-                              ("tf" . "#000000")
-                              ("fb" . "#1A1A1A")
-                              ("ff" . #f)
-                              ("nb" . "#1A1A1A")
-                              ("nf" . "#FFFFFF")
-                              ("hb" . "#1A1A1A")
-                              ("hf" . "#FFCC00")
-                              ("sb" . #f)
-                              ("sf" . #f)
-                              ("scb" . #f)
-                              ("scf" . #f)))
-                           "\""))))))
+      (alist->environment-variable
+       "BEMENU_OPTS"
+       `(("ignorecase" . #t)
+         ("line-height"
+          . ,(get-value 'statusbar-height config 25))
+         ("filter" . #f)
+         ("wrap" . #f)
+         ("list" . #f)
+         ("prompt" . #f)
+         ("prefix" . #f)
+         ("index" . #f)
+         ("password" . #f)
+         ("scrollbar" . #f)
+         ("ifne" . #f)
+         ("fork" . #f)
+         ("no-exec" . #f)
+         ("bottom" . #f)
+         ("grab" . #f)
+         ("no-overlap" . #f)
+         ("monitor" . #f)
+         ("fn" . "JetBrains Mono Bold 10")
+         ("tb" . "#FFCC00")
+         ("tf" . "#000000")
+         ("fb" . "#1A1A1A")
+         ("ff" . #f)
+         ("nb" . "#1A1A1A")
+         ("nf" . "#FFFFFF")
+         ("hb" . "#1A1A1A")
+         ("hf" . "#FFCC00")
+         ("sb" . #f)
+         ("sf" . #f)
+         ("scb" . #f)
+         ("scf" . #f))))))
 
   (feature
    (name 'wayland-bemenu)
