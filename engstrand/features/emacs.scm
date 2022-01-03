@@ -165,6 +165,14 @@
     #:emacs emacs-pgtk-native-comp
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
     #:extra-init-el '((fringe-mode 0)
+                      ;; do not open the Emacs welcome screen when we pass an
+                      ;; existing file as a command-line argument
+                      (defun my-inhibit-startup-screen-file ()
+                        (ignore
+                         (setq inhibit-startup-screen
+                               (file-exists-p
+                                (expand-file-name argi command-line-default-directory)))))
+                      (add-hook 'command-line-functions 'my-inhibit-startup-screen-file)
                       (setq native-comp-async-report-warnings-errors nil)
                       ;; Undo the top modeline of emacs-appearance
                       (setq-default mode-line-format header-line-format)
