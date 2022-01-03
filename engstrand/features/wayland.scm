@@ -124,7 +124,7 @@
       home-profile-service-type
       (pkgs '("mako" "libnotify")))
      (simple-service
-      'create-foot-config
+      'create-mako-config
       home-files-service-type
       `(("config/mako/config"
          ,(alist->ini "mako-config"
