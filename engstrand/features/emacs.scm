@@ -39,6 +39,42 @@
    (values `((,f-name . #t)))
    (home-services-getter get-home-services)))
 
+(define* (feature-emacs-dashboard
+          ;; #:key
+          ;; (emacs-dashboard emacs-dashboard)
+          )
+  "Add and configure emacs-dashboard as a welcome screen."
+  (define emacs-f-name 'dashboard)
+  (define f-name (symbol-append 'emacs- emacs-f-name))
+
+  (define (get-home-services config)
+    (list
+     (elisp-configuration-service
+      emacs-f-name
+      `((eval-when-compile (require 'dashboard))
+        (dashboard-setup-startup-hook)
+        (setq dashboard-center-content t)
+        (setq dashboard-set-init-info nil)
+        (setq dashboard-set-footer nil)
+        (setq dashboard-page-separator "\n\n")
+
+        (eval-when-compile (require 'project))
+        (setq dashboard-projects-backend 'project)
+        )
+      #:elisp-packages (list
+                        emacs-dashboard
+                        emacs-project
+                        ;; Optional dependencies:
+                        ;; emacs-projectile
+                        ;; emacs-page-break-lines
+                        ;; emacs-all-the-icons
+                        ))))
+
+  (feature
+   (name f-name)
+   (values `((,f-name . #t)))
+   (home-services-getter get-home-services)))
+
 (define* (feature-emacs-modus-themes
           ;; #:key
           ;; ()
@@ -208,6 +244,7 @@
    (feature-emacs-modus-themes)
    (feature-emacs-appearance
     #:margin 5)
+   (feature-emacs-dashboard)
    (feature-emacs-evil)
    (feature-emacs-monocle)
    (feature-emacs-dired)
