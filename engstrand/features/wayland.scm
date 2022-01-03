@@ -526,7 +526,7 @@
         ("logout" . (system* ,bin "terminate-session"
                              (getenv "XDG_SESSION_ID")))
         ("reboot" . (system* ,bin "reboot"))
-        ("shutdown" . (system* ,bin "shutdown")))))
+        ("shutdown" . (system* ,bin "poweroff")))))
 
   (define (get-home-services config)
     (let ((executable
