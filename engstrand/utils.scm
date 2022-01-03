@@ -1,4 +1,5 @@
 (define-module (engstrand utils)
+  #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (guix gexp)
   #:use-module (gnu packages)
@@ -89,3 +90,27 @@
                     "\n" acc)))
                ""
                alist)))
+
+(define-public (alist->environment-variable var alist)
+  (define (add-arg acc key value)
+    (string-append acc " --" key
+                   (if (not value) "" (string-append " " value))))
+
+  ;; Join arguments into a single string, with each key prefixed
+  ;; with "--" and the key and value separated with a space.
+  ;; Values that has no value (or #t) will only add the prefixed key.
+  ;; If the value is #f, the key will not be included at all.
+  (define str
+    (fold
+     (lambda (arg acc)
+       (let ((key (car arg)) (value (cdr arg)))
+         (cond
+          ((string? value) (add-arg acc key (string-append "'" value "'")))
+          ((number? value) (add-arg acc key (number->string value)))
+          ((eq? value #t) (add-arg acc key #f))
+          (else acc))))
+     "" alist))
+
+  ;; Return an alist containing the environment variable name VAR
+  ;; and its value as the result of serializing ALIST.
+  `((,var . ,(string-append "\"" str "\""))))
