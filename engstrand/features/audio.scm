@@ -24,7 +24,7 @@
   (ensure-pred number? step)
   (ensure-pred string? increase-volume-key)
   (ensure-pred string? decrease-volume-key)
-  (ensure-pred string? mute-key)
+  (ensure-pred string? mute-volume-key)
   (ensure-pred boolean? add-keybindings?)
 
   (define command (list (file-append pamixer "/bin/pamixer")))
@@ -57,7 +57,7 @@
                                         "--unmute"
                                         "--decrease" ,(number->string step))))
                      (dwl-key
-                      (key mute-key)
+                      (key mute-volume-key)
                       (action `(system* ,@command "--toggle-mute"))))
                     (dwl-config-keys config))))))))))
 
