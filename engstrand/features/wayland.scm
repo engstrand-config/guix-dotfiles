@@ -201,8 +201,11 @@
         `(("config/foot/foot.ini"
            ,(alist->ini "foot-config"
                        `(("pad" . "5x5")
-                         ("font"
-                          . ,(font->string 'fcft 'font-monospace config))
+                         ;; TODO: I prefer the look of the "monospace" font in foot
+                         ;; (whatever the fuck that is). No idea what font is used
+                         ;; when monospace is chosen. fc-match shows "DejaVu Sans Mono" "Book",
+                         ;; but it does not look like the font used in foot when applied directly.
+                         ("font" . "monospace:size=12")
                          ("dpi-aware" . "no")
                          ;; nmtui does not like if term is set to foot
                          ("term" . "xterm")

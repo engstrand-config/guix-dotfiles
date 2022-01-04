@@ -68,9 +68,9 @@
     #:sign-commits? #t)
    (feature-fonts
     #:font-packages (list font-jetbrains-mono font-iosevka-aile)
-    #:font-monospace (font "JetBrains Mono" #:size 12)
-    #:font-sans (font "Iosevka Aile" #:size 12)
-    #:font-serif (font "Iosevka Aile" #:size 12))
+    #:font-monospace (font "JetBrains Mono" #:size 13)
+    #:font-sans (font "Iosevka Aile" #:size 13)
+    #:font-serif (font "Iosevka Aile" #:size 13))
    (feature-pipewire)
    (feature-pulseaudio-control)
    (feature-backlight)
