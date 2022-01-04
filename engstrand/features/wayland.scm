@@ -114,8 +114,6 @@
   (ensure-pred string? dismiss-all-key)
   (ensure-pred boolean? add-keybindings?)
 
-  ;; TODO: Allow configuration using Guile.
-
   (define (get-home-services config)
     "Return a list of home services required by mako"
     (make-service-list
@@ -177,7 +175,7 @@
           (package foot)
           (set-default-terminal? #t)
           (window-alpha 0.9)
-          (swallow-clients? #t)) ;; TODO: Active swallow patch automatically if #t?
+          (swallow-clients? #t)) ;; TODO: Add swallow patch automatically if #t?
   "Setup foot terminal."
 
   (ensure-pred package? package)
@@ -193,11 +191,45 @@
         'add-foot-home-packages-to-profile
         home-profile-service-type
         (list package))
-       ;; TODO: Allow configuration using Guile.
        (simple-service
         'create-foot-config
         home-files-service-type
-        `(("config/foot/foot.ini" ,(local-file "../files/foot.ini"))))
+        `(("config/foot/foot.ini"
+           ,(alist->ini "foot-config"
+                       `(("pad" . "5x5")
+                         ("font" . "monospace:size=12")
+                         ("dpi-aware" . "no")
+                         ;; nmtui does not like if term is set to foot
+                         ("term" . "xterm")
+
+                         ("[key-bindings]")
+                         ("scrollback-up-line" . "Mod1+k")
+                         ("scrollback-down-line" . "Mod1+j")
+                         ("clipboard-copy" . "Mod1+c")
+                         ("clipboard-paste" . "Mod1+v")
+                         ("search-start" . "Mod1+s")
+                         ("font-increase" . "Mod1+Control+k")
+                         ("font-decrease" . "Mod1+Control+j")
+                         ("font-reset" . "Mod1+Control+0")
+                         ;; This should be defined in dwl.
+                         ("spawn-terminal" . "Mod4+Shift+Return")
+                         ("show-urls-launch" . "Mod1+u")
+                         ("show-urls-copy" . "Mod1+Control+u")
+
+                         ("[search-bindings]")
+                         ("find-prev" . "Mod1+p")
+                         ("find-next" . "Mod1+n")
+                         ("cursor-left" . "Mod1+h")
+                         ("cursor-right" . "Mod1+l")
+                         ("cursor-left-word" . "Mod1+b")
+                         ("cursor-right-word" . "Mod1+w")
+                         ("cursor-home" . "Mod1+i")
+                         ("cursor-end" . "Mod1+a")
+                         ("clipboard-paste" . "Mod1+v")
+
+                         ("[mouse-bindings]")
+                         ("select-begin-block" . "none")
+                         ("select-word-whitespace"  . "Mod1+BTN_LEFT-2"))))))
        (when (and set-default-terminal? has-dwl-guile?)
          (simple-service
           'set-foot-as-default-terminal
