@@ -129,18 +129,19 @@
       `(("config/mako/config"
          ,(alist->ini "mako-config"
                       `(("font"
-                         . ,(font->string 'pango 'font-sans config))
+                         . ,(font->string 'pango 'font-sans config
+                                          #:size 11))
                         ("background-color" . "#252525FF")
                         ("text-color" . "#FFFFFFFF")
-                        ("width" . 500)
-                        ("height" . 85)
+                        ("width" . 370)
+                        ("height" . 100)
                         ("border-color" . "#555555FF")
                         ("border-size" . 1)
                         ("border-radius" . 0)
-                        ("margin" . "0,0,10")
+                        ("margin" . 5)
                         ("padding" . 10)
                         ("default-timeout" . 15000)
-                        ("anchor" . "bottom-center")
+                        ("anchor" . "top-right")
                         ("max-visible" . 2)
                         ("format" . "<b>%s (%a)</b>\\n%b")
                         ("[grouped=true]")
