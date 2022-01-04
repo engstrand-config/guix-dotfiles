@@ -128,12 +128,14 @@
           #:key
           (no-insert-state-message? #t)
           (leader? #t)
+          (undo-fu? #t)
           (commentary? #t)
           (collection? #t)
           (surround? #t))
   "Add and configure evil-mode for Emacs."
   (ensure-pred boolean? no-insert-state-message?)
   (ensure-pred boolean? leader?)
+  (ensure-pred boolean? undo-fu?)
   (ensure-pred boolean? collection?)
   (ensure-pred boolean? surround?)
   (define emacs-f-name 'evil)
@@ -154,6 +156,8 @@
         (setq evil-want-keybinding nil)
         ;; Use C-u to scroll up
         (setq evil-want-C-u-scroll t)
+        ;; undo with higher granularity
+        (setq evil-want-fine-undo t)
         ;; The packages below must be loaded and configured in a certain order
         (require 'evil)
         ,@(if leader?
@@ -169,6 +173,12 @@
                  "S" 'evil-write-all
                  )
                 '()))
+        ,@(if undo-fu?
+              `((eval-when-compile (require 'undo-fu))
+                (setq evil-undo-system 'undo-fu)
+                (define-key evil-normal-state-map (kbd "u") 'undo-fu-only-undo)
+                (define-key evil-normal-state-map (kbd "C-r") 'undo-fu-only-redo))
+              '())
         (evil-mode 1)
         ,@(if commentary?
               `((require 'evil-commentary)
@@ -186,6 +196,7 @@
       #:elisp-packages (list
                         emacs-evil
                         (if leader? emacs-evil-leader)
+                        (if undo-fu? emacs-undo-fu)
                         (if commentary? emacs-evil-commentary)
                         (if collection? emacs-evil-collection)
                         (if surround? emacs-evil-surround)))))
