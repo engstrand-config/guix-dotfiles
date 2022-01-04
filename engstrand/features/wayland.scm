@@ -1,5 +1,6 @@
 (define-module (engstrand features wayland)
   #:use-module (rde features)
+  #:use-module (rde features fontutils)
   #:use-module (rde features predicates)
   #:use-module (guix gexp)
   #:use-module (srfi srfi-1)
@@ -116,6 +117,7 @@
 
   (define (get-home-services config)
     "Return a list of home services required by mako"
+    (require-value 'font-monospace config)
     (make-service-list
      (simple-service
       'add-mako-home-packages-to-profile
@@ -126,7 +128,8 @@
       home-files-service-type
       `(("config/mako/config"
          ,(alist->ini "mako-config"
-                      `(("font" . "sans 10")
+                      `(("font"
+                         . ,(font->string 'pango 'font-sans config))
                         ("background-color" . "#252525FF")
                         ("text-color" . "#FFFFFFFF")
                         ("width" . 500)
@@ -185,6 +188,7 @@
 
   (define (get-home-services config)
     "Return a list of home services required by foot."
+    (require-value 'font-monospace config)
     (let ((has-dwl-guile? (get-value 'dwl-guile config)))
       (make-service-list
        (simple-service
@@ -197,7 +201,8 @@
         `(("config/foot/foot.ini"
            ,(alist->ini "foot-config"
                        `(("pad" . "5x5")
-                         ("font" . "monospace:size=12")
+                         ("font"
+                          . ,(font->string 'fcft 'font-monospace config))
                          ("dpi-aware" . "no")
                          ;; nmtui does not like if term is set to foot
                          ("term" . "xterm")
@@ -456,12 +461,14 @@
 
 (define* (feature-wayland-bemenu
           #:key
-          (options '())
           (set-default-menu? #t))
   "Setup bemenu."
 
+  (ensure-pred boolean? set-default-menu?)
+
   (define (get-home-services config)
     "Return a list of home services required by bemenu."
+    (require-value 'font-monospace config)
     (make-service-list
      (simple-service
       'add-bemenu-home-packages-to-profile
@@ -500,7 +507,10 @@
          ("grab" . #f)
          ("no-overlap" . #f)
          ("monitor" . #f)
-         ("fn" . "JetBrains Mono Bold 10")
+         ("fn"
+          . ,(font->string 'pango 'font-monospace config
+                           #:bold? #t
+                           #:size 10))
          ("tb" . "#FFCC00")
          ("tf" . "#000000")
          ("fb" . "#1A1A1A")
@@ -567,6 +577,7 @@
   "Install and configure swaylock."
 
   (define (get-home-services config)
+    (require-value 'font-monospace config)
     (list
      (simple-service
       'create-swaylock-config
@@ -579,7 +590,9 @@
                         ("daemonize")
                         ("hide-keyboard-layout")
                         ("color" . "000000AA")
-                        ("font" . "JetBrains Mono:style=bold")
+                        ("font"
+                         . ,(font->string 'fcft 'font-monospace config
+                                          #:bold? #t))
                         ("font-size" . 40)
                         ("indicator-thickness" . 8)
                         ("indicator-radius" . 125)

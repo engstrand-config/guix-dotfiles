@@ -52,40 +52,37 @@
     (interval 1)
     (render `(strftime "%A, %d %b (w.%V) %T" (localtime (current-time)))))))
 
-;; General dtao-guile configuration
-(define %engstrand-dtao-guile-config
-  (dtao-config
-   (block-spacing 0)
-   (use-dwl-guile-colorscheme? #t)
-   (modules '((ice-9 match)))
-   (padding-left 0)
-   (padding-top 0)
-   (padding-bottom 0)
-   (height 25)
-   (left-blocks %engstrand-dtao-guile-left-blocks)
-   (center-blocks %engstrand-dtao-guile-center-blocks)
-   (right-blocks %engstrand-dtao-guile-right-blocks)))
-
-(define* (feature-statusbar-dtao-guile
-          #:key
-          (dtao-guile-configuration (home-dtao-guile-configuration)))
+;; TODO: Add options for setting blocks, etc.
+(define* (feature-statusbar-dtao-guile)
   "Install and configure dtao-guile."
 
-  (ensure-pred home-dtao-guile-configuration? dtao-guile-configuration)
-
-  ;; dtao-config
-  (define dtao
-    (home-dtao-guile-configuration-config dtao-guile-configuration))
+  ;; Statusbar height
+  (define height 25)
 
   (define (get-home-services config)
     "Return a list of home services required by dtao-guile."
+    (require-value 'font-monospace config)
     (list
      (service home-dtao-guile-service-type
-              dtao-guile-configuration)))
+              (home-dtao-guile-configuration
+               (config
+                (dtao-config
+                (font (font->string 'fcft 'font-monospace config
+                                    #:bold? #t))
+                (block-spacing 0)
+                (use-dwl-guile-colorscheme? #t)
+                (modules '((ice-9 match)))
+                (padding-left 0)
+                (padding-top 0)
+                (padding-bottom 0)
+                (height height)
+                (left-blocks %engstrand-dtao-guile-left-blocks)
+                (center-blocks %engstrand-dtao-guile-center-blocks)
+                (right-blocks %engstrand-dtao-guile-right-blocks)))))))
 
   (feature
    (name 'statusbar-dtao-guile)
    (values `((statusbar? . #t)
-             (statusbar-height . ,(dtao-config-height dtao))
+             (statusbar-height . ,height)
              (dtao-guile . #t)))
    (home-services-getter get-home-services)))

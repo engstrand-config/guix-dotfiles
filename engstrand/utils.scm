@@ -4,8 +4,11 @@
   #:use-module (guix gexp)
   #:use-module (gnu packages)
   #:use-module (rde features)
+  #:use-module (rde features fontutils)
   #:use-module (rde features predicates)
-  #:export (modify-features))
+  #:export (
+            modify-features
+            font->string))
 
 ;; Converts a list of kernel modules into a list of packages.
 ;; Each kernel module should accept the current system kernel
@@ -119,3 +122,33 @@
   (string-append (or (getenv "XDG_LOG_HOME")
                      (getenv "HOME"))
                  "/" name ".log"))
+
+;; Convert a font into a pango or fcft string that can be used in
+;; configuration files.
+(define* (font->string fmt type config
+                       #:key
+                       (bold? '())
+                       (size '()))
+  (define (weight->string weight)
+    (let ((str (symbol->string weight)))
+      (match fmt
+        ('pango (string-capitalize str))
+        ('fcft str)
+        (_ str))))
+
+  (define (get-weight font)
+    (let ((weight (cond
+                   ((null? bold?)
+                    (if (font-weight font)
+                        (font-weight font)
+                        'normal))
+                   ((eq? bold? #t) 'bold)
+                   ((eq? bold? #f) 'normal))))
+      (weight->string weight)))
+
+  (let ((font (get-value type config))
+        (fmt-string (if (eq? fmt 'pango) "~a ~a ~a" "~a:style=~a:size=~a")))
+    (format #f fmt-string
+            (font-name font)
+            (get-weight font)
+            (if (null? size) (font-size font) size))))

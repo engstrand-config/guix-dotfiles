@@ -68,10 +68,9 @@
     #:sign-commits? #t)
    (feature-fonts
     #:font-packages (list font-jetbrains-mono font-iosevka-aile)
-    #:font-monospace (font "JetBrains Mono" #:size 13)
-    #:font-sans (font "Iosevka Aile" #:size 13)
-    #:font-serif (font "Iosevka Aile" #:size 13)
-    )
+    #:font-monospace (font "JetBrains Mono" #:size 12)
+    #:font-sans (font "Iosevka Aile" #:size 12)
+    #:font-serif (font "Iosevka Aile" #:size 12))
    (feature-pipewire)
    (feature-alsa-control)
    (feature-backlight)
@@ -123,10 +122,7 @@
    (feature-wayland-wlsunset)
    (feature-wayland-screenshot)
    (feature-wayland-swaylock)
-   (feature-statusbar-dtao-guile
-    #:dtao-guile-configuration
-    (home-dtao-guile-configuration
-     (config %engstrand-dtao-guile-config)))
+   (feature-statusbar-dtao-guile)
    (feature-wayland-dwl-guile
     #:dwl-guile-configuration
     (home-dwl-guile-configuration
