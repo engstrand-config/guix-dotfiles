@@ -72,7 +72,7 @@
     #:font-sans (font "Iosevka Aile" #:size 12)
     #:font-serif (font "Iosevka Aile" #:size 12))
    (feature-pipewire)
-   (feature-alsa-control)
+   (feature-pulseaudio-control)
    (feature-backlight)
    (feature-zsh)
    (feature-ssh)
