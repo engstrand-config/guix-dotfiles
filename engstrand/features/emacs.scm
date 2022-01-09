@@ -39,6 +39,53 @@
    (values `((,f-name . #t)))
    (home-services-getter get-home-services)))
 
+;; Rewrite as more general elfeed feature?
+(define* (feature-emacs-elfeed-nextcloud
+          #:key
+          ;; temporary solution
+          (pass-domain "nextcloud/elfeed/domain")
+          (pass-user "nextcloud/elfeed/user")
+          (pass-password "nextcloud/elfeed/password"))
+  (ensure-pred string? pass-domain)
+  (ensure-pred string? pass-user)
+  (ensure-pred string? pass-password)
+  (define emacs-f-name 'elfeed)
+  (define f-name (symbol-append 'emacs- emacs-f-name))
+
+  (define (get-home-services config)
+    (list
+     (elisp-configuration-service
+      emacs-f-name
+      `((eval-when-compile (require 'elfeed)
+                           (require 'elfeed-protocol)
+                           (require 'olivetti))
+        ;; require curl?
+        (setq elfeed-use-curl t)
+        (setq elfeed-protocol-owncloud-maxsize 1000)
+        (setq elfeed-protocol-owncloud-update-with-modified-time t)
+        (setq elfeed-feeds (list
+                            (list (format "owncloud+https://%s@%s"
+                                              (password-store-get ,pass-user)
+                                              (password-store-get ,pass-domain))
+                              :password (password-store-get ,pass-password))))
+        (elfeed-protocol-enable)
+        ;; use Olivetti in read mode
+        (defun elfeed-olivetti (buff)
+          (switch-to-buffer buff)
+          (olivetti-mode)
+          (elfeed-show-refresh))
+        (setq elfeed-show-entry-switch 'elfeed-olivetti))
+      #:elisp-packages (list
+                        emacs-elfeed
+                        emacs-elfeed-protocol
+                        emacs-password-store
+                        emacs-olivetti))))
+
+  (feature
+   (name f-name)
+   (values `((,f-name . #t)))
+   (home-services-getter get-home-services)))
+
 (define* (feature-emacs-dashboard
           ;; #:key
           ;; (emacs-dashboard emacs-dashboard)
@@ -256,6 +303,7 @@
    (feature-emacs-appearance
     #:margin 5)
    (feature-emacs-dashboard)
+   (feature-emacs-elfeed-nextcloud)
    (feature-emacs-evil)
    (feature-emacs-monocle)
    (feature-emacs-dired)
