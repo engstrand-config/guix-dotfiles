@@ -577,7 +577,10 @@
    (home-services-getter get-home-services)))
 
 ;; TODO: Add options?
-(define* (feature-wayland-swaylock)
+(define* (feature-wayland-swaylock
+          #:key
+          (lock-key "s-x")
+          (add-keybindings? #t))
   "Install and configure swaylock."
 
   (define (get-home-services config)
@@ -614,7 +617,22 @@
                         ("separator-color" . "00000000")
                         ("effect-blur" . "5x5")
                         ("fade-in" . 0)
-                        ("datestr" . ""))))))))
+                        ("datestr" . ""))))))
+     (when (and add-keybindings? (get-value 'dwl-guile config))
+       (simple-service
+        'add-swaylock-dwl-keybindings
+        home-dwl-guile-service-type
+        (modify-dwl-guile-config
+         (config =>
+                 (dwl-config
+                  (inherit config)
+                  (keys
+                   (append
+                    (list
+                     (dwl-key
+                      (key lock-key)
+                      (action `(dwl:shcmd "swaylock"))))
+                    (dwl-config-keys config))))))))))
 
   (define (get-system-services config)
     (list
