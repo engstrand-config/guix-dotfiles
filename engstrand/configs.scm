@@ -58,7 +58,9 @@
 
 (define %engstrand-base-features
   (list
-   (feature-base-services)
+   (feature-base-services
+    #:guix-substitute-urls (list "https://substitutes.nonguix.org")
+    #:guix-authorized-keys (list (local-file "files/nonguix-signing-key.pub")))
    (feature-desktop-services)
    (feature-switch-to-tty-on-boot)
    ;; TODO: Move to systems/*.scm?
