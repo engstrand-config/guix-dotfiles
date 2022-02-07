@@ -11,6 +11,30 @@
             feature-emacs-evil
             %engstrand-emacs-base-features))
 
+(define* (feature-emacs-org-latex-preview)
+  "Add and configure latex previews in Emacs Org mode."
+  (define emacs-f-name 'org-latex-preview)
+  (define f-name (symbol-append 'emacs- emacs-f-name))
+
+  (define (get-home-services config)
+    (list
+     (simple-service
+      'add-org-mode-latex-preview-home-packages-to-profile
+      home-profile-service-type
+      (pkgs '("texlive-latex-preview" "texlive-graphics-def")))
+     (elisp-configuration-service
+      emacs-f-name
+      `((require 'org)
+        ;; Use dvisvgm for latex rendering
+        (setq org-latex-create-formula-image-program 'dvisvgm)
+        ;; Increase latex preview scale in org mode
+        (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))))))
+
+  (feature
+   (name f-name)
+   (values `((,f-name . #t)))
+   (home-services-getter get-home-services)))
+
 (define* (feature-emacs-corfu
           ;; #:key
           ;; ()
@@ -273,5 +297,6 @@
    (feature-emacs-pdf-tools)
    (feature-emacs-org)
    (feature-emacs-org-agenda)
+   (feature-emacs-org-latex-preview)
    (feature-emacs-org-roam
     #:org-roam-directory "~/roam/")))
