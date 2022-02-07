@@ -28,7 +28,7 @@
         ;; Use dvisvgm for latex rendering
         (setq org-latex-create-formula-image-program 'dvisvgm)
         ;; Increase latex preview scale in org mode
-        (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))))))
+        (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.8))))))
 
   (feature
    (name f-name)
