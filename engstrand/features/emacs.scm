@@ -255,7 +255,6 @@
                       (add-hook 'prog-mode-hook 'display-line-numbers-mode)
                       ;; Olivetti mode when working with text
                       (add-hook 'text-mode-hook 'olivetti-mode)
-                      (setq olivetti-set-width 100)
                       ;; Nicer mouse scrolling
                       (setq mouse-wheel-progressive-speed nil)
                       (setq mouse-wheel-scroll-amount '(3))
@@ -281,7 +280,8 @@
     #:margin 5)
    (feature-emacs-dashboard)
    (feature-emacs-evil)
-   (feature-emacs-monocle)
+   (feature-emacs-monocle
+    #:olivetti-body-width 100)
    (feature-emacs-dired)
    (feature-emacs-faces)
    (feature-emacs-completion
