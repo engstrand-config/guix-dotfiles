@@ -70,9 +70,9 @@
      %dwl-base-keys))
    (colors
     (dwl-colors
-     (root '(0.1 0.1 0.1 1))
-     (border '(0.5 0.5 0.5 1))
-     (focus '(1 0.8 0 1))))))
+     (root "#191919")
+     (border "#808080")
+     (focus "#FFCC00")))))
 
 ;; Checks if SYMBOL corresponds to a patch that is/will
 ;; be applied to dwl-guile, based on the feature values in CONFIG.
