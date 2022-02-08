@@ -19,36 +19,41 @@
           #:key
           (open-key "S-s-w")
           (spawn-parameters '("firefox"))
-          (add-keybindings? #t))
+          (default-browser? #f))
   "Setup Firefox."
 
   (ensure-pred string? open-key)
   (ensure-pred start-parameters? spawn-parameters)
-  (ensure-pred boolean? add-keybindings?)
+  (ensure-pred boolean? default-browser?)
 
   (define (get-home-services config)
     "Return a list of home services required by Firefox."
-    (make-service-list
-     (simple-service
-      'add-firefox-home-packages-to-profile
-      home-profile-service-type
-      (list
-       (if (get-value 'wayland config) firefox/wayland-95.0.2 firefox)))
-     (when (and add-keybindings? (get-value 'dwl-guile config))
+    (let ((package (if (get-value 'wayland config) firefox/wayland-95.0.2 firefox)))
+      (make-service-list
+       (if default-browser?
+           (simple-service
+            'set-firefox-environment-variable
+            home-environment-variables-service-type
+            `(("BROWSER" . ,(file-append package "/bin/firefox")))))
        (simple-service
-        'add-firefox-dwl-keybindings
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (keys
-                   (append
-                    (list
-                     (dwl-key
-                      (key open-key)
-                      (action `(dwl:spawn ,spawn-parameters))))
-                    (dwl-config-keys config))))))))))
+        'add-firefox-home-packages-to-profile
+        home-profile-service-type
+        (list package))
+       (when (and default-browser? (get-value 'dwl-guile config))
+         (simple-service
+          'add-firefox-dwl-keybindings
+          home-dwl-guile-service-type
+          (modify-dwl-guile-config
+           (config =>
+                   (dwl-config
+                    (inherit config)
+                    (keys
+                     (append
+                      (list
+                       (dwl-key
+                        (key open-key)
+                        (action `(dwl:spawn ,spawn-parameters))))
+                      (dwl-config-keys config)))))))))))
 
   (feature
    (name 'firefox)
@@ -58,22 +63,27 @@
           #:key
           (package qutebrowser-with-scripts)
           (open-key "S-s-w")
-          (add-keybindings? #t))
+          (default-browser? #f))
   "Setup qutebrowser, a keyboard-focused browser with a minimal GUI."
 
   (ensure-pred package? package)
   (ensure-pred string? open-key)
-  (ensure-pred boolean? add-keybindings?)
+  (ensure-pred boolean? default-browser?)
   ;; TODO: Add configuration in Guile
 
   (define (get-home-services config)
     "Return a list of home services required by qutebrowser"
     (make-service-list
+     (if default-browser?
+         (simple-service
+          'set-qutebrowser-environment-variable
+          home-environment-variables-service-type
+          `(("BROWSER" . ,(file-append package "/bin/qutebrowser")))))
      (simple-service
       'add-qutebrowser-home-packages-to-profile
       home-profile-service-type
       (list package))
-     (when (and add-keybindings? (get-value 'dwl-guile config))
+     (when (and default-browser? (get-value 'dwl-guile config))
        (simple-service
         'add-qutebrowser-dwl-keybindings
         home-dwl-guile-service-type

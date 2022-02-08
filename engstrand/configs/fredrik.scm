@@ -45,9 +45,9 @@
          (options `((identity-file . "~/.ssh/aur")
                     (user . "aur"))))))))
     (feature-virtualization)
-    (feature-qutebrowser)
-    (feature-firefox
-     #:add-keybindings? #f)
+    (feature-qutebrowser
+     #:default-browser? #t)
+    (feature-firefox)
     (feature-kdeconnect)
     (feature-bitwarden-cli
      #:email "frewacom@gmail.com"

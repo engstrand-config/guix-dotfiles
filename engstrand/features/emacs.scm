@@ -1,4 +1,5 @@
 (define-module (engstrand features emacs)
+  #:use-module (guix gexp)
   #:use-module (engstrand utils)
   #:use-module (gnu home services)
   #:use-module (gnu services)
@@ -6,9 +7,17 @@
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages emacs-xyz)
   #:use-module (rde features)
+  #:use-module (rde features base)
   #:use-module (rde features emacs)
-  #:export (feature-emacs-corfu
+  #:export (
+            feature-emacs-default-editor
+            feature-emacs-org-latex-preview
+            feature-emacs-corfu
+            feature-emacs-dashboard
+            feature-emacs-modus-themes
             feature-emacs-evil
+
+            %engstrand-emacs-package
             %engstrand-emacs-base-features))
 
 (define* (make-emacs-feature base-name
@@ -22,6 +31,23 @@
      (values `((,f-name . #t)))
      (home-services-getter home-services)
      (system-services-getter system-services))))
+
+(define* (feature-emacs-default-editor)
+  "Configure emacs as the default system editor."
+
+  (define (get-home-services config)
+    (list
+     (simple-service
+      'set-emacs-environment-variables
+      home-environment-variables-service-type
+      `(("EDITOR" . ,(file-append %engstrand-emacs-package "/bin/emacs"))
+        ;; Used by guix commands, e.g. guix edit. rde sets this by itself,
+        ;; but the --no-wait option does not seem to play nice with our setup.
+        ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))))
+
+  (feature
+   (name 'emacs-default-editor)
+   (home-services-getter get-home-services)))
 
 (define* (feature-emacs-org-latex-preview)
   "Add and configure latex previews in Emacs Org mode."
@@ -227,10 +253,13 @@
   (make-emacs-feature emacs-f-name
                       #:home-services get-home-services))
 
+(define %engstrand-emacs-package emacs-pgtk-native-comp)
+
 (define %engstrand-emacs-base-features
   (list
+   (feature-emacs-default-editor)
    (feature-emacs
-    #:emacs emacs-pgtk-native-comp
+    #:emacs %engstrand-emacs-package
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
     #:extra-init-el '(;; no fringes
                       (fringe-mode 0)

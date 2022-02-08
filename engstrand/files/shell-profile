@@ -1,15 +1,5 @@
 #!/bin/sh
 
-export PATH="$PATH:$HOME/.node_modules/bin:$HOME/.cargo/bin"
-
-export EDITOR="nvim"
-export TERMINAL="st"
-export BROWSER="firefox"
-export READER="zathura"
-export FILE="vifm"
-export STATUSBAR="dsblocks"
-export PASTEL_COLOR_MODE=8bit
-
 # less/man colors
 export LESS_TERMCAP_mb="$(printf '%b' '[1;31m')"; a="${a%_}"
 export LESS_TERMCAP_md="$(printf '%b' '[1;36m')"; a="${a%_}"

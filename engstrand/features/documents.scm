@@ -1,4 +1,5 @@
 (define-module (engstrand features documents)
+  #:use-module (guix gexp)
   #:use-module (rde features)
   #:use-module (rde features predicates)
   #:use-module (gnu packages pdf)
@@ -25,6 +26,10 @@
   (define (get-home-services config)
     "Return a list of system services required by zathura"
     (list
+     (simple-service
+      'set-zathura-environment-variable
+      home-environment-variables-service-type
+      `(("READER" . ,(file-append zathura "/bin/zathura"))))
      (simple-service
       'add-zathura-home-packages-to-profile
       home-profile-service-type

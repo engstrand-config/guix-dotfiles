@@ -28,9 +28,9 @@
      #:gpg-smart-card? #f)
     (feature-virtualization)
     (feature-kdeconnect)
-    (feature-qutebrowser
-     #:add-keybindings? #f)
-    (feature-firefox)
+    (feature-qutebrowser)
+    (feature-firefox
+     #:default-browser? #t)
     (feature-custom-services
      #:home-services
      (list
