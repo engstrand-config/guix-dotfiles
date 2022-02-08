@@ -11,10 +11,21 @@
             feature-emacs-evil
             %engstrand-emacs-base-features))
 
+(define* (make-emacs-feature base-name
+                        #:key
+                        (home-services (const '()))
+                        (system-services (const '())))
+  "Creates a basic emacs feature configuration."
+  (let ((f-name (symbol-append 'emacs- base-name)))
+    (feature
+     (name f-name)
+     (values `((,f-name . #t)))
+     (home-services-getter home-services)
+     (system-services-getter system-services))))
+
 (define* (feature-emacs-org-latex-preview)
   "Add and configure latex previews in Emacs Org mode."
   (define emacs-f-name 'org-latex-preview)
-  (define f-name (symbol-append 'emacs- emacs-f-name))
 
   (define (get-home-services config)
     (list
@@ -30,10 +41,8 @@
         ;; Increase latex preview scale in org mode
         (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.8))))))
 
-  (feature
-   (name f-name)
-   (values `((,f-name . #t)))
-   (home-services-getter get-home-services)))
+  (make-emacs-feature emacs-f-name
+                      #:home-services get-home-services))
 
 (define* (feature-emacs-corfu
           ;; #:key
@@ -41,7 +50,6 @@
           )
   "Add and configure Corfu completion for Emacs."
   (define emacs-f-name 'corfu)
-  (define f-name (symbol-append 'emacs- emacs-f-name))
 
   (define (get-home-services config)
     (list
@@ -58,10 +66,8 @@
       #:elisp-packages (list
                         emacs-corfu))))
 
-  (feature
-   (name f-name)
-   (values `((,f-name . #t)))
-   (home-services-getter get-home-services)))
+  (make-emacs-feature emacs-f-name
+                      #:home-services get-home-services))
 
 (define* (feature-emacs-dashboard
           ;; #:key
@@ -69,7 +75,6 @@
           )
   "Add and configure emacs-dashboard as a welcome screen."
   (define emacs-f-name 'dashboard)
-  (define f-name (symbol-append 'emacs- emacs-f-name))
 
   (define (get-home-services config)
     (list
@@ -94,10 +99,8 @@
                         ;; emacs-all-the-icons
                         ))))
 
-  (feature
-   (name f-name)
-   (values `((,f-name . #t)))
-   (home-services-getter get-home-services)))
+  (make-emacs-feature emacs-f-name
+                      #:home-services get-home-services))
 
 (define* (feature-emacs-modus-themes
           ;; #:key
@@ -105,7 +108,6 @@
           )
   "Add and configure the Modus themes for Emacs."
   (define emacs-f-name 'modus-themes)
-  (define f-name (symbol-append 'emacs- emacs-f-name))
 
   (define (get-home-services config)
     (list
@@ -143,10 +145,8 @@
       #:elisp-packages (list
                         emacs-modus-themes))))
 
-  (feature
-   (name f-name)
-   (values `((,f-name . #t)))
-   (home-services-getter get-home-services)))
+  (make-emacs-feature emacs-f-name
+                      #:home-services get-home-services))
 
 (define* (feature-emacs-evil
           #:key
@@ -163,7 +163,6 @@
   (ensure-pred boolean? collection?)
   (ensure-pred boolean? surround?)
   (define emacs-f-name 'evil)
-  (define f-name (symbol-append 'emacs- emacs-f-name))
 
   (define (get-home-services config)
     (list
@@ -225,10 +224,8 @@
                         (if collection? emacs-evil-collection)
                         (if surround? emacs-evil-surround)))))
 
-  (feature
-   (name f-name)
-   (values `((,f-name . #t)))
-   (home-services-getter get-home-services)))
+  (make-emacs-feature emacs-f-name
+                      #:home-services get-home-services))
 
 (define %engstrand-emacs-base-features
   (list
