@@ -58,7 +58,7 @@
      (simple-service
       'add-org-mode-latex-preview-home-packages-to-profile
       home-profile-service-type
-      (pkgs '("texlive-latex-preview" "texlive-graphics-def")))
+      (pkgs '("texlive" "texlive-latex-preview" "texlive-graphics-def")))
      (elisp-configuration-service
       emacs-f-name
       `((require 'org)
