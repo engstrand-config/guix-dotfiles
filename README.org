@@ -1,0 +1,55 @@
+* The GNU/Linux+Engstrand system
+
+This is our opinionated, minimalist GNU Guix configuration.
+It features [[https://sr.ht/abcdw/rde/][ =rde= ]], Emacs (evil mode) and various Wayland applications.
+
+[[./images/desktop.jpeg]]
+[[./images/apps.jpeg]]
+
+** Applications
+We have patched some of our favorite applications with GNU Guile support and also created some tools from scratch in Guile, for example:
+|---------------+--------------------------------+--------------------|
+| Application   | Description                    | Links              |
+|---------------+--------------------------------+--------------------|
+| =dwl-guile=     | dynamic tiling window manager  | [[https://github.com/engstrand-config/dwl-guile][repo]], [[https://github.com/engstrand-config/home-service-dwl-guile][home service]] |
+| =dtao-guile=    | a minimal status bar           | [[https://github.com/engstrand-config/dtao-guile][repo]], [[https://github.com/engstrand-config/home-service-dtao-guile][home service]] |
+| =farg=          | system colorscheme manager     | [[https://github.com/engstrand-config/farg][repo/home service]]  |
+| =bemenu-prompt= | create =bemenu= prompts in Guile | [[https://github.com/engstrand-config/guix-dotfiles/blob/main/engstrand/utils/bemenu-prompt.scm][source]]             |
+|---------------+--------------------------------+--------------------|
+
+We like configuring as much as possible (WM, status bar etc.) in Guile, since it brings a unified approach to the configuration of our computing environment.
+# This allows us to keep track of and reproduce configuration settings with the help of Guix derivations.
+
+** System level configuration
+We own a number of desktop/laptop computers and they all have their own configuration file in =./engstrand/systems=.
+In the system-specific configuration file we define hardware-specific settings such as mount points for drives, LUKS encryption, the resolution and refresh rate of monitors and more.
+
+** User-level configuration
+Our user-level configurations reside in =./engstrand/configs=.
+This includes name, email address, GPG public key, default applications, personalized appearance of the window manager etc.
+
+** Reconfiguring the system
+The entry point for applying a configuration to our =rde=-powered Guix system is =~/.config/guix/config.scm=, so in order to reconfigure the system we run
+#+begin_src sh
+RDE_USER=$USER \
+RDE_TARGET=system \
+sudo guix system reconfigure ~/.config/guix/config.scm
+#+end_src
+and similarly, to reconfigure the home environment
+#+begin_src sh
+RDE_USER=$USER \
+RDE_TARGET=home \
+guix home reconfigure ~/.config/guix/config.scm
+#+end_src
+
+So, what is in =~/.config/guix/config.scm=?
+That depends on the user and system configuration we would like to apply. For example, on the desktop system named =ghost= that the user =johan= uses, =config.scm= contains the following:
+#+begin_src scheme
+(use-modules (engstrand reconfigure))
+(make-config #:user "johan" #:system "ghost")
+#+end_src
+
+** Building an installation ISO
+The =build-iso.sh= script builds a GNU Guix System ISO that has
+- the full Linux kernel
+- the channels in =./engstrand/channels.scm= included
