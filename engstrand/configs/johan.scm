@@ -44,6 +44,6 @@
                  (border-px 2)))))))
     (feature-wayland-wbg
      #:path (string-append (getenv "HOME")
-                           "/engstrand-config/wallpapers/default.jpg")))
+                           "/engstrand-config/wallpapers/firewatch/e8u3zvnatbm51.jpg")))
    %engstrand-emacs-base-features
    %engstrand-base-features))
