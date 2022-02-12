@@ -1,3 +1,6 @@
 .config/nvim/.netrwhist
 .local/share/*
 *.iso
+*.pdf
+*.tex
+*.html
