@@ -393,8 +393,9 @@
 
 (define* (feature-wayland-screenshot
           #:key
-          (output-filetype "jpeg")
-          (output-quality 100)
+          (output-filetype "png")
+          (jpeg-quality 100)
+          (png-compression-level 6)
           (include-cursors? #f)
           (screenshot-output-key "<print>")
           (screenshot-select-key "s-<print>")
@@ -403,7 +404,8 @@
   "Setup grim, slurp and wl-clipboard for taking screenshots in Wayland compositors."
 
   (ensure-pred string? output-filetype)
-  (ensure-pred number? output-quality)
+  (ensure-pred number? jpeg-quality)
+  (ensure-pred number? png-compression-level)
   (ensure-pred boolean? include-cursors?)
   (ensure-pred string? screenshot-output-key)
   (ensure-pred string? screenshot-select-key)
@@ -414,7 +416,12 @@
     `(,(file-append grim "/bin/grim")
       ,(if include-cursors? "-c" "")
       "-t" ,output-filetype
-      "-q" ,(number->string output-quality)))
+      ,@(if (eq? output-filetype "jpeg")
+            (list "-q" (number->string jpeg-quality))
+            '())
+      ,@(if (eq? output-filetype "png")
+            (list "-l" (number->string png-compression-level))
+            '())))
 
   (define %grim-select-options
     `("-g" "\"$(" ,(file-append slurp "/bin/slurp" ")\"")))
@@ -538,12 +545,13 @@
   "Install and configure bemenu power prompt."
 
   (define actions
-    (let ((bin (file-append elogind "/bin/loginctl")))
-      `(("suspend" . (system* ,bin "suspend"))
-        ("logout" . (system* ,bin "terminate-session"
+    (let ((loginctl (file-append elogind "/bin/loginctl")))
+      `(("suspend" . (system* ,loginctl "suspend"))
+        ("restart dwl" . (system* ,(file-append shepherd "/bin/herd") "restart" "dwl-guile"))
+        ("logout" . (system* ,loginctl "terminate-session"
                              (getenv "XDG_SESSION_ID")))
-        ("reboot" . (system* ,bin "reboot"))
-        ("shutdown" . (system* ,bin "poweroff")))))
+        ("reboot" . (system* ,loginctl "reboot"))
+        ("shutdown" . (system* ,loginctl "poweroff")))))
 
   (define (get-home-services config)
     (let ((executable
