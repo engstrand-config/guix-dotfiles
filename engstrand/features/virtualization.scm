@@ -3,6 +3,7 @@
   #:use-module (rde features predicates)
   #:use-module (gnu services)
   #:use-module (gnu services virtualization)
+  #:use-module (rde system services accounts)
   #:export (feature-virtualization))
 
 (define* (feature-virtualization
@@ -15,6 +16,10 @@
   (define (get-system-services config)
     "Return a list of system services required for virtualization."
     (list
+     (simple-service
+      'virtualization-add-user-groups
+      rde-account-service-type
+      (list "libvirt" "kvm"))
      (service virtlog-service-type)
      (service libvirt-service-type
               (libvirt-configuration
@@ -22,5 +27,4 @@
 
   (feature
    (name 'virtualization)
-   (values `((virtualization-groups . ,(list "libvirt" "kvm"))))
    (system-services-getter get-system-services)))

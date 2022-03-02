@@ -68,23 +68,9 @@
     (rde-config-home-environment %generated-config))
 
   (define %engstrand-system
-    (let ((os (rde-config-operating-system %generated-config)))
-      (operating-system
-       (inherit os)
-       (issue (operating-system-issue %initial-os))
-       (users
-        (map
-         (lambda (user)
-           (user-account
-            (inherit user)
-            (supplementary-groups
-             (append
-              (user-account-supplementary-groups user)
-              (get-feature-groups 'virtualization-groups
-                                  %generated-config)
-              (get-feature-groups 'bluetooth-groups
-                                  %generated-config)))))
-         (operating-system-users os))))))
+    (operating-system
+     (inherit (rde-config-operating-system %generated-config))
+     (issue (operating-system-issue %initial-os))))
 
   (match target
     ("home" %engstrand-he)
