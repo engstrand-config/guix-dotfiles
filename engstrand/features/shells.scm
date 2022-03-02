@@ -5,7 +5,7 @@
   #:use-module (guix gexp)
   #:use-module (gnu services)
   #:use-module (gnu packages shells)
-  #:use-module (gnu packages shellsutils)
+  #:use-module (gnu packages shellutils)
   #:use-module (gnu home-services-utils)
   #:use-module (gnu home-services shells)
   #:use-module (gnu home-services shellutils)
