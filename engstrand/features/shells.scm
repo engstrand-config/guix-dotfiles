@@ -5,6 +5,7 @@
   #:use-module (guix gexp)
   #:use-module (gnu services)
   #:use-module (gnu packages shells)
+  #:use-module (gnu packages shellsutils)
   #:use-module (gnu home-services-utils)
   #:use-module (gnu home-services shells)
   #:use-module (gnu home-services shellutils)
@@ -18,7 +19,7 @@
     "Return a list of home services required by zsh"
     (list
      (service home-zsh-autosuggestions-service-type
-              zsh-autosuggestions-latest)
+              zsh-autosuggestions)
      (service home-zsh-service-type
               (home-zsh-configuration
                ;; TODO: Use absolute paths
