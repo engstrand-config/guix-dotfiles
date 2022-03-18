@@ -2,6 +2,7 @@
   #:use-module (rde features)
   #:use-module (rde features predicates)
   #:use-module (gnu packages linux)
+  #:use-module (gnu services)
   #:use-module (gnu services desktop)
   #:use-module (engstrand utils)
   #:use-module (rde system services accounts)
