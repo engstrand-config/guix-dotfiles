@@ -7,24 +7,28 @@
   #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
   #:export (
-            feature-tlp
-            feature-laptop))
+	    feature-tlp
+	    feature-laptop))
 
-(define* (feature-laptop)
+(define* (feature-laptop
+	  #:key
+	  (natural-scrolling? #t))
   "Setup general laptop functionality and configuration."
+
+  (ensure-pred boolean? natural-scrolling?)
 
   (define (get-home-services config)
     "Return a list of home services required for laptops."
     (make-service-list
      (when (get-value 'dwl-guile config)
        (simple-service
-        'set-natural-scrolling-in-dwl-guile
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (natural-scrolling? #t))))))))
+	'set-natural-scrolling-in-dwl-guile
+	home-dwl-guile-service-type
+	(modify-dwl-guile-config
+	 (config =>
+		 (dwl-config
+		  (inherit config)
+		  (natural-scrolling? natural-scrolling?))))))))
 
   (feature
    (name 'laptop)
@@ -32,10 +36,10 @@
    (home-services-getter get-home-services)))
 
 (define* (feature-tlp
-          #:key
-          (tlp-config (tlp-configuration
-                       (cpu-scaling-governor-on-ac (list "performance"))
-                       (sched-powersave-on-bat? #t))))
+	  #:key
+	  (tlp-config (tlp-configuration
+		       (cpu-scaling-governor-on-ac (list "performance"))
+		       (sched-powersave-on-bat? #t))))
   "Setup TLP for power management on laptops."
 
   (define (get-system-services config)
@@ -46,7 +50,7 @@
       profile-service-type
       (pkgs '("tlp")))
      (service tlp-service-type
-              tlp-config)))
+	      tlp-config)))
 
   (feature
    (name 'tlp)
