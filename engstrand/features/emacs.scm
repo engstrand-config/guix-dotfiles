@@ -259,7 +259,7 @@
   (list
    (feature-emacs-default-editor)
    (feature-emacs
-    #:emacs %engstrand-emacs-package
+    ;; #:emacs %engstrand-emacs-package
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
     #:extra-init-el '(;; no fringes
                       (fringe-mode 0)
