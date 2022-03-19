@@ -316,7 +316,6 @@
    (feature-emacs-vertico)
    (feature-emacs-project)
    (feature-emacs-perspective)
-   (feature-emacs-input-methods)
    (feature-emacs-which-key)
    (feature-emacs-git)
    (feature-emacs-keycast)
