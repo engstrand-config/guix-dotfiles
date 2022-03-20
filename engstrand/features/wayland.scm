@@ -397,9 +397,9 @@
           (jpeg-quality 100)
           (png-compression-level 6)
           (include-cursors? #f)
-          (screenshot-output-key "<print>")
+          (screenshot-output-key "S-s-<print>")
           (screenshot-select-key "s-<print>")
-          (screenshot-select-copy-key "S-s-<print>")
+          (screenshot-select-copy-key "<print>")
           (add-keybindings? #t))
   "Setup grim, slurp and wl-clipboard for taking screenshots in Wayland compositors."
 
