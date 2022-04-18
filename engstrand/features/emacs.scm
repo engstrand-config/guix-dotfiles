@@ -290,6 +290,7 @@
                             tab-bar-new-tab-choice "*scratch*")
                       ;; Move to future C feature
                       (setq c-default-style "linux")
+                      (add-hook 'c-mode-common-hook '(lambda () (setq indent-tabs-mode t)))
                       ;; Delete whitespace from indentations immediately
                       (setq backward-delete-char-untabify-method 'hungry)
                       ;; Transparency - laggy when window large
