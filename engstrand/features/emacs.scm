@@ -3,12 +3,12 @@
   #:use-module (engstrand utils)
   #:use-module (gnu home services)
   #:use-module (gnu services)
-  ;; #:use-module (flat packages emacs)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages emacs-xyz)
   #:use-module (rde features)
   #:use-module (rde features base)
   #:use-module (rde features emacs)
+  #:use-module (rde packages emacs)
   #:export (
             feature-emacs-default-editor
             feature-emacs-org-latex-preview
@@ -258,13 +258,13 @@
   (make-emacs-feature emacs-f-name
                       #:home-services get-home-services))
 
-;; (define %engstrand-emacs-package emacs-pgtk-native-comp)
+(define %engstrand-emacs-package emacs-next-pgtk-latest)
 
 (define %engstrand-emacs-base-features
   (list
    (feature-emacs-default-editor)
    (feature-emacs
-    ;; #:emacs %engstrand-emacs-package
+    #:emacs %engstrand-emacs-package
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
     #:extra-init-el '(;; no fringes
                       (fringe-mode 0)
