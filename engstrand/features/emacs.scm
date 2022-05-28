@@ -59,8 +59,9 @@
       'add-org-mode-latex-preview-home-packages-to-profile
       home-profile-service-type
       (pkgs '("texlive" "texlive-latex-preview" "texlive-graphics-def")))
-     (elisp-configuration-service
+     (rde-elisp-configuration-service
       emacs-f-name
+      config
       `((require 'org)
         ;; Use dvisvgm for latex rendering
         (setq org-latex-create-formula-image-program 'dvisvgm)
@@ -79,8 +80,9 @@
 
   (define (get-home-services config)
     (list
-     (elisp-configuration-service
+     (rde-elisp-configuration-service
       emacs-f-name
+      config
       `((require 'corfu)
         ;; TAB-and-Go completion
         (setq corfu-cycle t)
@@ -104,8 +106,9 @@
 
   (define (get-home-services config)
     (list
-     (elisp-configuration-service
+     (rde-elisp-configuration-service
       emacs-f-name
+      config
       `((eval-when-compile (require 'dashboard))
         (dashboard-setup-startup-hook)
         (setq dashboard-center-content t)
@@ -137,8 +140,9 @@
 
   (define (get-home-services config)
     (list
-     (elisp-configuration-service
+     (rde-elisp-configuration-service
       emacs-f-name
+      config
       `((require 'modus-themes)
         (window-divider-mode 0)
         (setq modus-themes-italic-constructs t
@@ -192,8 +196,9 @@
 
   (define (get-home-services config)
     (list
-     (elisp-configuration-service
+     (rde-elisp-configuration-service
       emacs-f-name
+      config
       `(;; Make the Escape key behave more nicely for evil-mode
         (global-set-key (kbd "<escape>") 'keyboard-quit)
         (define-key query-replace-map (kbd "<escape>") 'quit)
@@ -273,9 +278,6 @@
                       (add-hook 'command-line-functions 'my-inhibit-startup-screen-file)
                       ;; ignore warnings from native-comp
                       (setq native-comp-async-report-warnings-errors nil)
-                      ;; Undo the top modeline of emacs-appearance
-                      (setq-default mode-line-format header-line-format)
-                      (setq-default header-line-format nil)
                       ;; Relative line numbers, but only when relevant
                       (setq-default display-line-numbers-type 'relative)
                       (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -304,11 +306,12 @@
    ;; any values set in rde.
    (feature-emacs-modus-themes)
    (feature-emacs-appearance
-    #:margin 5)
+    #:margin 5
+    #:header-line-as-mode-line? #f)
    (feature-emacs-dashboard)
    (feature-emacs-evil)
-   (feature-emacs-monocle
-    #:olivetti-body-width 100)
+   ;; (feature-emacs-monocle
+   ;;  #:olivetti-body-width 100)
    (feature-emacs-dired)
    (feature-emacs-faces)
    (feature-emacs-completion
