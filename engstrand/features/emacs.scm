@@ -3,7 +3,7 @@
   #:use-module (engstrand utils)
   #:use-module (gnu home services)
   #:use-module (gnu services)
-  #:use-module (flat packages emacs)
+  ;; #:use-module (flat packages emacs)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages emacs-xyz)
   #:use-module (rde features)
@@ -258,7 +258,7 @@
   (make-emacs-feature emacs-f-name
                       #:home-services get-home-services))
 
-(define %engstrand-emacs-package emacs-pgtk-native-comp)
+;; (define %engstrand-emacs-package emacs-pgtk-native-comp)
 
 (define %engstrand-emacs-base-features
   (list
@@ -277,7 +277,7 @@
                                 (expand-file-name argi command-line-default-directory)))))
                       (add-hook 'command-line-functions 'my-inhibit-startup-screen-file)
                       ;; ignore warnings from native-comp
-                      (setq native-comp-async-report-warnings-errors nil)
+                      ;; (setq native-comp-async-report-warnings-errors nil)
                       ;; Relative line numbers, but only when relevant
                       (setq-default display-line-numbers-type 'relative)
                       (add-hook 'prog-mode-hook 'display-line-numbers-mode)
