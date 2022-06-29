@@ -32,6 +32,7 @@
   #:use-module (gnu packages mtools)
   #:use-module (gnu packages package-management)
   #:use-module (nongnu packages linux)
+  #:use-module (guix gexp)
   #:use-module (guix packages)
   #:export (installation-os-nonfree))
 
