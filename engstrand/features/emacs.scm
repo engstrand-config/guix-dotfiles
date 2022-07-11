@@ -88,7 +88,7 @@
         (setq corfu-cycle t)
         (setq corfu-preselect-first nil)
         (setq corfu-auto t)
-        (corfu-global-mode 1)
+        (global-corfu-mode 1)
         (define-key corfu-map (kbd "<tab>") 'corfu-next)
         (define-key corfu-map (kbd "<backtab>") 'corfu-previous))
       #:elisp-packages (list
@@ -300,7 +300,9 @@
                       ;; Clean up white space
                       (add-hook 'before-save-hook 'whitespace-cleanup)
                       ;; Allow execution of src blocks without asking
-                      (setq org-confirm-babel-evaluate nil)))
+                      (setq org-confirm-babel-evaluate nil)
+                      ;; for some reason this must be added manually
+                      (vertico-mode)))
    ;; Load custom theme before rde emacs-appearance feature.
    ;; This make sures that our custom settings overrides
    ;; any values set in rde.
@@ -310,8 +312,8 @@
     #:header-line-as-mode-line? #f)
    (feature-emacs-dashboard)
    (feature-emacs-evil)
-   ;; (feature-emacs-monocle
-   ;;  #:olivetti-body-width 100)
+   (feature-emacs-monocle
+    #:olivetti-body-width 100)
    (feature-emacs-dired)
    (feature-emacs-faces)
    (feature-emacs-completion
