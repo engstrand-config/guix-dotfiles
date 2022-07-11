@@ -2,6 +2,7 @@
   #:use-module (gnu services)
   #:use-module (rde features base)
   #:use-module (rde features gnupg)
+  #:use-module (rde features bittorrent)
   #:use-module (engstrand features sync)
   #:use-module (engstrand features browsers)
   #:use-module (engstrand features emacs)
@@ -10,6 +11,7 @@
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
+  #:use-module (engstrand features utils)
   #:use-module (engstrand configs))
 
 ;; TODO: Add custom packages as feature:
@@ -28,6 +30,8 @@
      #:gpg-smart-card? #f)
     (feature-virtualization)
     (feature-kdeconnect)
+    (feature-transmission)
+    (feature-piper)
     (feature-qutebrowser)
     (feature-firefox
      #:default-browser? #t)
