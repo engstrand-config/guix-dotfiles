@@ -4,13 +4,16 @@
   #:use-module (guix gexp)
   #:use-module (gnu packages gnupg)
   #:use-module (gnu services)
+  #:use-module (gnu services dbus)
+  #:use-module (gnu packages gnome)
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (engstrand utils)
   #:use-module (engstrand packages rust)
   #:use-module (engstrand packages utils)
   #:export (feature-imv
-            feature-bitwarden-cli))
+            feature-bitwarden-cli
+            feature-piper))
 
 (define* (feature-imv)
   "Setup imv, an image viewer for X11 and Wayland."
@@ -28,6 +31,31 @@
   (feature
    (name 'imv)
    (home-services-getter get-home-services)))
+
+(define* (feature-piper)
+  "Set up Piper, a configuration utility for gaming mice."
+
+  (define (get-home-services config)
+    "Return a list of home services required by Piper"
+    (list
+     (simple-service
+      'add-piper-home-packages-to-profile
+      home-profile-service-type
+      ;; seems like `python' is needed also
+      (pkgs '("python" "piper")))))
+
+  (define (get-system-services config)
+    "Return a list of system services required by Piper"
+    (list
+     (simple-service
+      'ratbagd
+      dbus-root-service-type
+      (list libratbag))))
+
+  (feature
+   (name 'piper)
+   (home-services-getter get-home-services)
+   (system-services-getter get-system-services)))
 
 (define* (feature-bitwarden-cli
           #:key
