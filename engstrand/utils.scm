@@ -116,7 +116,7 @@
 
   ;; Return an alist containing the environment variable name VAR
   ;; and its value as the result of serializing ALIST.
-  `((,var . ,(string-append "\"" str "\""))))
+  `((,var . ,str )))
 
 (define-public (make-log-file name)
   (string-append (or (getenv "XDG_LOG_HOME")
