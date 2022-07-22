@@ -31,7 +31,7 @@
         (list
          (shepherd-service
           (documentation "Run the KDE Connect daemon.")
-          (requirement (append '(dbus-home)
+          (requirement (append '(dbus)
                                (if has-dwl-guile? '(dwl-guile) '())))
           (provision '(kdeconnect))
           (auto-start? #t)
