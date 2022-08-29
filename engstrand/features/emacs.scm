@@ -8,6 +8,7 @@
   #:use-module (rde features)
   #:use-module (rde features base)
   #:use-module (rde features emacs)
+  #:use-module (rde features emacs-xyz)
   #:use-module (rde packages emacs)
   #:export (
             feature-emacs-default-editor
