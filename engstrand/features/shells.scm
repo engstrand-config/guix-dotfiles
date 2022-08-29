@@ -1,4 +1,5 @@
 (define-module (engstrand features shells)
+  #:use-module (rde gexp)
   #:use-module (rde features)
   #:use-module (rde packages)
   #:use-module (rde features predicates)
@@ -23,8 +24,8 @@
      (service home-zsh-service-type
               (home-zsh-configuration
                ;; TODO: Use absolute paths
-               (zshrc `(,(slurp-file-gexp (local-file "../files/zshrc"))))
-               (zprofile `(,(slurp-file-gexp (local-file "../files/shell-profile"))))))))
+               (zshrc `(,(slurp-file-like (local-file "../files/zshrc"))))
+               (zprofile `(,(slurp-file-like (local-file "../files/shell-profile"))))))))
   (feature
    (name 'zsh)
    (values `((login-shell . ,(file-append zsh "/bin/zsh"))))
