@@ -176,7 +176,7 @@
 ;; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
           #:key
-          (package foot)
+          (package foot-1.11.0)
           (set-default-terminal? #t)
           (window-alpha 0.9)
           (swallow-clients? #t)) ;; TODO: Add swallow patch automatically if #t?

@@ -41,3 +41,17 @@
    (synopsis "Super simple wallpaper application for Wayland compositors")
    (description "Super simple wallpaper application for
                               Wayland compositors implementing the layer-shell protocol.")))
+
+(define-public foot-1.11.0
+  (package
+   (inherit foot)
+   (name "foot")
+   (version "1.11.0")
+   (home-page "https://codeberg.org/dnkl/foot")
+   (source (origin
+            (method git-fetch)
+            (uri (git-reference (url home-page) (commit version)))
+            (file-name (git-file-name name version))
+            (sha256
+             (base32
+              "1d9bk8lhmw5lc8k0mw80g0vbwgxyh3gw5c7ppy3sir07s9y0y0fn"))))))
