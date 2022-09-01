@@ -44,7 +44,7 @@
 ;; Move some of the packages to separate features?
 (define %engstrand-base-home-packages
   (pkgs '("curl" "htop" "ncurses"
-          "hicolor-icon-theme" "adwaita-icon-theme" "gnome-themes-standard")))
+          "hicolor-icon-theme" "adwaita-icon-theme" "gnome-themes-extra")))
 
 ;; Dynamically create a configuration that can be reproduced
 ;; without having the correct environment variables set.
