@@ -7,32 +7,32 @@
   #:use-module (engstrand utils)
   #:use-module (dtao-guile home-service)
   #:export (
-	    feature-statusbar-dtao-guile
+            feature-statusbar-dtao-guile
 
-	    %engstrand-dtao-guile-config
-	    %engstrand-dtao-guile-left-blocks
-	    %engstrand-dtao-guile-center-blocks
-	    %engstrand-dtao-guile-right-blocks))
+            %engstrand-dtao-guile-config
+            %engstrand-dtao-guile-left-blocks
+            %engstrand-dtao-guile-center-blocks
+            %engstrand-dtao-guile-right-blocks))
 
 (define %engstrand-dtao-guile-left-blocks
   (append
    (map
     (lambda (tag)
       (let ((str (string-append "^p(8)" (number->string tag) "^p(8)"))
-	    (index (- tag 1)))
-      (dtao-block
-       (interval 0)
-       (events? #t)
-       (click `(match button
-		 (0 (dtao:view ,index))))
-       (render `(cond
-		 ((dtao:selected-tag? ,index)
-		  ,(string-append "^bg(#ffcc00)^fg(#191919)" str "^fg()^bg()"))
-		 ((dtao:urgent-tag? ,index)
-		  ,(string-append "^bg(#ff0000)^fg(#ffffff)" str "^fg()^bg()"))
-		 ((dtao:active-tag? ,index)
-		  ,(string-append "^bg(#323232)^fg(#ffffff)" str "^fg()^bg()"))
-		 (else ,str))))))
+            (index (- tag 1)))
+        (dtao-block
+         (interval 0)
+         (events? #t)
+         (click `(match button
+                   (0 (dtao:view ,index))))
+         (render `(cond
+                   ((dtao:selected-tag? ,index)
+                    ,(string-append "^bg(#ffcc00)^fg(#191919)" str "^fg()^bg()"))
+                   ((dtao:urgent-tag? ,index)
+                    ,(string-append "^bg(#ff0000)^fg(#ffffff)" str "^fg()^bg()"))
+                   ((dtao:active-tag? ,index)
+                    ,(string-append "^bg(#323232)^fg(#ffffff)" str "^fg()^bg()"))
+                   (else ,str))))))
     (iota 9 1))
    (list
     (dtao-block
@@ -64,28 +64,28 @@
     (require-value 'font-monospace config)
     (list
      (service home-dtao-guile-service-type
-	      (home-dtao-guile-configuration
-	       (config
-		(dtao-config
-		(font (font->string 'fcft 'font-monospace config
-				    #:bold? #t))
-		(block-spacing 0)
-		(use-dwl-guile-colorscheme? #t)
-		(modules '((ice-9 match)
-			   (ice-9 popen)
-			   (ice-9 rdelim)
-			   (srfi srfi-1)))
-		(padding-left 0)
-		(padding-top 0)
-		(padding-bottom 0)
-		(height height)
-		(left-blocks %engstrand-dtao-guile-left-blocks)
-		(center-blocks %engstrand-dtao-guile-center-blocks)
-		(right-blocks %engstrand-dtao-guile-right-blocks)))))))
+              (home-dtao-guile-configuration
+               (config
+                (dtao-config
+                 (font (font->string 'fcft 'font-monospace config
+                                     #:bold? #t))
+                 (block-spacing 0)
+                 (use-dwl-guile-colorscheme? #t)
+                 (modules '((ice-9 match)
+                            (ice-9 popen)
+                            (ice-9 rdelim)
+                            (srfi srfi-1)))
+                 (padding-left 0)
+                 (padding-top 0)
+                 (padding-bottom 0)
+                 (height height)
+                 (left-blocks %engstrand-dtao-guile-left-blocks)
+                 (center-blocks %engstrand-dtao-guile-center-blocks)
+                 (right-blocks %engstrand-dtao-guile-right-blocks)))))))
 
   (feature
    (name 'statusbar-dtao-guile)
    (values `((statusbar? . #t)
-	     (statusbar-height . ,height)
-	     (dtao-guile . #t)))
+             (statusbar-height . ,height)
+             (dtao-guile . #t)))
    (home-services-getter get-home-services)))

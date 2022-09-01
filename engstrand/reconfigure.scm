@@ -6,7 +6,9 @@
   #:use-module (gnu system accounts)
   #:use-module (rde features)
   #:use-module (rde features predicates)
+  #:use-module (farg provider)
   #:use-module (engstrand systems)
+  #:use-module (engstrand colorscheme)
   #:export (make-config))
 
 ;; Allows dynamic loading of configuration modules based on file name.
@@ -59,10 +61,11 @@
     (rde-config
      (initial-os %initial-os)
      (features
-      (append
-       %user-features
-       %engstrand-system-base-features
-       %system-features))))
+      (colorscheme-provider
+       #:config %engstrand-farg-config
+       #:services (append %user-features
+                          %engstrand-system-base-features
+                          %system-features)))))
 
   (define %engstrand-he
     (rde-config-home-environment %generated-config))

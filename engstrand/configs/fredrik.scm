@@ -6,8 +6,11 @@
   #:use-module (gnu services)
   #:use-module (gnu services databases)
   #:use-module (gnu home-services ssh) ;; rde home-service
+  #:use-module (farg config)
+  #:use-module (farg home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
+  #:use-module (engstrand features base)
   #:use-module (engstrand features xorg)
   #:use-module (engstrand features sync)
   #:use-module (engstrand features utils)
