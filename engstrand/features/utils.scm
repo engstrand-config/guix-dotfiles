@@ -84,7 +84,7 @@
      (simple-service
       'create-rbw-config
       home-files-service-type
-      `(("config/rbw/guix-watcher"
+      `((".config/rbw/guix-watcher"
          ,(mixed-text-file
            "guix-watcher"
            email (number->string lock-timeout) pinentry))))

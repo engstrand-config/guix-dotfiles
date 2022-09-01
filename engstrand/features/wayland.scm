@@ -126,7 +126,7 @@
      (simple-service
       'create-mako-config
       home-files-service-type
-      `(("config/mako/config"
+      `((".config/mako/config"
          ,(alist->ini "mako-config"
                       `(("font"
                          . ,(font->string 'pango 'font-sans config
@@ -199,7 +199,7 @@
        (simple-service
         'create-foot-config
         home-files-service-type
-        `(("config/foot/foot.ini"
+        `((".config/foot/foot.ini"
            ,(alist->ini "foot-config"
                        `(("pad" . "5x5")
                          ;; TODO: I prefer the look of the "monospace" font in foot
@@ -563,7 +563,7 @@
        (simple-service
         'create-bemenu-power-executable
         home-files-service-type
-        `(("config/bemenu.scm" ,executable)))
+        `((".config/bemenu.scm" ,executable)))
        (when (get-value 'dwl-guile config)
          (simple-service
           'add-bemenu-power-dwl-keybinding
@@ -597,7 +597,7 @@
      (simple-service
       'create-swaylock-config
       home-files-service-type
-      `(("config/swaylock/config"
+      `((".config/swaylock/config"
          ,(alist->ini "swaylock-config"
                       `(("clock")
                         ("screenshots")
