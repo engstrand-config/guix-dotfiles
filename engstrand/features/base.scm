@@ -41,11 +41,11 @@
 (define* (feature-farg)
   "Installs and configures farg, a system colorscheme manager for Guix."
 
-  (lambda (config palette)
+  (lambda (home-farg-config palette)
     (define (get-home-services config)
       "Return a list of home services required by farg"
       (list
-       (service home-farg-service-type config)))
+       (service home-farg-service-type home-farg-config)))
 
     (feature
      (name 'farg)
