@@ -72,16 +72,18 @@
          (config =>
                  (dwl-config
                   (inherit config)
-                  (monitor-rules monitors)))))
+                  (monitor-rules
+                   (append (list (dwl-monitor-rule
+                                  (layout "tile")))
+                           monitors))))))
        (when add-keybindings?
          (simple-service
-          'add-dwl-guile-monitor-rules
+          'add-dwl-guile-keybindings
           home-dwl-guile-service-type
           (modify-dwl-guile-config
            (config =>
                    (dwl-config
                     (inherit config)
-                    (monitor-rules monitors)
                     (keys
                      (append
                       (list
