@@ -3,6 +3,7 @@
   #:use-module (engstrand systems)
   #:use-module (engstrand packages linux)
   #:use-module (engstrand features laptop)
+  #:use-module (engstrand features display)
   #:use-module (engstrand features bluetooth)
   #:use-module (dwl-guile home-service)
   #:use-module (rde features system)
@@ -11,15 +12,6 @@
   #:use-module (gnu system file-systems)
   #:use-module (gnu system mapped-devices))
 
-;; TODO: Add amdgpu driver for xorg as a feature
-;; (define %xorg-amdgpu-config
-;;   "Section \"Device\"
-;;   Identifier  \"AMD\"
-;;   Driver      \"amdgpu\"
-;;   Option      \"TearFree\" \"true\"
-;;   Option      \"Backlight\" \"amdgpu_bl0\"
-;;   EndSection")
-;;
 ;; TODO: Add support for swap-devices as a feature.
 ;; rde does not support this out of the box. Instead, we
 ;; must pass it using the initial-os field of rde-config.
@@ -37,7 +29,7 @@
      #:firmware (list linux-firmware)
      #:kernel-arguments %engstrand-kernel-arguments
      #:kernel-loadable-modules (kernel-modules->list (list tuxedo-keyboard-module)
-						     linux))
+                                                     linux))
     (feature-host-info
      #:host-name "tuxedo"
      #:timezone %engstrand-timezone
@@ -53,7 +45,23 @@
       (file-system
        (mount-point "/")
        (device
-	(uuid "4484aa6c-d5ff-4964-b62d-c2572c701e66" 'ext4))
+        (uuid "4484aa6c-d5ff-4964-b62d-c2572c701e66" 'ext4))
        (type "ext4"))))
-    (feature-bluetooth))
+    (feature-bluetooth)
+    (feature-dwl-guile-monitor-config
+     #:monitors
+     (list
+      (dwl-monitor-rule
+       (name "eDP-1")
+       (x 0)
+       (y 0)
+       (width 1920)
+       (height 1080)
+       (refresh-rate 60)
+       (adaptive-sync? #f))))
+    (feature-kanshi-autorandr
+     #:profiles
+     '((("Ancor Communications Inc MG248 G6LMQS123017 (HDMI-A-1)" .
+         (("mode" . "1920x1080")
+          ("position" . "0x-1080")))))))
    %engstrand-laptop-base-features))
