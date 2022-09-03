@@ -50,6 +50,9 @@
 (define-public (list-of-state-items? x)
   (every state-item? x))
 
+(define-public (list-of-list? x)
+  (every list? x))
+
 (define-syntax %modify-feature
   (syntax-rules ()
     ((_ feature (delete kind) clauses ...)
