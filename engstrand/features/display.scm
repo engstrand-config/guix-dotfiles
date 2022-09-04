@@ -38,16 +38,24 @@
           (monitors '())
           (focus-left-key "s-<left>")
           (focus-right-key "s-<right>")
+          (focus-up-key "s-<up>")
+          (focus-down-key "s-<down>")
           (move-left-key "S-s-<left>")
           (move-right-key "S-s-<right>")
+          (move-up-key "S-s-<up>")
+          (move-down-key "S-s-<down>")
           (add-keybindings? #t))
   "Configure monitor settings for dwl-guile."
 
   (ensure-pred list-of-monitor-rules? monitors)
   (ensure-pred string? focus-left-key)
   (ensure-pred string? focus-right-key)
+  (ensure-pred string? focus-up-key)
+  (ensure-pred string? focus-down-key)
   (ensure-pred string? move-left-key)
   (ensure-pred string? move-right-key)
+  (ensure-pred string? move-up-key)
+  (ensure-pred string? move-down-key)
 
   (define (get-home-services config)
     "Return a list of home services required for configuring monitors in dwl-guile."
@@ -73,9 +81,11 @@
                  (dwl-config
                   (inherit config)
                   (monitor-rules
-                   (append (list (dwl-monitor-rule
-                                  (layout "tile")))
-                           monitors))))))
+                   (append monitors
+                           ;; The selected monitor rule is based on the order
+                           ;; of the rules in the list.
+                           (list (dwl-monitor-rule
+                                  (layout "tile")))))))))
        (when add-keybindings?
          (simple-service
           'add-dwl-guile-keybindings
@@ -94,11 +104,23 @@
                         (key focus-right-key)
                         (action `(dwl:focus-monitor DIRECTION-RIGHT)))
                        (dwl-key
+                        (key focus-up-key)
+                        (action `(dwl:focus-monitor DIRECTION-UP)))
+                       (dwl-key
+                        (key focus-down-key)
+                        (action `(dwl:focus-monitor DIRECTION-DOWN)))
+                       (dwl-key
                         (key move-left-key)
                         (action `(dwl:tag-monitor DIRECTION-LEFT)))
                        (dwl-key
                         (key move-right-key)
-                        (action `(dwl:tag-monitor DIRECTION-RIGHT))))
+                        (action `(dwl:tag-monitor DIRECTION-RIGHT)))
+                       (dwl-key
+                        (key move-up-key)
+                        (action `(dwl:tag-monitor DIRECTION-UP)))
+                       (dwl-key
+                        (key move-down-key)
+                        (action `(dwl:tag-monitor DIRECTION-DOWN))))
                       (dwl-config-keys config)))))))))))
 
   (feature
