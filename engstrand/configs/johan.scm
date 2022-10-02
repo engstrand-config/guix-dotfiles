@@ -9,6 +9,7 @@
   #:use-module (engstrand features virtualization)
   #:use-module (engstrand features wayland)
   #:use-module (farg config)
+  #:use-module (engstrand features daw)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
@@ -38,6 +39,9 @@
     (feature-kdeconnect)
     (feature-transmission)
     (feature-piper)
+    (feature-ardour)
+    (feature-calf-plugins)
+    (feature-sfz)
     (feature-qutebrowser)
     (feature-firefox
      #:default-browser? #t)
