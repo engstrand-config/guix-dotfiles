@@ -9,7 +9,7 @@
 
 (define-public %system-swap
   (swap-space
-   (target (uuid "2e1cafae-8f43-4938-be21-fc525250f915"))))
+   (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03"))))
 
 (define-public %system-features
   (list
@@ -27,7 +27,7 @@
           (file-system
            (mount-point "/")
            (device
-            (uuid "3d72e2f8-6474-4b99-8087-48094ed37f2b"
+            (uuid "104e5086-1795-4a28-b3eb-f563ef06fc52"
                   'ext4))
            (type "ext4"))))
    (feature-dwl-guile-monitor-config
