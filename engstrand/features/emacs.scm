@@ -302,6 +302,8 @@
                       (add-hook 'before-save-hook 'whitespace-cleanup)
                       ;; Allow execution of src blocks without asking
                       (setq org-confirm-babel-evaluate nil)
+                      ;; (Temporarily) suppress startup warning in perspective.el
+                      (setq persp-suppress-no-prefix-key-warning t)
                       ;; for some reason this must be added manually
                       (vertico-mode)))
    ;; Load custom theme before rde emacs-appearance feature.
