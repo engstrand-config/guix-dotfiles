@@ -3,6 +3,7 @@
   #:use-module (rde features fontutils)
   #:use-module (rde features predicates)
   #:use-module (guix gexp)
+  #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (gnu services)
   #:use-module (gnu services xorg)
@@ -18,6 +19,9 @@
   #:use-module (engstrand utils bemenu-prompt)
   #:use-module (engstrand systems)
   #:use-module (engstrand packages wayland)
+  #:use-module (farg config)
+  #:use-module (farg colorscheme)
+  #:use-module (farg home-service)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
@@ -270,7 +274,6 @@
    (name 'wayland-foot)
    (home-services-getter get-home-services)))
 
-;; TODO: Move to farg?
 ;; TODO: Copy file at PATH to store and restart shepherd service on change
 (define* (feature-wayland-wbg
           #:key
@@ -281,34 +284,41 @@
   (ensure-pred maybe-string? path)
   (ensure-pred boolean? auto-start?)
 
-  (define (get-home-services config)
-    "Return a list of home services required by wbg"
-    (let ((has-dwl-guile? (get-value 'dwl-guile config)))
-      (make-service-list
-       (simple-service
-        'add-wbg-home-packages-to-profile
-        home-profile-service-type
-        (list wbg))
-       (when path
-         (simple-service
-          'add-wbg-shepherd-service
-          home-shepherd-service-type
-          (list
-           (shepherd-service
-            (documentation "Run wbg.")
-            (provision '(wbg))
-            (requirement (if has-dwl-guile? '(dwl-guile) '()))
-            (auto-start? auto-start?)
-            (respawn? #t)
-            (start
-             #~(make-forkexec-constructor
-                (list #$(file-append wbg "/bin/wbg") #$path)
-                #:log-file #$(make-log-file "wbg")))
-            (stop #~(make-kill-destructor)))))))))
+  (lambda (fconfig palette)
+    (define wallpaper-path
+      (let ((colorscheme (home-farg-configuration-colorscheme fconfig)))
+        (match path
+          (#f (colorscheme-wallpaper colorscheme))
+          (else path))))
 
-  (feature
-   (name 'wayland-wbg)
-   (home-services-getter get-home-services)))
+    (define (get-home-services config)
+      "Return a list of home services required by wbg"
+      (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+        (make-service-list
+         (simple-service
+          'add-wbg-home-packages-to-profile
+          home-profile-service-type
+          (list wbg))
+         (when wallpaper-path
+           (simple-service
+            'add-wbg-shepherd-service
+            home-shepherd-service-type
+            (list
+             (shepherd-service
+              (documentation "Run wbg.")
+              (provision '(wbg))
+              (requirement (if has-dwl-guile? '(dwl-guile) '()))
+              (auto-start? auto-start?)
+              (respawn? #t)
+              (start
+               #~(make-forkexec-constructor
+                  (list #$(file-append wbg "/bin/wbg") #$wallpaper-path)
+                  #:log-file #$(make-log-file "wbg")))
+              (stop #~(make-kill-destructor)))))))))
+
+    (feature
+     (name 'wayland-wbg)
+     (home-services-getter get-home-services))))
 
 (define* (feature-wayland-wlsunset
           #:key

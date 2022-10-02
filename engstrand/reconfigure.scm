@@ -6,10 +6,17 @@
   #:use-module (gnu system accounts)
   #:use-module (rde features)
   #:use-module (rde features predicates)
+  #:use-module (farg config)
   #:use-module (farg provider)
   #:use-module (engstrand systems)
   #:use-module (engstrand colorscheme)
   #:export (make-config))
+
+;; TODO: Move wallpapers into channel in order for paths to be consistent
+(define %engstrand-default-colorscheme
+  (farg-config
+   (wallpaper (string-append (getenv "HOME")
+                             "/engstrand-config/wallpapers/default.jpg"))))
 
 ;; Allows dynamic loading of configuration modules based on file name.
 (define* (dynamic-load sub mod var-name #:key (throw? #t))
@@ -42,6 +49,7 @@
   (ensure-pred operating-system? initial-os)
 
   (define %user-features (dynamic-load 'configs user '%user-features))
+  (define %user-colorscheme (dynamic-load 'configs user '%user-colorscheme #:throw? #f))
   (define %system-features (dynamic-load 'systems system '%system-features))
   (define %system-swap (dynamic-load 'systems system '%system-swap #:throw? #f))
 
@@ -62,7 +70,10 @@
      (initial-os %initial-os)
      (features
       (colorscheme-provider
-       #:config %engstrand-farg-config
+       ;; Fallback to default colorscheme
+       #:config (if (unspecified? %user-colorscheme)
+                    %engstrand-default-colorscheme
+                    %user-colorscheme)
        #:services (append %user-features
                           %engstrand-system-base-features
                           %system-features)))))

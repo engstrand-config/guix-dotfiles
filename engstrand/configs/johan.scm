@@ -8,6 +8,7 @@
   #:use-module (engstrand features emacs)
   #:use-module (engstrand features virtualization)
   #:use-module (engstrand features wayland)
+  #:use-module (farg config)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
@@ -16,6 +17,11 @@
 
 ;; TODO: Add custom packages as feature:
 ;;       "youtube-dl"
+
+(define-public %user-colorscheme
+  (farg-config
+   (wallpaper (string-append (getenv "HOME")
+                             "/engstrand-config/wallpapers/nature/dieter-becker-SH-5qrarq3s-unsplash.jpg"))))
 
 (define-public %user-features
   (append
@@ -45,9 +51,6 @@
         (config =>
                 (dwl-config
                  (inherit config)
-                 (border-px 2)))))))
-    (feature-wayland-wbg
-     #:path (string-append (getenv "HOME")
-                           "/engstrand-config/wallpapers/nature/dieter-becker-SH-5qrarq3s-unsplash.jpg")))
+                 (border-px 2))))))))
    %engstrand-emacs-base-features
    %engstrand-base-features))

@@ -7,7 +7,6 @@
   #:use-module (gnu services databases)
   #:use-module (gnu home-services ssh) ;; rde home-service
   #:use-module (farg config)
-  #:use-module (farg home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand features base)
@@ -19,6 +18,11 @@
   #:use-module (engstrand features browsers)
   #:use-module (engstrand features virtualization)
   #:use-module (engstrand features wayland))
+
+(define-public %user-colorscheme
+  (farg-config
+   (wallpaper (string-append (getenv "HOME")
+                             "/engstrand-config/wallpapers/nature/dieter-becker-SH-5qrarq3s-unsplash.jpg"))))
 
 (define-public %user-features
   (append
