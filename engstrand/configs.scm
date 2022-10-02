@@ -120,7 +120,7 @@
    (feature-imv)
    (feature-neovim)
    (feature-zathura)
-   (feature-wayland-wbg)
+   (feature-wayland-swaybg)
    (feature-wayland-bemenu)
    (feature-wayland-bemenu-power)
    (feature-wayland-foot)

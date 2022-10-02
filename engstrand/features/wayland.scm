@@ -33,7 +33,7 @@
             feature-wayland-bemenu-power
             feature-wayland-foot
             feature-wayland-mako
-            feature-wayland-wbg
+            feature-wayland-swaybg
             feature-wayland-wlsunset
             feature-wayland-screenshot
             feature-wayland-swaylock
@@ -285,11 +285,11 @@
    (home-services-getter get-home-services)))
 
 ;; TODO: Copy file at PATH to store and restart shepherd service on change
-(define* (feature-wayland-wbg
+(define* (feature-wayland-swaybg
           #:key
           (path #f)
           (auto-start? #t))
-  "Setup wbg for setting wallpaper in Wayland compositors."
+  "Setup swaybg for setting wallpaper in Wayland compositors."
 
   (ensure-pred maybe-string? path)
   (ensure-pred boolean? auto-start?)
@@ -302,32 +302,32 @@
           (else path))))
 
     (define (get-home-services config)
-      "Return a list of home services required by wbg"
+      "Return a list of home services required by swaybg"
       (let ((has-dwl-guile? (get-value 'dwl-guile config)))
         (make-service-list
          (simple-service
           'add-wbg-home-packages-to-profile
           home-profile-service-type
-          (list wbg))
+          (list swaybg))
          (when wallpaper-path
            (simple-service
-            'add-wbg-shepherd-service
+            'add-swaybg-shepherd-service
             home-shepherd-service-type
             (list
              (shepherd-service
-              (documentation "Run wbg.")
-              (provision '(wbg))
+              (documentation "Run swaybg.")
+              (provision '(swaybg))
               (requirement (if has-dwl-guile? '(dwl-guile) '()))
               (auto-start? auto-start?)
               (respawn? #t)
               (start
                #~(make-forkexec-constructor
-                  (list #$(file-append wbg "/bin/wbg") #$wallpaper-path)
-                  #:log-file #$(make-log-file "wbg")))
+                  (list #$(file-append swaybg "/bin/swaybg") "-i" #$wallpaper-path "--mode" "fill")
+                  #:log-file #$(make-log-file "swaybg")))
               (stop #~(make-kill-destructor)))))))))
 
     (feature
-     (name 'wayland-wbg)
+     (name 'wayland-swaybg)
      (home-services-getter get-home-services))))
 
 (define* (feature-wayland-wlsunset
