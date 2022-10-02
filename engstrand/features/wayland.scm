@@ -128,63 +128,64 @@
   (ensure-pred string? dismiss-all-key)
   (ensure-pred boolean? add-keybindings?)
 
-  (define (get-home-services config)
-    "Return a list of home services required by mako"
-    (require-value 'font-monospace config)
-    (make-service-list
-     (simple-service
-      'add-mako-home-packages-to-profile
-      home-profile-service-type
-      (pkgs '("mako" "libnotify")))
-     (simple-service
-      'create-mako-config
-      home-files-service-type
-      `((".config/mako/config"
-         ,(alist->ini "mako-config"
-                      `(("font"
-                         . ,(font->string 'pango 'font-sans config
-                                          #:size 11))
-                        ("background-color" . "#252525FF")
-                        ("text-color" . "#FFFFFFFF")
-                        ("width" . 370)
-                        ("height" . 100)
-                        ("border-color" . "#555555FF")
-                        ("border-size" . 1)
-                        ("border-radius" . 0)
-                        ("margin" . 5)
-                        ("padding" . 10)
-                        ("default-timeout" . 15000)
-                        ("anchor" . "top-right")
-                        ("max-visible" . 2)
-                        ("format" . "<b>%s (%a)</b>\\n%b")
-                        ("[grouped=true]")
-                        ("format" . "<b>%s (%a, %g)</b>\\n%b")
-                        ("[hidden]")
-                        ("format" . "(%h more notifications)"))))))
-     (when (and add-keybindings? (get-value 'dwl-guile config))
+  (lambda (fconfig palette)
+    (define (get-home-services config)
+      "Return a list of home services required by mako"
+      (require-value 'font-monospace config)
+      (make-service-list
        (simple-service
-        'add-mako-dwl-keybindings
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (keys
-                   (append
-                    (list
-                     (dwl-key
-                      (key dismiss-key)
-                      (action `(system* ,(file-append mako "/bin/makoctl")
-                                        "dismiss")))
-                     (dwl-key
-                      (key dismiss-all-key)
-                      (action `(system* ,(file-append mako "/bin/makoctl")
-                                        "dismiss" "--all"))))
-                    (dwl-config-keys config))))))))))
+        'add-mako-home-packages-to-profile
+        home-profile-service-type
+        (pkgs '("mako" "libnotify")))
+       (simple-service
+        'create-mako-config
+        home-files-service-type
+        `((".config/mako/config"
+           ,(alist->ini "mako-config"
+                        `(("font"
+                           . ,(font->string 'pango 'font-sans config
+                                            #:size 11))
+                          ("background-color" . ,(palette 'background))
+                          ("text-color" . ,(palette 'text))
+                          ("width" . 370)
+                          ("height" . 100)
+                          ("border-color" . ,(offset (palette 'background) 25))
+                          ("border-size" . 1)
+                          ("border-radius" . 0)
+                          ("margin" . 5)
+                          ("padding" . 10)
+                          ("default-timeout" . 15000)
+                          ("anchor" . "top-right")
+                          ("max-visible" . 2)
+                          ("format" . "<b>%s (%a)</b>\\n%b")
+                          ("[grouped=true]")
+                          ("format" . "<b>%s (%a, %g)</b>\\n%b")
+                          ("[hidden]")
+                          ("format" . "(%h more notifications)"))))))
+       (when (and add-keybindings? (get-value 'dwl-guile config))
+         (simple-service
+          'add-mako-dwl-keybindings
+          home-dwl-guile-service-type
+          (modify-dwl-guile-config
+           (config =>
+                   (dwl-config
+                    (inherit config)
+                    (keys
+                     (append
+                      (list
+                       (dwl-key
+                        (key dismiss-key)
+                        (action `(system* ,(file-append mako "/bin/makoctl")
+                                          "dismiss")))
+                       (dwl-key
+                        (key dismiss-all-key)
+                        (action `(system* ,(file-append mako "/bin/makoctl")
+                                          "dismiss" "--all"))))
+                      (dwl-config-keys config))))))))))
 
-  (feature
-   (name 'wayland-mako)
-   (home-services-getter get-home-services)))
+    (feature
+     (name 'wayland-mako)
+     (home-services-getter get-home-services))))
 
 ;; TODO: Move to features/terminals.scm?
 (define* (feature-wayland-foot
