@@ -71,12 +71,7 @@
       (dwl-key
        (key "s-<tab>")
        (action '(dwl:view-previous))))
-     %dwl-base-keys))
-   (colors
-    (dwl-colors
-     (root "#191919")
-     (border "#808080")
-     (focus "#FFCC00")))))
+     %dwl-base-keys))))
 
 ;; Checks if SYMBOL corresponds to a patch that is/will
 ;; be applied to dwl-guile, based on the feature values in CONFIG.
@@ -94,19 +89,33 @@
 
   (ensure-pred home-dwl-guile-configuration? dwl-guile-configuration)
 
-  (define (get-home-services config)
-    "Return a list of home services required by dwl."
-    (list
-     (service home-dwl-guile-service-type
-              dwl-guile-configuration)))
+  (lambda (fconfig palette)
+    (define (get-home-services config)
+      "Return a list of home services required by dwl."
+      (list
+       (service home-dwl-guile-service-type
+                dwl-guile-configuration)
+       (simple-service
+        'set-dwl-colorscheme-dwl
+        home-dwl-guile-service-type
+        (modify-dwl-guile-config
+         (config =>
+                 (dwl-config
+                  (inherit config)
+                  (colors
+                   (dwl-colors
+                    (root (palette 'background))
+                    (text (palette 'text))
+                    (border (offset (palette 'background) 10))
+                    (focus (palette 'primary))))))))))
 
-  (feature
-   (name 'wayland-dwl-guile)
-   (values `((wayland . #t)
-             (dwl-guile . #t)
-             (dwl-guile-patches
-              . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
-   (home-services-getter get-home-services)))
+    (feature
+     (name 'wayland-dwl-guile)
+     (values `((wayland . #t)
+               (dwl-guile . #t)
+               (dwl-guile-patches
+                . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
+     (home-services-getter get-home-services))))
 
 (define* (feature-wayland-mako
           #:key
