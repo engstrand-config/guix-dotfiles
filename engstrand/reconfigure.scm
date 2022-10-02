@@ -9,7 +9,6 @@
   #:use-module (farg config)
   #:use-module (farg provider)
   #:use-module (engstrand systems)
-  #:use-module (engstrand colorscheme)
   #:export (make-config))
 
 ;; TODO: Move wallpapers into channel in order for paths to be consistent
