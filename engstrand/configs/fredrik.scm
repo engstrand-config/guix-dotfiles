@@ -21,8 +21,9 @@
 
 (define-public %user-colorscheme
   (farg-config
+   (light? #f)
    (wallpaper (string-append (getenv "HOME")
-                             "/engstrand-config/wallpapers/nature/dieter-becker-SH-5qrarq3s-unsplash.jpg"))))
+                             "/engstrand-config/wallpapers/f1/9w30A0D.jpg"))))
 
 (define-public %user-features
   (append
@@ -40,8 +41,7 @@
     ;;       or transform the pinentry-bemenu package and move the pinentry exectuable to "/bin/pinentry".
     (feature-gnupg
      #:gpg-primary-key "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
-     #:pinentry-flavor 'gtk2
-     #:gpg-smart-card? #f)
+     #:pinentry-flavor 'gtk2)
     (feature-ssh
      #:ssh-configuration
      (home-ssh-configuration
