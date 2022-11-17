@@ -110,7 +110,7 @@
      (rde-elisp-configuration-service
       emacs-f-name
       config
-      `((eval-when-compile (require 'dashboard))
+      `((require 'dashboard)
         (dashboard-setup-startup-hook)
         (setq dashboard-center-content t)
         (setq dashboard-set-init-info nil)
