@@ -14,6 +14,7 @@
             feature-emacs-default-editor
             feature-emacs-org-latex-preview
             feature-emacs-corfu
+            feature-emacs-corfu-dabbrev
             feature-emacs-dashboard
             feature-emacs-modus-themes
             feature-emacs-evil
@@ -94,6 +95,28 @@
         (define-key corfu-map (kbd "<backtab>") 'corfu-previous))
       #:elisp-packages (list
                         emacs-corfu))))
+
+  (make-emacs-feature emacs-f-name
+                      #:home-services get-home-services))
+
+(define* (feature-emacs-corfu-dabbrev
+          #:key
+          (completion-key "M-<tab>")
+          (expand-key "M-C-<tab>"))
+  "Switches the default dabbrev keybindings for usage with Corfu."
+  (define emacs-f-name 'corfu-dabbrev)
+
+  (ensure-pred string? completion-key)
+  (ensure-pred string? expand-key)
+
+  (define (get-home-services config)
+    (list
+     (rde-elisp-configuration-service
+      emacs-f-name
+      config
+      `((require 'dabbrev)
+        (global-set-key (kbd ,completion-key) 'dabbrev-completion)
+        (global-set-key (kbd ,expand-key) 'dabbrev-expand)))))
 
   (make-emacs-feature emacs-f-name
                       #:home-services get-home-services))
@@ -322,6 +345,7 @@
    (feature-emacs-completion
     #:mini-frame? #f)
    (feature-emacs-corfu)
+   (feature-emacs-corfu-dabbrev)
    (feature-emacs-vertico)
    (feature-emacs-project)
    (feature-emacs-perspective)
