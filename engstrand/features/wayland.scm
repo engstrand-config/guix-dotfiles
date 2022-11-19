@@ -284,7 +284,6 @@
    (name 'wayland-foot)
    (home-services-getter get-home-services)))
 
-;; TODO: Copy file at PATH to store and restart shepherd service on change
 (define* (feature-wayland-swaybg
           #:key
           (path #f)
@@ -301,6 +300,9 @@
           (#f (colorscheme-wallpaper colorscheme))
           (else path))))
 
+    (define user-wallpaper-path
+      (string-append (getenv "HOME") "/.config/wallpaper.jpg"))
+
     (define (get-home-services config)
       "Return a list of home services required by swaybg"
       (let ((has-dwl-guile? (get-value 'dwl-guile config)))
@@ -309,6 +311,25 @@
           'add-wbg-home-packages-to-profile
           home-profile-service-type
           (list swaybg))
+         (when wallpaper-path
+           (simple-service
+            'copy-wallpaper-to-profile
+            home-files-service-type
+            `((".config/wallpaper.jpg" ,(local-file wallpaper-path)))))
+         (when wallpaper-path
+           (simple-service
+            'reload-wallpaper-on-farg-activation
+            home-farg-service-type
+            (modify-farg-config
+             (config =>
+                   (farg-config
+                    (inherit config)
+                    (activation-commands
+                     (cons
+                      #~(begin
+                          (display "Reloading swaybg to update wallpaper...\n")
+                          (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg"))
+                      (farg-config-activation-commands config))))))))
          (when wallpaper-path
            (simple-service
             'add-swaybg-shepherd-service
@@ -322,7 +343,9 @@
               (respawn? #t)
               (start
                #~(make-forkexec-constructor
-                  (list #$(file-append swaybg "/bin/swaybg") "-i" #$wallpaper-path "--mode" "fill")
+                  (list #$(file-append swaybg "/bin/swaybg")
+                        "-i" #$user-wallpaper-path
+                        "--mode" "fill")
                   #:log-file #$(make-log-file "swaybg")))
               (stop #~(make-kill-destructor)))))))))
 

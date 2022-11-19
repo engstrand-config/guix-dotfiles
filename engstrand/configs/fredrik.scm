@@ -25,7 +25,7 @@
   (farg-config
    (inherit %engstrand-default-farg-config)
    (light? #f)
-   (wallpaper (get-wallpaper-path "default.jpg"))))
+   (wallpaper (get-wallpaper-path "f1/9w30A0D.jpg"))))
 
 (define-public %user-features
   (append
