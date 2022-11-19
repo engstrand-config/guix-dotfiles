@@ -3,26 +3,28 @@
   #:use-module (rde features base)
   #:use-module (rde features gnupg)
   #:use-module (rde features bittorrent)
-  #:use-module (engstrand features sync)
-  #:use-module (engstrand features browsers)
-  #:use-module (engstrand features emacs)
-  #:use-module (engstrand features virtualization)
-  #:use-module (engstrand features wayland)
+  #:use-module (engstrand utils)
+  #:use-module (engstrand configs)
+  #:use-module (engstrand wallpapers) ;; get-wallpaper-path
   #:use-module (engstrand features daw)
+  #:use-module (engstrand features sync)
+  #:use-module (engstrand features emacs)
+  #:use-module (engstrand features utils)
+  #:use-module (engstrand features wayland)
+  #:use-module (engstrand features theming)
+  #:use-module (engstrand features browsers)
+  #:use-module (engstrand features virtualization)
   #:use-module (farg config)
   #:use-module (dwl-guile utils)
-  #:use-module (dwl-guile home-service)
-  #:use-module (engstrand utils)
-  #:use-module (engstrand features utils)
-  #:use-module (engstrand configs))
+  #:use-module (dwl-guile home-service))
 
 ;; TODO: Add custom packages as feature:
 ;;       "youtube-dl"
 
 (define-public %user-colorscheme
   (farg-config
-   (wallpaper (string-append (getenv "HOME")
-                             "/engstrand-config/wallpapers/nature/dieter-becker-SH-5qrarq3s-unsplash.jpg"))))
+   (inherit %engstrand-default-farg-config)
+   (wallpaper (get-wallpaper-path "nature/dieter-becker-SH-5qrarq3s-unsplash.jpg"))))
 
 (define-public %user-features
   (append

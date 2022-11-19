@@ -23,6 +23,7 @@
   #:use-module (engstrand features state)
   #:use-module (engstrand features shells)
   #:use-module (engstrand features neovim)
+  #:use-module (engstrand features theming)
   #:use-module (engstrand features wayland)
   #:use-module (engstrand features documents)
   #:use-module (engstrand features statusbar)

@@ -9,13 +9,8 @@
   #:use-module (farg config)
   #:use-module (farg provider)
   #:use-module (engstrand systems)
+  #:use-module (engstrand wallpapers) ;; get-wallpaper-path
   #:export (make-config))
-
-;; TODO: Move wallpapers into channel in order for paths to be consistent
-(define %engstrand-default-colorscheme
-  (farg-config
-   (wallpaper (string-append (getenv "HOME")
-                             "/engstrand-config/wallpapers/default.jpg"))))
 
 ;; Allows dynamic loading of configuration modules based on file name.
 (define* (dynamic-load sub mod var-name #:key (throw? #t))
@@ -71,7 +66,7 @@
       (colorscheme-provider
        ;; Fallback to default colorscheme
        #:config (if (unspecified? %user-colorscheme)
-                    %engstrand-default-colorscheme
+                    %engstrand-default-farg-config
                     %user-colorscheme)
        #:services (append %user-features
                           %engstrand-system-base-features

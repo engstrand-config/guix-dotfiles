@@ -9,21 +9,23 @@
   #:use-module (farg config)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
+  #:use-module (engstrand wallpapers) ;; get-wallpaper-path
   #:use-module (engstrand features base)
   #:use-module (engstrand features xorg)
   #:use-module (engstrand features sync)
   #:use-module (engstrand features utils)
   #:use-module (engstrand features state)
   #:use-module (engstrand features emacs)
+  #:use-module (engstrand features theming)
   #:use-module (engstrand features browsers)
   #:use-module (engstrand features virtualization)
   #:use-module (engstrand features wayland))
 
 (define-public %user-colorscheme
   (farg-config
+   (inherit %engstrand-default-farg-config)
    (light? #f)
-   (wallpaper (string-append (getenv "HOME")
-                             "/engstrand-config/wallpapers/f1/9w30A0D.jpg"))))
+   (wallpaper (get-wallpaper-path "default.jpg"))))
 
 (define-public %user-features
   (append
@@ -42,15 +44,16 @@
     (feature-gnupg
      #:gpg-primary-key "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
      #:pinentry-flavor 'gtk2)
-    (feature-ssh
-     #:ssh-configuration
-     (home-ssh-configuration
-      (extra-config
-       (list
-        (ssh-host
-         (host "aur.archlinux.org")
-         (options `((identity-file . "~/.ssh/aur")
-                    (user . "aur"))))))))
+    (feature-ssh)
+     ;; This is broken after latest guix pull
+     ;; #:ssh-configuration
+     ;; (home-ssh-configuration
+     ;;  (extra-config
+     ;;   (list
+     ;;    (ssh-host
+     ;;     (host "aur.archlinux.org")
+     ;;     (options `((identity-file . "~/.ssh/aur")
+     ;;                (user . "aur"))))))))
     (feature-virtualization)
     (feature-qutebrowser
      #:default-browser? #t)

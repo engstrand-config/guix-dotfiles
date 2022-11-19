@@ -1,6 +1,4 @@
 (define-module (engstrand features base)
-  #:use-module (farg config)
-  #:use-module (farg home-service)
   #:use-module (rde features)
   #:use-module (rde features predicates)
   #:use-module (guix gexp)
@@ -9,9 +7,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu packages linux)
   #:use-module (engstrand utils)
-  #:export (
-            feature-switch-to-tty-on-boot
-            feature-farg))
+  #:export (feature-switch-to-tty-on-boot))
 
 (define* (feature-switch-to-tty-on-boot
           #:key
@@ -37,16 +33,3 @@
   (feature
    (name 'switch-tty-after-boot)
    (system-services-getter get-system-services)))
-
-(define* (feature-farg)
-  "Installs and configures farg, a system colorscheme manager for Guix."
-
-  (lambda (home-farg-config palette)
-    (define (get-home-services config)
-      "Return a list of home services required by farg"
-      (list
-       (service home-farg-service-type home-farg-config)))
-
-    (feature
-     (name 'farg)
-     (home-services-getter get-home-services))))
