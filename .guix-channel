@@ -45,6 +45,15 @@
      (commit "f94df02065d8691880dd5414e5c5ad27388d450f")
      (signer "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
   (channel
+   (name wallpapers)
+   (url "https://github.com/engstrand-config/wallpapers")
+   (branch "main")
+   (introduction
+    (channel-introduction
+     (version 0)
+     (commit "d876bfd1f49fe58cca185d20b5b57ae5c93d208e")
+     (signer "C9BE B8A0 4458 FDDF 1268 1B39 029D 8EB7 7E18 D68C"))))
+  (channel
    (name rde)
    (url "https://git.sr.ht/~abcdw/rde")
    (introduction
