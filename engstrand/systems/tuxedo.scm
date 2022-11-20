@@ -12,13 +12,6 @@
   #:use-module (gnu system file-systems)
   #:use-module (gnu system mapped-devices))
 
-;; TODO: Add support for swap-devices as a feature.
-;; rde does not support this out of the box. Instead, we
-;; must pass it using the initial-os field of rde-config.
-(define-public %system-swap
-  (swap-space
-   (target (uuid "40c98866-74b1-4e99-9c32-24d584fe0617"))))
-
 (define-public %system-features
   (append
    (list
@@ -46,7 +39,11 @@
        (mount-point "/")
        (device
         (uuid "4484aa6c-d5ff-4964-b62d-c2572c701e66" 'ext4))
-       (type "ext4"))))
+       (type "ext4")))
+     #:swap-devices
+     (list
+      (swap-space
+       (target (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))))
     (feature-bluetooth)
     (feature-dwl-guile-monitor-config
      #:monitors

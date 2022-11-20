@@ -45,23 +45,11 @@
   (define %user-features (dynamic-load 'configs user '%user-features))
   (define %user-colorscheme (dynamic-load 'configs user '%user-colorscheme #:throw? #f))
   (define %system-features (dynamic-load 'systems system '%system-features))
-  (define %system-swap (dynamic-load 'systems system '%system-swap #:throw? #f))
-
-  ;; Check if a swap device has been set in the system configuration.
-  ;; If this is the case, we must extend the initial os to make sure
-  ;; that it is included in the system configuration.
-  (define %initial-os
-    (if (or (unspecified? %system-swap) (null? %system-swap))
-        initial-os
-        (operating-system
-         (inherit initial-os)
-         (swap-devices
-          (list %system-swap)))))
 
   ;; All is good, create the configuration
   (define %generated-config
     (rde-config
-     (initial-os %initial-os)
+     (initial-os initial-os)
      (features
       (colorscheme-provider
        ;; Fallback to default colorscheme
@@ -82,9 +70,9 @@
       (append
        (get-value
         'kernel-arguments %generated-config
-        (operating-system-user-kernel-arguments %initial-os))
+        (operating-system-user-kernel-arguments initial-os))
        (get-feature-kernel-arguments 'kernel-arguments-radios %generated-config)))
-     (issue (operating-system-issue %initial-os))))
+     (issue (operating-system-issue initial-os))))
 
   (match target
     ("home" %engstrand-he)

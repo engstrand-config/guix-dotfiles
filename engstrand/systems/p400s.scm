@@ -7,10 +7,6 @@
   #:use-module (gnu system file-systems)
   #:use-module (gnu system mapped-devices))
 
-(define-public %system-swap
-  (swap-space
-   (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03"))))
-
 (define-public %system-features
   (list
    (feature-host-info
@@ -29,7 +25,10 @@
            (device
             (uuid "104e5086-1795-4a28-b3eb-f563ef06fc52"
                   'ext4))
-           (type "ext4"))))
+           (type "ext4")))
+    #:swap-devices
+    (list (swap-space
+           (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03")))))
    (feature-dwl-guile-monitor-config
     #:monitors
     (list
