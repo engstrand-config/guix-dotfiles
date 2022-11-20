@@ -11,8 +11,11 @@
             feature-farg))
 
 (define %engstrand-default-farg-config
-  (farg-config
-   (wallpaper (get-wallpaper-path "default.jpg"))))
+  (let ((default-wallpaper (get-wallpaper-path "default.jpg")))
+    (farg-config
+     ;; TODO: Add root wallpaper directory as variable in wallpapers channel
+     (wallpaper-search-directory (dirname default-wallpaper))
+     (wallpaper default-wallpaper))))
 
 (define* (feature-farg)
   "Installs and configures farg, a system colorscheme manager for Guix."
