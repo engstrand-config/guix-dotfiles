@@ -96,7 +96,8 @@
                     (list
                      (dwl-key
                       (key open-key)
-                      (action `(dwl:spawn ,(file-append package "/bin/qutebrowser")))))
+                      (action `(dwl:spawn ,(file-append package "/bin/qutebrowser")
+                                          "--qt-arg" "no-sandbox" "true"))))
                     (dwl-config-keys config))))))))))
 
   (feature
