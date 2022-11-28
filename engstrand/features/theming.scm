@@ -31,4 +31,5 @@
 
     (feature
      (name 'farg)
+     (values '(("farg" . #t)))
      (home-services-getter get-home-services))))

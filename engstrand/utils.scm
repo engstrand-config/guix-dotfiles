@@ -162,3 +162,6 @@
             (font-name font)
             (get-weight font)
             (if (null? size) (font-size font) size))))
+
+(define-public (str-escape str)
+  (string-append "\"" str "\""))
