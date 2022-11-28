@@ -2,8 +2,11 @@
   #:use-module (guix gexp)
   #:use-module (dwl-guile home-service)
   #:use-module (dwl-guile configuration)
+  #:use-module (farg colorscheme)
+  #:use-module (farg home-service)
   #:use-module (engstrand utils)
   #:use-module (gnu home services)
+  #:use-module (rde home services emacs)
   #:use-module (gnu services)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages emacs-xyz)
@@ -173,52 +176,57 @@
   (make-emacs-feature emacs-f-name
                       #:home-services get-home-services))
 
-(define* (feature-emacs-modus-themes
-          ;; #:key
-          ;; ()
-          )
+(define* (feature-emacs-modus-themes)
   "Add and configure the Modus themes for Emacs."
   (define emacs-f-name 'modus-themes)
 
-  (define (get-home-services config)
-    (list
-     (rde-elisp-configuration-service
-      emacs-f-name
-      config
-      `((require 'modus-themes)
-        (window-divider-mode 0)
-        (setq modus-themes-italic-constructs t
-              modus-themes-bold-constructs t
-              modus-themes-mixed-fonts t
-              modus-themes-subtle-line-numbers t
-              modus-themes-intense-markup t
-              modus-themes-lang-checkers nil
-              modus-themes-mode-line '(borderless)
-              modus-themes-syntax nil
-              modus-themes-hl-line '(underline intense)
-              modus-themes-paren-match nil
-              modus-themes-links nil
-              modus-themes-prompts nil
-              modus-themes-mail-citations 'faint
-              modus-themes-region '(bg-only accented)
-              modus-themes-diffs 'nil
-              modus-themes-vivendi-color-overrides '((bg-main . "#0A0A0A"))
-              modus-themes-org-blocks 'gray-background
-              modus-themes-org-agenda '((header-block . (variable-pitch 1.3))
-                                        (header-date . (grayscale workaholic bold-today 1.1))
-                                        (event . (accented varied))
-                                        (scheduled . uniform)
-                                        (habit . traffic-light))
-              modus-themes-headings '((1 . (background variable-pitch 1.3))
-                                      (2 . (rainbow overline 1.1))
-                                      (t . (semibold))))
-        (modus-themes-load-themes)
-        (modus-themes-load-vivendi))
-      #:elisp-packages (list
-                        emacs-modus-themes))))
+  (lambda (fconfig _)
+    (define (get-home-services config)
+      (let ((light? (colorscheme-light? (home-farg-configuration-colorscheme fconfig))))
+        (list
+         ;; FIXME: Can't seem to get it to work using the rde-elisp service
+         (simple-service
+          'emacs-load-modus-theme-in-init-el
+          home-emacs-service-type
+          (home-emacs-extension
+           (init-el (if light?
+                        '((modus-themes-load-operandi))
+                        '((modus-themes-load-vivendi))))))
+         (rde-elisp-configuration-service
+          emacs-f-name
+          config
+          `((require 'modus-themes)
+            (window-divider-mode 0)
+            (setq modus-themes-italic-constructs t
+                  modus-themes-bold-constructs t
+                  modus-themes-mixed-fonts t
+                  modus-themes-subtle-line-numbers t
+                  modus-themes-intense-markup t
+                  modus-themes-lang-checkers nil
+                  modus-themes-mode-line '(borderless)
+                  modus-themes-syntax nil
+                  modus-themes-hl-line '(underline intense)
+                  modus-themes-paren-match nil
+                  modus-themes-links nil
+                  modus-themes-prompts nil
+                  modus-themes-mail-citations 'faint
+                  modus-themes-region '(bg-only accented)
+                  modus-themes-diffs 'nil
+                  modus-themes-vivendi-color-overrides '((bg-main . "#0A0A0A"))
+                  modus-themes-org-blocks 'gray-background
+                  modus-themes-org-agenda '((header-block . (variable-pitch 1.3))
+                                            (header-date . (grayscale workaholic bold-today 1.1))
+                                            (event . (accented varied))
+                                            (scheduled . uniform)
+                                            (habit . traffic-light))
+                  modus-themes-headings '((1 . (background variable-pitch 1.3))
+                                          (2 . (rainbow overline 1.1))
+                                          (t . (semibold))))
+            (modus-themes-load-themes))
+          #:elisp-packages (list emacs-modus-themes)))))
 
-  (make-emacs-feature emacs-f-name
-                      #:home-services get-home-services))
+    (make-emacs-feature emacs-f-name
+                        #:home-services get-home-services)))
 
 (define* (feature-emacs-evil
           #:key
