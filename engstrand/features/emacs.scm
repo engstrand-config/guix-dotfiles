@@ -1,5 +1,7 @@
 (define-module (engstrand features emacs)
   #:use-module (guix gexp)
+  #:use-module (dwl-guile home-service)
+  #:use-module (dwl-guile configuration)
   #:use-module (engstrand utils)
   #:use-module (gnu home services)
   #:use-module (gnu services)
@@ -37,19 +39,35 @@
 (define* (feature-emacs-default-editor)
   "Configure emacs as the default system editor."
 
-  (define (get-home-services config)
-    (list
-     (simple-service
-      'set-emacs-environment-variables
-      home-environment-variables-service-type
-      `(("EDITOR" . ,(file-append %engstrand-emacs-package "/bin/emacs"))
-        ;; Used by guix commands, e.g. guix edit. rde sets this by itself,
-        ;; but the --no-wait option does not seem to play nice with our setup.
-        ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))))
+  (lambda (_ palette)
+    (define (get-home-services config)
+      (make-service-list
+       (simple-service
+        'set-emacs-environment-variables
+        home-environment-variables-service-type
+        `(("EDITOR" . ,(file-append %engstrand-emacs-package "/bin/emacs"))
+          ;; Used by guix commands, e.g. guix edit. rde sets this by itself,
+          ;; but the --no-wait option does not seem to play nice with our setup.
+          ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))
+       (when (get-value 'dwl-guile config)
+         (simple-service
+          'set-emacs-window-rule
+          home-dwl-guile-service-type
+          (modify-dwl-guile-config
+           (config =>
+                   (dwl-config
+                    (inherit config)
+                    (rules
+                     (append
+                      (list
+                       (dwl-rule (id "emacs")
+                                 (title "emacs")
+                                 (alpha (palette 'alpha))))
+                      (dwl-config-rules config))))))))))
 
   (feature
    (name 'emacs-default-editor)
-   (home-services-getter get-home-services)))
+   (home-services-getter get-home-services))))
 
 (define* (feature-emacs-org-latex-preview)
   "Add and configure latex previews in Emacs Org mode."
