@@ -82,7 +82,10 @@
                    (font (font->string 'fcft 'font-monospace config
                                        #:bold? #t))
                    (block-spacing 0)
-                   (use-dwl-guile-colorscheme? #t)
+                   (use-dwl-guile-colorscheme? #f)
+                   (background-color (palette 'background))
+                   (foreground-color (palette 'text))
+                   (border-color (palette 'background))
                    (modules '((ice-9 match)
                               (ice-9 popen)
                               (ice-9 rdelim)
