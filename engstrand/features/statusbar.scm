@@ -31,11 +31,11 @@
                    ((dtao:selected-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
                              (palette 'primary)
-                             (palette 'background)
+                             (make-readable (palette 'primary) (palette 'primary))
                              str))
                    ((dtao:urgent-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
-                             "#FF0000" ;; TODO: Use red from palette
+                             (palette 'red)
                              (palette 'background) ;; TODO: Light/dark based on theme mode
                              str))
                    ((dtao:active-tag? ,index)
