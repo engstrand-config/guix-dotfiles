@@ -27,6 +27,7 @@
   #:use-module (engstrand features wayland)
   #:use-module (engstrand features documents)
   #:use-module (engstrand features statusbar)
+  #:use-module (engstrand features version-control)
   #:export (
             %engstrand-base-system-packages
             %engstrand-base-home-packages
@@ -37,10 +38,6 @@
 ;;
 ;; Operating system configuration should be done in engstrand/systems.scm,
 ;; and computer specific settings in each corresponding file in engstrand/systems/.
-;;
-;; TODO: Add feature for setting custom groups (preferrably directly in features).
-;;       This is required by certain services, e.g. virtualization.
-
 (define %engstrand-base-system-packages
   (pkgs '("git" "nss-certs")))
 
@@ -71,6 +68,7 @@
     #:console-font (file-append font-terminus "/share/consolefonts/ter-120b"))
    (feature-git
     #:sign-commits? #t)
+   (feature-git-colorscheme)
    (feature-fonts
     #:font-packages (list font-jetbrains-mono font-iosevka-aile)
     #:font-monospace (font "JetBrains Mono" #:size 13)
