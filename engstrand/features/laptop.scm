@@ -85,35 +85,36 @@
                    interface
                    "/capacity"))
 
-  (define (get-home-services config)
-    (throw-message
-     (not (file-exists? read-path))
-     (string-append "Invalid battery interface name. No such file " read-path))
+  (lambda (_ palette)
+    (define (get-home-services config)
+      (throw-message
+       (not (file-exists? read-path))
+       (string-append "Invalid battery interface name. No such file " read-path))
 
-    (make-service-list
-     (when (get-value 'dtao-guile config)
-       (simple-service
-        'add-dtao-guile-battery-block
-        home-dtao-guile-service-type
-        (list
-         (dtao-block
-          (position "right")
-          (interval 10)
-          (render
-           `(let* ((port (open-input-file ,read-path))
-                   (result (read-line port))
-                   (percent (string->number result)))
-              (close-port port)
-              (string-append "^fg("
-                             (cond
-                              ((<= percent 20) "#ff0000")
-                              ((<= percent 50) "#ffcc00")
-                              (else "#00ff00"))
-                             ")" result "%^fg()")))))))))
+      (make-service-list
+       (when (get-value 'dtao-guile config)
+         (simple-service
+          'add-dtao-guile-battery-block
+          home-dtao-guile-service-type
+          (list
+           (dtao-block
+            (position "right")
+            (interval 10)
+            (render
+             `(let* ((port (open-input-file ,read-path))
+                     (result (read-line port))
+                     (percent (string->number result)))
+                (close-port port)
+                (string-append "^fg("
+                               (cond
+                                ((<= percent 20) ,(palette 'red))
+                                ((<= percent 50) ,(palette 'text))
+                                (else ,(palette 'green)))
+                               ")" result "%^fg()")))))))))
 
-  (feature
-   (name 'laptop-statusbar-battery)
-   (home-services-getter get-home-services)))
+    (feature
+     (name 'laptop-statusbar-battery)
+     (home-services-getter get-home-services))))
 
 (define* (feature-laptop-monitor-brightness
           #:key
