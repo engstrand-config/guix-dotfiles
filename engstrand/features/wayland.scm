@@ -197,10 +197,25 @@
   (define (strip-hex hex)
     (substring hex 1))
 
-  (lambda (_ palette)
+  (lambda (fconfig palette)
     (define (get-home-services config)
       "Return a list of home services required by foot."
       (require-value 'font-monospace config)
+
+      (define light? (colorscheme-light? (home-farg-configuration-colorscheme fconfig)))
+
+      (define c0 (make-readable (palette 0) (palette 'background)))
+      (define c1 (make-readable (palette 1) (palette 'background)))
+      (define c2 (make-readable (palette 2) (palette 'background)))
+      (define c3 (make-readable (palette 3) (palette 'background)))
+      (define c4 (make-readable (palette 4) (palette 'background)))
+      (define c5 (make-readable (palette 5) (palette 'background)))
+      (define c6 (make-readable (palette 6) (palette 'background)))
+      (define red (make-readable (blend "#FF0000" (palette 'primary) 0.7)
+                                 (palette 'background)))
+      (define green (make-readable (blend "#00FF00" (palette 'primary) 0.7)
+                                   (palette 'background)))
+
       (let ((has-dwl-guile? (get-value 'dwl-guile config)))
         (make-service-list
          (simple-service
@@ -213,14 +228,30 @@
           `((".config/foot/foot.ini"
              ,(alist->ini "foot-config"
                           `(("pad" . "5x5")
-                            ;; TODO: I prefer the look of the "monospace" font in foot
-                            ;; (whatever the fuck that is). No idea what font is used
-                            ;; when monospace is chosen. fc-match shows "DejaVu Sans Mono" "Book",
-                            ;; but it does not look like the font used in foot when applied directly.
                             ("font" . "monospace:size=12")
                             ("dpi-aware" . "no")
                             ;; nmtui does not like if term is set to foot
                             ("term" . "xterm")
+
+                            ("[colors]")
+                            ("foreground" . ,(strip-hex (palette 'text)))
+                            ("background" . ,(strip-hex (palette 'background)))
+                            ("regular0" . ,(strip-hex c0))
+                            ("regular1" . ,(strip-hex c1))
+                            ("regular2" . ,(strip-hex c2))
+                            ("regular3" . ,(strip-hex c3))
+                            ("regular4" . ,(strip-hex c4))
+                            ("regular5" . ,(strip-hex c5))
+                            ("regular6" . ,(strip-hex c6))
+                            ("bright0" . ,(strip-hex (brighten c0 10)))
+                            ("bright1" . ,(strip-hex (brighten c1 10)))
+                            ("bright2" . ,(strip-hex (brighten c2 10)))
+                            ("bright3" . ,(strip-hex (brighten c3 10)))
+                            ("bright4" . ,(strip-hex (brighten c4 10)))
+                            ("bright5" . ,(strip-hex (brighten c5 10)))
+                            ("bright6" . ,(strip-hex (brighten c6 10)))
+                            ("dim1" . ,(strip-hex red))
+                            ("dim2" . ,(strip-hex green))
 
                             ("[key-bindings]")
                             ("scrollback-up-line" . "Mod1+k")
