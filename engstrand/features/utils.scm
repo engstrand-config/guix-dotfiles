@@ -91,7 +91,7 @@
       'on-rbw-config-change
       home-run-on-change-service-type
       (let ((bin (file-append rbw "/bin/rbw")))
-        `(("files/config/rbw/guix-watcher"
+        `(("files/.config/rbw/guix-watcher"
            ,#~(begin
                 (when #$email
                   (system* #$bin "config" "set" "email" #$email))
