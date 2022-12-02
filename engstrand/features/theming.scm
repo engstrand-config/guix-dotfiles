@@ -22,6 +22,10 @@
     (make-readable (blend "#00FF00" (palette 'primary) 0.7)
                    (palette 'background)
                    5))
+  (define blue
+    (make-readable (blend "#0000FF" (palette 'primary) 0.7)
+                   (palette 'background)
+                   5))
   (define yellow
     (make-readable (blend "#FFFF00" (palette 'primary) 0.7)
                    (palette 'background)
@@ -36,15 +40,18 @@
   (define 6-text (make-readable (palette 6) (palette 'background)))
   (define red-text (make-readable red red))
   (define green-text (make-readable green green))
+  (define blue-text (make-readable blue blue))
   (define yellow-text (make-readable yellow yellow))
 
   (lambda (name)
     (match name
       ('red red)
       ('green green)
+      ('blue blue)
       ('yellow yellow)
       ('red-text red-text)
       ('green-text green-text)
+      ('blue-text blue-text)
       ('yellow-text yellow-text)
       ('0-text 0-text)
       ('1-text 1-text)
