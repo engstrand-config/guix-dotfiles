@@ -18,13 +18,10 @@
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service))
 
-;; TODO: Add custom packages as feature:
-;;       "youtube-dl"
-
 (define-public %user-colorscheme
   (farg-config
    (inherit %engstrand-default-farg-config)
-   (wallpaper (get-wallpaper-path "nature/dieter-becker-SH-5qrarq3s-unsplash.jpg"))))
+   (wallpaper (get-wallpaper-path "nature/jack-b-8Wqm1W59Baw-unsplash.jpg"))))
 
 (define-public %user-features
   (append
