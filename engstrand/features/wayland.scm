@@ -377,7 +377,9 @@
                      (cons
                       #~(begin
                           (display "Reloading swaybg to update wallpaper...\n")
-                          (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg"))
+                          (with-output-to-file "/dev/null"
+                            (lambda ()
+                              (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg"))))
                       (farg-config-activation-commands config))))))))
          (when wallpaper-path
            (simple-service
