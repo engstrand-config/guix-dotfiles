@@ -38,6 +38,7 @@
   (define 4-text (make-readable (palette 4) (palette 'background)))
   (define 5-text (make-readable (palette 5) (palette 'background)))
   (define 6-text (make-readable (palette 6) (palette 'background)))
+  (define 7-text (make-readable (palette 7) (palette 'background)))
   (define red-text (make-readable red red))
   (define green-text (make-readable green green))
   (define blue-text (make-readable blue blue))
@@ -60,6 +61,7 @@
       ('4-text 4-text)
       ('5-text 5-text)
       ('6-text 6-text)
+      ('7-text 7-text)
       ;; Redirect any other lookups to the default palette
       (_ (palette name)))))
 

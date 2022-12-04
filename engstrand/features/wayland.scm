@@ -20,6 +20,7 @@
   #:use-module (engstrand systems)
   #:use-module (engstrand packages wayland)
   #:use-module (farg config)
+  #:use-module (farg reload)
   #:use-module (farg colorscheme)
   #:use-module (farg home-service)
   #:use-module (dwl-guile utils)
@@ -202,6 +203,25 @@
       "Return a list of home services required by foot."
       (require-value 'font-monospace config)
 
+      ;; Terminal color overrides for the default pywal colors.
+      (define color-overrides
+        `((0 . ,(palette '0-text))
+          (1 . ,(palette '1-text))
+          (2 . ,(palette '2-text))
+          (3 . ,(palette '3-text))
+          (4 . ,(palette '4-text))
+          (5 . ,(palette '5-text))
+          (6 . ,(palette '6-text))
+          (7 . ,(palette '7-text))
+          (8 . ,(brighten (palette '0-text) 10))
+          (9 . ,(brighten (palette '1-text) 10))
+          (10 . ,(brighten (palette '2-text) 10))
+          (11 . ,(brighten (palette '3-text) 10))
+          (12 . ,(brighten (palette '4-text) 10))
+          (13 . ,(brighten (palette '5-text) 10))
+          (14 . ,(brighten (palette '6-text) 10))
+          (15 . ,(brighten (palette '7-text) 10))))
+
       (let ((has-dwl-guile? (get-value 'dwl-guile config)))
         (make-service-list
          (simple-service
@@ -222,20 +242,22 @@
                             ("[colors]")
                             ("foreground" . ,(strip-hex (palette 'text)))
                             ("background" . ,(strip-hex (palette 'background)))
-                            ("regular0" . ,(strip-hex (palette '0-text)))
-                            ("regular1" . ,(strip-hex (palette '1-text)))
-                            ("regular2" . ,(strip-hex (palette '2-text)))
-                            ("regular3" . ,(strip-hex (palette '3-text)))
-                            ("regular4" . ,(strip-hex (palette '4-text)))
-                            ("regular5" . ,(strip-hex (palette '5-text)))
-                            ("regular6" . ,(strip-hex (palette '6-text)))
-                            ("bright0" . ,(strip-hex (brighten (palette '0-text) 10)))
-                            ("bright1" . ,(strip-hex (brighten (palette '1-text) 10)))
-                            ("bright2" . ,(strip-hex (brighten (palette '2-text) 10)))
-                            ("bright3" . ,(strip-hex (brighten (palette '3-text) 10)))
-                            ("bright4" . ,(strip-hex (brighten (palette '4-text) 10)))
-                            ("bright5" . ,(strip-hex (brighten (palette '5-text) 10)))
-                            ("bright6" . ,(strip-hex (brighten (palette '6-text) 10)))
+                            ("regular0" . ,(strip-hex (assoc-ref color-overrides 0)))
+                            ("regular1" . ,(strip-hex (assoc-ref color-overrides 1)))
+                            ("regular2" . ,(strip-hex (assoc-ref color-overrides 2)))
+                            ("regular3" . ,(strip-hex (assoc-ref color-overrides 3)))
+                            ("regular4" . ,(strip-hex (assoc-ref color-overrides 4)))
+                            ("regular5" . ,(strip-hex (assoc-ref color-overrides 5)))
+                            ("regular6" . ,(strip-hex (assoc-ref color-overrides 6)))
+                            ("regular7" . ,(strip-hex (assoc-ref color-overrides 7)))
+                            ("bright0" . ,(strip-hex (assoc-ref color-overrides 8)))
+                            ("bright1" . ,(strip-hex (assoc-ref color-overrides 9)))
+                            ("bright2" . ,(strip-hex (assoc-ref color-overrides 10)))
+                            ("bright3" . ,(strip-hex (assoc-ref color-overrides 11)))
+                            ("bright4" . ,(strip-hex (assoc-ref color-overrides 12)))
+                            ("bright5" . ,(strip-hex (assoc-ref color-overrides 13)))
+                            ("bright6" . ,(strip-hex (assoc-ref color-overrides 14)))
+                            ("bright7" . ,(strip-hex (assoc-ref color-overrides 15)))
                             ("dim1" . ,(strip-hex (palette 'red)))
                             ("dim2" . ,(strip-hex (palette 'green)))
 
@@ -267,6 +289,19 @@
                             ("[mouse-bindings]")
                             ("select-begin-block" . "none")
                             ("select-word-whitespace"  . "Mod1+BTN_LEFT-2"))))))
+         (simple-service
+          'reload-open-foot-instances-on-farg-activation
+          home-farg-service-type
+          (modify-farg-config
+           (config =>
+                   (farg-config
+                    (inherit config)
+                    (activation-commands
+                     (cons
+                      #~(begin
+                          (display "Reloading theme in open foot instances...\n")
+                          #$(reload-terminal-colors palette color-overrides))
+                      (farg-config-activation-commands config)))))))
          (when (and set-default-terminal? has-dwl-guile?)
            (simple-service
             'set-foot-as-default-terminal
