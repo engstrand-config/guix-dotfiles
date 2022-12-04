@@ -100,7 +100,6 @@
         'add-qutebrowser-home-packages-to-profile
         home-profile-service-type
         (list package))
-       ;; TODO: Update theme and move to package? It should make use of farg.
        (simple-service
         'add-qutebrowser-config
         home-files-service-type
@@ -118,6 +117,7 @@
                                                       (palette 'primary)
                                                       (palette 'primary))))
                    (secondary-text (str-escape (palette 'secondary-text)))
+                   (disabled-text (str-escape (offset (palette 'background) 50)))
                    (red (str-escape (palette 'red)))
                    (green (str-escape (palette 'green)))
                    (blue (str-escape (palette 'blue)))
@@ -211,28 +211,38 @@
                   ("colors.tabs.selected.even.fg" . ,foreground)
                   ("colors.tabs.selected.odd.bg" . ,background)
                   ("colors.tabs.selected.odd.fg" . ,foreground)
+                  ("colors.contextmenu.disabled.bg" . ,background-offset)
+                  ("colors.contextmenu.disabled.fg" . ,disabled-text)
+                  ("colors.contextmenu.menu.bg" . ,background)
+                  ("colors.contextmenu.menu.fg" . ,foreground)
+                  ("colors.contextmenu.selected.bg" . ,primary)
+                  ("colors.contextmenu.selected.fg" . ,primary-overlay-text)
                   ("colors.webpage.bg" . ,background)
                   ("colors.webpage.preferred_color_scheme"
                    . ,(if light?
                           (str-escape "light")
                           (str-escape "dark"))))))))))
-       ;; TODO: No option to send command without starting a new instance:
-       ;; https://github.com/qutebrowser/qutebrowser/issues/5258.
-       ;; Add workaround by checking if any qutebrowser process is active.
-       ;; (when (get-value 'farg config)
-       ;;   (simple-service
-       ;;    'reload-qutebrowser-on-farg-activation
-       ;;    home-farg-service-type
-       ;;    (modify-farg-config
-       ;;     (config =>
-       ;;             (farg-config
-       ;;              (inherit config)
-       ;;              (activation-commands
-       ;;               (cons
-       ;;                #~(begin
-       ;;                    (display "Reloading qutebrowser to update theme...\n")
-       ;;                    (system* #$package "restart" "swaybg"))
-       ;;                (farg-config-activation-commands config))))))))
+       (simple-service
+        'reload-qutebrowser-on-farg-activation
+        home-farg-service-type
+        (modify-farg-config
+         (config =>
+                 (farg-config
+                  (inherit config)
+                  (activation-commands
+                   (cons
+                    #~(begin
+                        (use-modules (ice-9 popen))
+                        (display "Reloading qutebrowser to update theme...\n")
+                        (let* ((port (open-input-pipe "pgrep qutebrowser"))
+                               (pid (read-line port)))
+                          (close-port port)
+                          (unless (eof-object? pid)
+                            (system* #$(file-append package "/bin/qutebrowser")
+                                     ":config-source"
+                                     ;; Only output potential errors
+                                     "-l=critical"))))
+                    (farg-config-activation-commands config)))))))
        (when (and default-browser? (get-value 'dwl-guile config))
          (simple-service
           'add-qutebrowser-dwl-keybindings
