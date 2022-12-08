@@ -158,6 +158,19 @@
                           ("format" . "<b>%s (%a, %g)</b>\\n%b")
                           ("[hidden]")
                           ("format" . "(%h more notifications)"))))))
+       (simple-service
+        'reload-mako-config-on-farg-activation
+        home-farg-service-type
+        (modify-farg-config
+         (config =>
+                 (farg-config
+                  (inherit config)
+                  (activation-commands
+                   (cons
+                    #~(begin
+                        (display "Reloading mako configuration...\n")
+                        (system* #$(file-append mako "/bin/makoctl") "reload"))
+                    (farg-config-activation-commands config)))))))
        (when (and add-keybindings? (get-value 'dwl-guile config))
          (simple-service
           'add-mako-dwl-keybindings
