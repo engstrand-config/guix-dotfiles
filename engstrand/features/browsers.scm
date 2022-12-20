@@ -220,7 +220,11 @@
                   ("colors.contextmenu.menu.fg" . ,text)
                   ("colors.contextmenu.selected.bg" . ,primary)
                   ("colors.contextmenu.selected.fg" . ,primary-overlay-text)
-                  ("colors.webpage.bg" . ,background)
+                  ;; Websites that does not explicitly set the background color
+                  ;; will use this color instead. This is problematic since
+                  ;; they expect the default background to be white, thus resulting
+                  ;; in unreadable text.
+                  ("colors.webpage.bg" . "#ffffff")
                   ("colors.webpage.preferred_color_scheme"
                    . ,(if light? "light" "dark")))))))))
        (simple-service
