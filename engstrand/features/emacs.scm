@@ -10,6 +10,7 @@
   #:use-module (gnu services)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages emacs-xyz)
+  #:use-module (rde gexp)
   #:use-module (rde features)
   #:use-module (rde features base)
   #:use-module (rde features emacs)
@@ -180,18 +181,52 @@
   "Add and configure the Modus themes for Emacs."
   (define emacs-f-name 'modus-themes)
 
-  (lambda (fconfig _)
+  (define (get-theme-overrides palette light-theme? light-palette?)
+    (let ((invert? (not (eq? light-theme? light-palette?))))
+      `((bg-main . ,(if invert? (palette 'text) (palette 'background))))))
+
+  (lambda (fconfig palette)
     (define (get-home-services config)
       (let ((light? (colorscheme-light? (home-farg-configuration-colorscheme fconfig))))
         (list
-         ;; FIXME: Can't seem to get it to work using the rde-elisp service
          (simple-service
-          'emacs-load-modus-theme-in-init-el
+          'emacs-modus-theme-farg-blend
           home-emacs-service-type
           (home-emacs-extension
-           (init-el (if light?
-                        '((modus-themes-load-operandi))
-                        '((modus-themes-load-vivendi))))))
+           (init-el
+            (let* ((mod (if light? 8 0))
+                   (operandi-bg-blend
+                    (offset (if light? (palette 'background) (palette 'text)) mod))
+                   (operandi-fg-blend
+                    (offset (if light? (palette 'text) (palette 'background)) mod))
+                   (vivendi-bg-blend operandi-fg-blend)
+                   (vivendi-fg-blend operandi-bg-blend))
+              `(;; Load modus blending utilities from file to prevent issues
+                ;; with nested quasiquotes.
+                ,(slurp-file-like (local-file "emacs/modus-blend.el"))
+
+                (setq my-modus-operandi-bg-blend ,operandi-bg-blend
+                      my-modus-operandi-fg-blend ,operandi-fg-blend
+                      my-modus-vivendi-bg-blend ,vivendi-bg-blend
+                      my-modus-vivendi-fg-blend ,vivendi-fg-blend
+                      modus-themes-operandi-color-overrides
+                      (append
+                       '((fg-window-divider-inner . ,operandi-bg-blend)
+                         (fg-window-divider-outer . ,operandi-bg-blend))
+                       (my-modus-themes-tint-palette modus-themes-operandi-colors
+                                                     my-modus-operandi-bg-blend
+                                                     my-modus-operandi-fg-blend))
+                      modus-themes-vivendi-color-overrides
+                      (append
+                       '((fg-window-divider-inner . ,vivendi-bg-blend)
+                         (fg-window-divider-outer . ,vivendi-bg-blend))
+                       (my-modus-themes-tint-palette modus-themes-vivendi-colors
+                                                     my-modus-vivendi-bg-blend
+                                                     my-modus-vivendi-fg-blend)))
+
+                ,@(if light?
+                      '((modus-themes-load-operandi))
+                      '((modus-themes-load-vivendi))))))))
          (rde-elisp-configuration-service
           emacs-f-name
           config
@@ -212,7 +247,6 @@
                   modus-themes-mail-citations 'faint
                   modus-themes-region '(bg-only accented)
                   modus-themes-diffs 'nil
-                  modus-themes-vivendi-color-overrides '((bg-main . "#0A0A0A"))
                   modus-themes-org-blocks 'gray-background
                   modus-themes-org-agenda '((header-block . (variable-pitch 1.3))
                                             (header-date . (grayscale workaholic bold-today 1.1))
@@ -221,8 +255,7 @@
                                             (habit . traffic-light))
                   modus-themes-headings '((1 . (background variable-pitch 1.3))
                                           (2 . (rainbow overline 1.1))
-                                          (t . (semibold))))
-            (modus-themes-load-themes))
+                                          (t . (semibold)))))
           #:elisp-packages (list emacs-modus-themes)))))
 
     (make-emacs-feature emacs-f-name
@@ -355,13 +388,13 @@
                       (setq persp-suppress-no-prefix-key-warning t)
                       ;; for some reason this must be added manually
                       (vertico-mode)))
-   ;; Load custom theme before rde emacs-appearance feature.
-   ;; This make sures that our custom settings overrides
-   ;; any values set in rde.
-   (feature-emacs-modus-themes)
    (feature-emacs-appearance
     #:margin 5
     #:header-line-as-mode-line? #f)
+   ;; Load custom theme after rde emacs-appearance feature.
+   ;; This make sures that our custom settings overrides
+   ;; any values set in rde.
+   (feature-emacs-modus-themes)
    (feature-emacs-dashboard)
    (feature-emacs-evil)
    (feature-emacs-monocle
