@@ -354,9 +354,7 @@
    (feature-emacs
     #:emacs %engstrand-emacs-package
     #:additional-elisp-packages (list emacs-geiser emacs-geiser-guile)
-    #:extra-init-el '(;; no fringes
-                      (fringe-mode 0)
-                      ;; do not open the Emacs welcome screen when we pass an
+    #:extra-init-el '(;; do not open the Emacs welcome screen when we pass an
                       ;; existing file as a command-line argument
                       (defun my-inhibit-startup-screen-file ()
                         (ignore
