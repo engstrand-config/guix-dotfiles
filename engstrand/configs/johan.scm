@@ -53,6 +53,10 @@
         (config =>
                 (dwl-config
                  (inherit config)
+                 (smart-gaps? #f)
+                 (smart-borders? #f)
+                 (gaps-horizontal-outer 20)
+                 (gaps-vertical-outer 20)
                  (border-px 2))))))))
    %engstrand-emacs-base-features
    %engstrand-base-features))
