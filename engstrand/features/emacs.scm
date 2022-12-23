@@ -22,6 +22,7 @@
             feature-emacs-corfu
             feature-emacs-corfu-dabbrev
             feature-emacs-dashboard
+            feature-emacs-transparency
             feature-emacs-modus-themes
             feature-emacs-evil
 
@@ -52,26 +53,11 @@
         `(("EDITOR" . ,(file-append %engstrand-emacs-package "/bin/emacs"))
           ;; Used by guix commands, e.g. guix edit. rde sets this by itself,
           ;; but the --no-wait option does not seem to play nice with our setup.
-          ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))
-       (when (get-value 'dwl-guile config)
-         (simple-service
-          'set-emacs-window-rule
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (rules
-                     (append
-                      (list
-                       (dwl-rule (id "emacs")
-                                 (title "emacs")
-                                 (alpha (palette 'alpha))))
-                      (dwl-config-rules config))))))))))
+          ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))))
 
-  (feature
-   (name 'emacs-default-editor)
-   (home-services-getter get-home-services))))
+    (feature
+     (name 'emacs-default-editor)
+     (home-services-getter get-home-services))))
 
 (define* (feature-emacs-org-latex-preview)
   "Add and configure latex previews in Emacs Org mode."
@@ -176,6 +162,25 @@
 
   (make-emacs-feature emacs-f-name
                       #:home-services get-home-services))
+
+(define* (feature-emacs-transparency
+          #:key
+          (alpha #f))
+  "Set frame background transparency."
+  (define emacs-f-name 'transparency)
+  (lambda (_ palette)
+    (define (get-home-services config)
+      (let ((emacs-alpha (if alpha alpha (palette 'alpha))))
+        (list
+         (rde-elisp-configuration-service
+          emacs-f-name
+          config
+          `((add-to-list 'default-frame-alist '(alpha-background . ,emacs-alpha))
+            ;; remove non-transparent border around frame
+            (set-frame-parameter (selected-frame) 'internal-border-width 0))))))
+
+    (make-emacs-feature emacs-f-name
+                        #:home-services get-home-services)))
 
 (define* (feature-emacs-modus-themes)
   "Add and configure the Modus themes for Emacs."
@@ -378,8 +383,6 @@
                       (add-hook 'c-mode-common-hook '(lambda () (setq indent-tabs-mode t)))
                       ;; Delete whitespace from indentations immediately
                       (setq backward-delete-char-untabify-method 'hungry)
-                      ;; Transparency - laggy when window large
-                      ;; (add-to-list 'default-frame-alist '(alpha 93 . 93))
                       ;; Clean up white space
                       (add-hook 'before-save-hook 'whitespace-cleanup)
                       ;; Allow execution of src blocks without asking
@@ -391,6 +394,7 @@
    (feature-emacs-appearance
     #:margin 5
     #:header-line-as-mode-line? #f)
+   (feature-emacs-transparency)
    ;; Load custom theme after rde emacs-appearance feature.
    ;; This make sures that our custom settings overrides
    ;; any values set in rde.
