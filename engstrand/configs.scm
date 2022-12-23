@@ -7,6 +7,7 @@
   #:use-module (rde features base)
   #:use-module (rde features linux)
   #:use-module (rde features fontutils)
+  #:use-module (rde features networking)
   #:use-module (rde features version-control)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
@@ -62,6 +63,7 @@
     #:guix-substitute-urls (list "https://substitutes.nonguix.org")
     #:guix-authorized-keys (list (local-file "files/nonguix-signing-key.pub")))
    (feature-desktop-services)
+   (feature-networking)
    (feature-switch-to-tty-on-boot)
    ;; TODO: Move to systems/*.scm?
    (feature-hidpi
