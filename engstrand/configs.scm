@@ -28,6 +28,7 @@
   #:use-module (engstrand features wayland)
   #:use-module (engstrand features documents)
   #:use-module (engstrand features statusbar)
+  #:use-module (engstrand features messaging)
   #:use-module (engstrand features version-control)
   #:export (
             %engstrand-base-system-packages
@@ -121,6 +122,7 @@
    (feature-imv)
    (feature-neovim)
    (feature-zathura)
+   (feature-signal)
    (feature-wayland-swaybg)
    (feature-wayland-bemenu)
    (feature-wayland-bemenu-power)
