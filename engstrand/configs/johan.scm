@@ -3,6 +3,7 @@
   #:use-module (rde features base)
   #:use-module (rde features gnupg)
   #:use-module (rde features bittorrent)
+  #:use-module (rde features mail)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path
@@ -23,13 +24,15 @@
    (inherit %engstrand-default-farg-config)
    (wallpaper (get-wallpaper-path "nature/jack-b-8Wqm1W59Baw-unsplash.jpg"))))
 
+(define email-engstrand-primary "johan@engstrand.nu")
+
 (define-public %user-features
   (append
    (list
     (feature-user-info
      #:user-name "johan"
      #:full-name "Johan Engstrand"
-     #:email "johan@engstrand.nu")
+     #:email email-engstrand-primary)
     (feature-gnupg
      #:gpg-primary-key "DFC6C6B70EF5F7CB75EE97E6DF3088DDBCAD566D"
      #:pinentry-flavor 'gtk2)
@@ -40,6 +43,10 @@
     (feature-ardour)
     (feature-calf-plugins)
     (feature-sfz)
+    (feature-mail-settings
+     #:mail-accounts (list (mail-account (id 'personal) (fqda email-engstrand-primary) (type 'generic))))
+    (feature-emacs-message)
+    (feature-isync)
     (feature-qutebrowser)
     (feature-firefox
      #:default-browser? #t)
