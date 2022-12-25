@@ -259,6 +259,7 @@
                             ("term" . "xterm")
 
                             ("[colors]")
+                            ("alpha" . ,(palette 'alpha))
                             ("foreground" . ,(strip-hex (palette 'text)))
                             ("background" . ,(strip-hex (palette 'background)))
                             ("regular0" . ,(strip-hex (assoc-ref color-overrides 0)))
