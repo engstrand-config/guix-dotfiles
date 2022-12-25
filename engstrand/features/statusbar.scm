@@ -82,7 +82,6 @@
                    (font (font->string 'fcft 'font-monospace config
                                        #:bold? #t))
                    (block-spacing 0)
-                   (use-dwl-guile-colorscheme? #f)
                    (background-color (palette 'background))
                    (foreground-color (palette 'text))
                    (border-color (palette 'background))

@@ -132,8 +132,4 @@
    (feature-wayland-screenshot)
    (feature-wayland-swaylock)
    (feature-statusbar-dtao-guile)
-   (feature-wayland-dwl-guile
-    #:dwl-guile-configuration
-    (home-dwl-guile-configuration
-     (patches %engstrand-dwl-guile-patches)
-     (config %engstrand-dwl-guile-config)))))
+   (feature-wayland-dwl-guile)))

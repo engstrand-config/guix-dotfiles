@@ -15,6 +15,7 @@
   #:use-module (dwl-guile configuration)
   #:use-module (dwl-guile configuration records)
   #:use-module (engstrand utils)
+  #:use-module (engstrand features wayland)
   #:export (
             feature-dwl-guile-monitor-config
             feature-kanshi-autorandr))
@@ -68,11 +69,13 @@
          (config =>
                  (home-dwl-guile-configuration
                   (inherit config)
-                  (patches
-                   (append
-                    (home-dwl-guile-configuration-patches config)
-                    (list %patch-monitor-config
-                          %patch-focusmonpointer)))))))
+                  (package
+                   (patch-dwl-guile-package dwl-guile
+                                            #:patches
+                                            (append
+                                             %engstrand-dwl-guile-patches
+                                             (list %patch-monitor-config
+                                                   %patch-focusmonpointer))))))))
        (simple-service
         'add-dwl-guile-monitor-rules
         home-dwl-guile-service-type

@@ -40,7 +40,8 @@
             feature-wayland-swaylock
 
             %engstrand-dwl-guile-patches
-            %engstrand-dwl-guile-config))
+            %engstrand-dwl-guile-config
+            %engstrand-dwl-guile-home-configuration))
 
 (define %engstrand-dwl-guile-patches
   (list %patch-xwayland
@@ -69,6 +70,13 @@
        (action '(dwl:view-previous))))
      %dwl-base-keys))))
 
+(define %engstrand-dwl-guile-home-configuration
+  (home-dwl-guile-configuration
+   (package
+    (patch-dwl-guile-package dwl-guile
+                             #:patches %engstrand-dwl-guile-patches))
+   (config %engstrand-dwl-guile-config)))
+
 ;; Checks if SYMBOL corresponds to a patch that is/will
 ;; be applied to dwl-guile, based on the feature values in CONFIG.
 ;; SYMBOL should be the name of the patch, not including the ".patch" extension.
@@ -80,7 +88,7 @@
 
 (define* (feature-wayland-dwl-guile
           #:key
-          (dwl-guile-configuration (home-dwl-guile-configuration)))
+          (dwl-guile-configuration %engstrand-dwl-guile-home-configuration))
   "Setup dwl-guile."
 
   (ensure-pred home-dwl-guile-configuration? dwl-guile-configuration)
@@ -101,7 +109,6 @@
                   (colors
                    (dwl-colors
                     (root (palette 'background))
-                    (text (palette 'text))
                     (border (offset (palette 'background) 10))
                     (focus (palette 'primary))))))))))
 
@@ -109,8 +116,7 @@
      (name 'wayland-dwl-guile)
      (values `((wayland . #t)
                (dwl-guile . #t)
-               (dwl-guile-patches
-                . ,(home-dwl-guile-configuration-patches dwl-guile-configuration))))
+               (dwl-guile-patches . ,%engstrand-dwl-guile-patches)))
      (home-services-getter get-home-services))))
 
 (define* (feature-wayland-mako
