@@ -110,7 +110,8 @@
                    (dwl-colors
                     (root (palette 'background))
                     (border (offset (palette 'background) 10))
-                    (focus (palette 'primary))))))))))
+                    (focus (palette 'primary))
+                    (lockscreen (with-alpha (palette 'background) 0.3))))))))))
 
     (feature
      (name 'wayland-dwl-guile)
