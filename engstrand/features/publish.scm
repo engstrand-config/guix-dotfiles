@@ -13,7 +13,7 @@
           #:key
           (guix guix)
           (port 80)
-          (host "localhost")
+          (host "0.0.0.0")
           (advertise? #f)
           (compress? #t)
           (compression-methods '(("gzip" 3) ("zstd" 3)))
