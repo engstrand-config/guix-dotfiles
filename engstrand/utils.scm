@@ -165,3 +165,8 @@
 
 (define-public (str-escape str)
   (string-append "\"" str "\""))
+
+(define-public (strip-hex hex)
+  (if (equal? (string-take hex 1) "#")
+      (substring hex 1)
+      hex))

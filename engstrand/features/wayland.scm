@@ -111,7 +111,7 @@
                     (root (palette 'background))
                     (border (offset (palette 'background) 10))
                     (focus (palette 'primary))
-                    (lockscreen (with-alpha (palette 'background) 0.3))))))))))
+                    (lockscreen (with-alpha (palette 'background) 90))))))))))
 
     (feature
      (name 'wayland-dwl-guile)
@@ -214,9 +214,6 @@
   (ensure-pred package? package)
   (ensure-pred boolean? set-default-terminal?)
   (ensure-pred boolean? swallow-clients?)
-
-  (define (strip-hex hex)
-    (substring hex 1))
 
   (lambda (_ palette)
     (define (get-home-services config)
@@ -710,62 +707,60 @@
           (add-keybindings? #t))
   "Install and configure swaylock."
 
-  (define (get-home-services config)
-    (require-value 'font-monospace config)
-    (list
-     (simple-service
-      'create-swaylock-config
-      home-files-service-type
-      `((".config/swaylock/config"
-         ,(alist->ini "swaylock-config"
-                      `(("clock")
-                        ("screenshots")
-                        ("indicator")
-                        ("daemonize")
-                        ("hide-keyboard-layout")
-                        ("color" . "000000AA")
-                        ("font"
-                         . ,(font->string 'fcft 'font-monospace config
-                                          #:bold? #t))
-                        ("font-size" . 40)
-                        ("indicator-thickness" . 8)
-                        ("indicator-radius" . 125)
-                        ("key-hl-color" . "FF8800")
-                        ("key-hl-color" . "FF8800")
-                        ("inside-color" . "00000000")
-                        ("inside-clear-color" . "00000000")
-                        ("inside-ver-color" . "00000000")
-                        ("inside-wrong-color" . "00000000")
-                        ("ring-color" . "FFCC00")
-                        ("ring-wrong-color" . "FF0000")
-                        ("text-clear-color" . "00000000")
-                        ("text-ver-color" . "00000000")
-                        ("text-wrong-color" . "00000000")
-                        ("separator-color" . "00000000")
-                        ("effect-blur" . "5x5")
-                        ("fade-in" . 0)
-                        ("datestr" . ""))))))
-     (when (and add-keybindings? (get-value 'dwl-guile config))
+  (lambda (_ palette)
+    (define (get-home-services config)
+      (require-value 'font-monospace config)
+      (list
        (simple-service
-        'add-swaylock-dwl-keybindings
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (keys
-                   (append
-                    (list
-                     (dwl-key
-                      (key lock-key)
-                      (action `(dwl:shcmd "swaylock"))))
-                    (dwl-config-keys config))))))))))
+        'create-swaylock-config
+        home-files-service-type
+        `((".config/swaylock/config"
+           ,(alist->ini "swaylock-config"
+                        `(("daemonize")
+                          ("hide-keyboard-layout")
+                          ("line-uses-ring")
+                          ("color" . "00000000")
+                          ("font"
+                           . ,(font->string 'fcft 'font-monospace config
+                                            #:bold? #t))
+                          ("font-size" . 40)
+                          ("indicator-thickness" . 10)
+                          ("indicator-radius" . 80)
+                          ("key-hl-color" . ,(strip-hex (palette 'primary)))
+                          ("bs-hl-color" . ,(strip-hex (palette 'red)))
+                          ("inside-color" . "00000000")
+                          ("inside-clear-color" . "00000000")
+                          ("inside-ver-color" . "00000000")
+                          ("inside-wrong-color" . "00000000")
+                          ("ring-color" . ,(strip-hex (offset (palette 'background) 20)))
+                          ("ring-ver-color" . ,(strip-hex (palette 'green)))
+                          ("ring-wrong-color" . ,(strip-hex (palette 'red)))
+                          ("ring-clear-color" . ,(strip-hex (palette 'secondary)))
+                          ("text-clear-color" . "00000000")
+                          ("text-ver-color" . "00000000")
+                          ("text-wrong-color" . "00000000")
+                          ("separator-color" . "00000000"))))))
+       (when (and add-keybindings? (get-value 'dwl-guile config))
+         (simple-service
+          'add-swaylock-dwl-keybindings
+          home-dwl-guile-service-type
+          (modify-dwl-guile-config
+           (config =>
+                   (dwl-config
+                    (inherit config)
+                    (keys
+                     (append
+                      (list
+                       (dwl-key
+                        (key lock-key)
+                        (action `(dwl:shcmd "swaylock"))))
+                      (dwl-config-keys config))))))))))
 
-  (define (get-system-services config)
-    (list
-     (screen-locker-service swaylock-effects "swaylock")))
+    (define (get-system-services config)
+      (list
+       (screen-locker-service swaylock "swaylock")))
 
-  (feature
-   (name 'wayland-swaylock)
-   (home-services-getter get-home-services)
-   (system-services-getter get-system-services)))
+    (feature
+     (name 'wayland-swaylock)
+     (home-services-getter get-home-services)
+     (system-services-getter get-system-services))))
