@@ -1,4 +1,5 @@
 (define-module (engstrand features browsers)
+  #:use-module (ice-9 ftw)
   #:use-module (srfi srfi-1)
   #:use-module (rde features)
   #:use-module (rde features predicates)
@@ -239,10 +240,9 @@
                     #~(begin
                         (use-modules (ice-9 popen))
                         (display "Reloading qutebrowser to update theme...\n")
-                        (let* ((port (open-input-pipe "pgrep qutebrowser"))
-                               (pid (read-line port)))
-                          (close-port port)
-                          (unless (eof-object? pid)
+                        (let* ((dir (getenv "XDG_RUNTIME_DIR"))
+                               (files (length (scandir (string-append dir "/qutebrowser")))))
+                          (when (> files 2) ; FIFO file is available, instance is running
                             (system* #$(file-append package "/bin/qutebrowser")
                                      ":config-source"
                                      ;; Only output potential errors
