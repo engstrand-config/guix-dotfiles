@@ -48,13 +48,15 @@
      (dwl-monitor-rule
       (name "DP-1")
       (x 1920)
-      (y -200)
+      (y 0)
       (width 2560)
       (height 1440)
       (refresh-rate 144)
       (adaptive-sync? #t))
      (dwl-monitor-rule
       (name "DP-3")
+      (x 0)
+      (y 200)
       (width 1920)
       (height 1080)
       (refresh-rate 144)
