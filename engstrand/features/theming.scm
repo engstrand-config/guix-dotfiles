@@ -69,7 +69,7 @@
   (let ((default-wallpaper (get-wallpaper-path "default.jpg")))
     (farg-config
      ;; TODO: Add root wallpaper directory as variable in wallpapers channel
-     (alpha (lambda (light?) (if light? 0.98 0.9)))
+     (alpha (lambda (light?) (if light? 0.98 0.96)))
      (wallpaper-search-directory (dirname default-wallpaper))
      (palette-getter engstrand-farg-palette)
      (wallpaper default-wallpaper))))
