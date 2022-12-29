@@ -58,8 +58,8 @@
        (adaptive-sync? #f))))
     (feature-kanshi-autorandr
      #:profiles
-     '((("Ancor Communications Inc MG248 G6LMQS123017 (HDMI-A-1)" .
+     '((("Ancor Communications Inc MG248 G6LMQS123017" .
          (("mode" . "1920x1080")
           ("position" . "0,0")))
-        ("eDP-1" . (("position" . "0,1080")))))))
+        (eDP-1 . (("position" . "0,1080")))))))
    %engstrand-laptop-base-features))
