@@ -47,35 +47,38 @@
   (list %patch-xwayland
         %patch-swallow
         %patch-movestack
-        %patch-attachabove))
+        %patch-attachabove
+        %patch-focusmonpointer
+        %patch-monitor-config))
 
 (define %engstrand-dwl-guile-config
-  (dwl-config
-   (xkb-rules %engstrand-keyboard-layout)
-   (border-px 2)
-   (keys
-    (append
-     (list
-      (dwl-key
-       (key "s-<kp-up>")
-       (action '(dwl:increase-masters +1)))
-      (dwl-key
-       (key "s-<kp-down>")
-       (action '(dwl:increase-masters -1)))
-      (dwl-key
-       (key "s-0")
-       (action '(dwl:cycle-layout)))
-      (dwl-key
-       (key "s-<tab>")
-       (action '(dwl:view-previous))))
-     %dwl-base-keys))))
+  #~((set 'border-px 2)))
+;; (dwl-config
+;;  (xkb-rules %engstrand-keyboard-layout)
+;;  (border-px 2)
+;;  (keys
+;;   (append
+;;    (list
+;;     (dwl-key
+;;      (key "s-<kp-up>")
+;;      (action '(dwl:increase-masters +1)))
+;;     (dwl-key
+;;      (key "s-<kp-down>")
+;;      (action '(dwl:increase-masters -1)))
+;;     (dwl-key
+;;      (key "s-0")
+;;      (action '(dwl:cycle-layout)))
+;;     (dwl-key
+;;      (key "s-<tab>")
+;;      (action '(dwl:view-previous))))
+;;    %dwl-base-keys))))
 
 (define %engstrand-dwl-guile-home-configuration
   (home-dwl-guile-configuration
    (package
     (patch-dwl-guile-package dwl-guile
                              #:patches %engstrand-dwl-guile-patches))
-   (config %engstrand-dwl-guile-config)))
+   (config (list %engstrand-dwl-guile-config))))
 
 ;; Checks if SYMBOL corresponds to a patch that is/will
 ;; be applied to dwl-guile, based on the feature values in CONFIG.
@@ -101,17 +104,11 @@
                 dwl-guile-configuration)
        (simple-service
         'set-dwl-colorscheme-dwl
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (colors
-                   (dwl-colors
-                    (root (palette 'background))
-                    (border (offset (palette 'background) 10))
-                    (focus (palette 'primary))
-                    (lockscreen (with-alpha (palette 'background) 90))))))))))
+        home-dwl-guile-extension
+        #~((set 'root #$(palette 'background))
+           (set 'border #$(offset (palette 'background) 10))
+           (set 'focus #$(palette 'primary))
+           (set 'lockscreen #$(with-alpha (palette 'background) 90))))))
 
     (feature
      (name 'wayland-dwl-guile)
@@ -181,23 +178,11 @@
        (when (and add-keybindings? (get-value 'dwl-guile config))
          (simple-service
           'add-mako-dwl-keybindings
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (keys
-                     (append
-                      (list
-                       (dwl-key
-                        (key dismiss-key)
-                        (action `(system* ,(file-append mako "/bin/makoctl")
-                                          "dismiss")))
-                       (dwl-key
-                        (key dismiss-all-key)
-                        (action `(system* ,(file-append mako "/bin/makoctl")
-                                          "dismiss" "--all"))))
-                      (dwl-config-keys config))))))))))
+          home-dwl-guile-extension
+          #~((bind 'keys #$dismiss-key
+                   (lambda () (dwl:shcmd #$(file-append mako "/bin/makoctl") "dismiss")))
+             (bind 'keys #$dismiss-all-key
+                   (lambda () (dwl:shcmd #$(file-append mako "/bin/makoctl") "dismiss" "--all"))))))))
 
     (feature
      (name 'wayland-mako)
@@ -207,11 +192,13 @@
 (define* (feature-wayland-foot
           #:key
           (package foot)
+          (open-key "s-<return>")
           (set-default-terminal? #t)
           (swallow-clients? #t)) ;; TODO: Add swallow patch automatically if #t?
   "Setup foot terminal."
 
   (ensure-pred package? package)
+  (ensure-pred string? open-key)
   (ensure-pred boolean? set-default-terminal?)
   (ensure-pred boolean? swallow-clients?)
 
@@ -320,32 +307,15 @@
                           (display "Reloading theme in open foot instances...\n")
                           #$(reload-terminal-colors palette color-overrides))
                       (farg-config-activation-commands config)))))))
-         (when (and set-default-terminal? has-dwl-guile?)
-           (simple-service
-            'set-foot-as-default-terminal
-            home-dwl-guile-service-type
-            (modify-dwl-guile-config
-             (config =>
-                     (dwl-config
-                      (inherit config)
-                      (terminal `(,(file-append package "/bin/foot"))))))))
          (when has-dwl-guile?
            (simple-service
-            'set-foot-window-rule
-            home-dwl-guile-service-type
-            (modify-dwl-guile-config
-             (config =>
-                     (dwl-config
-                      (inherit config)
-                      (rules
-                       (append
-                        (list
-                         (dwl-rule
-                          (id "foot")
-                          (alpha (palette 'alpha))
-                          (no-swallow (not swallow-clients?))
-                          (terminal swallow-clients?)))
-                        (dwl-config-rules config)))))))))))
+            'set-as-default-terminal-in-dwl-guile
+            home-dwl-guile-extension
+            #~((bind 'keys "s-<return>" (lambda () (dwl:spawn #$(file-append foot "/bin/foot"))))
+               (set-rules '((id . "foot")
+                            (alpha . #$(palette 'alpha))
+                            (swallow? . #$swallow-clients?)
+                            (terminal? . #$swallow-clients?)))))))))
 
     (feature
      (name 'wayland-foot)
@@ -389,16 +359,16 @@
             home-farg-service-type
             (modify-farg-config
              (config =>
-                   (farg-config
-                    (inherit config)
-                    (activation-commands
-                     (cons
-                      #~(begin
-                          (display "Reloading swaybg to update wallpaper...\n")
-                          (with-output-to-file "/dev/null"
-                            (lambda ()
-                              (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg"))))
-                      (farg-config-activation-commands config))))))))
+                     (farg-config
+                      (inherit config)
+                      (activation-commands
+                       (cons
+                        #~(begin
+                            (display "Reloading swaybg to update wallpaper...\n")
+                            (with-output-to-file "/dev/null"
+                              (lambda ()
+                                (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg"))))
+                        (farg-config-activation-commands config))))))))
          (when wallpaper-path
            (simple-service
             'add-swaybg-shepherd-service
@@ -484,20 +454,10 @@
        (when (and add-keybindings? has-dwl-guile?)
          (simple-service
           'add-wlsunset-dwl-keybindings
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (keys
-                     (append
-                      (list
-                       (dwl-key
-                        (key toggle-key)
-                        (action `(system* ,(file-append shepherd "/bin/herd")
-                                          "toggle"
-                                          "wlsunset"))))
-                      (dwl-config-keys config)))))))))))
+          home-dwl-guile-extension
+          #~((bind 'keys toggle-key
+                   (lambda () (dwl:shcmd #$(file-append shepherd "/bin/herd")
+                                         "toggle" "wlsunset")))))))))
 
   (feature
    (name 'wayland-wlsunset)
@@ -558,25 +518,11 @@
      (when (and add-keybindings? (get-value 'dwl-guile config))
        (simple-service
         'add-screenshot-dwl-keybindings
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (keys
-                   (append
-                    (list
-                     (dwl-key
-                      (key screenshot-output-key)
-                      (action (make-screenshot-shcmd)))
-                     (dwl-key
-                      (key screenshot-select-key)
-                      (action (make-screenshot-shcmd %grim-select-options)))
-                     (dwl-key
-                      (key screenshot-select-copy-key)
-                      (action (make-screenshot-shcmd %grim-select-options
-                                                     %grim-pipe-to-clipboard))))
-                    (dwl-config-keys config))))))))))
+        home-dwl-guile-extension
+        #~((bind 'keys #$screenshot-output-key (lambda () #$(make-screenshot-shcmd)))
+           (bind 'keys #$screenshot-select-key (lambda () #$(make-screenshot-shcmd %grim-select-options)))
+           (bind 'keys #$screenshot-select-copy-key
+                 (lambda () #$(make-screenshot-shcmd %grim-select-options %grim-pipe-to-clipboard))))))))
 
   (feature
    (name 'wayland-screenshots)
@@ -584,121 +530,108 @@
 
 (define* (feature-wayland-bemenu
           #:key
+          (open-key "s-d")
           (set-default-menu? #t))
-  "Setup bemenu."
+"Setup bemenu."
 
-  (ensure-pred boolean? set-default-menu?)
+(ensure-pred string? open-key)
+(ensure-pred boolean? set-default-menu?)
 
-  (lambda (fconfig palette)
-    (define (get-home-services config)
-      "Return a list of home services required by bemenu."
-      (require-value 'font-monospace config)
-      (make-service-list
+(lambda (fconfig palette)
+  (define (get-home-services config)
+    "Return a list of home services required by bemenu."
+    (require-value 'font-monospace config)
+    (make-service-list
+     (simple-service
+      'add-bemenu-home-packages-to-profile
+      home-profile-service-type
+      (list bemenu))
+     (when (and set-default-menu? (get-value 'dwl-guile config))
        (simple-service
-        'add-bemenu-home-packages-to-profile
-        home-profile-service-type
-        (list bemenu))
-       (when (and set-default-menu? (get-value 'dwl-guile config))
-         (simple-service
-          'set-bemenu-as-default-menu
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (menu `(,(file-append bemenu "/bin/bemenu-run"))))))))
+        'set-bemenu-as-default-menu-in-dwl-guile
+        home-dwl-guile-extension
+        #~((bind 'keys #$open-key (lambda () (dwl:spawn #$(file-append bemenu "/bin/bemenu-run")))))))
+     (simple-service
+      'bemenu-options
+      home-environment-variables-service-type
+      (alist->environment-variable
+       "BEMENU_OPTS"
+       `(("ignorecase" . #t)
+         ("line-height"
+          . ,(get-value 'statusbar-height config 25))
+         ("filter" . #f)
+         ("wrap" . #f)
+         ("list" . #f)
+         ("prompt" . #f)
+         ("prefix" . #f)
+         ("index" . #f)
+         ("password" . #f)
+         ("scrollbar" . #f)
+         ("ifne" . #f)
+         ("fork" . #f)
+         ("no-exec" . #f)
+         ("bottom" . #f)
+         ("grab" . #f)
+         ("no-overlap" . #f)
+         ("monitor" . #f)
+         ("fn"
+          . ,(font->string 'pango 'font-monospace config
+                           #:bold? #t
+                           #:size 10))
+         ("tb" . ,(palette 'primary))
+         ("tf" . ,(make-readable (palette 'primary)
+                                 (palette 'primary)))
+         ("fb" . ,(palette 'background))
+         ("ff" . ,(palette 'text))
+         ("nb" . ,(palette 'background))
+         ("nf" . ,(palette 'text))
+         ("ab" . ,(palette 'background))
+         ("af" . ,(palette 'text))
+         ("hb" . ,(offset (palette 'background) 10))
+         ("hf" . ,(palette 'primary-text))
+         ("sb" . #f)
+         ("sf" . ,(palette 'secondary-text))
+         ("scb" . #f)
+         ("scf" . #f))))))
 
-       (simple-service
-        'bemenu-options
-        home-environment-variables-service-type
-        (alist->environment-variable
-         "BEMENU_OPTS"
-         `(("ignorecase" . #t)
-           ("line-height"
-            . ,(get-value 'statusbar-height config 25))
-           ("filter" . #f)
-           ("wrap" . #f)
-           ("list" . #f)
-           ("prompt" . #f)
-           ("prefix" . #f)
-           ("index" . #f)
-           ("password" . #f)
-           ("scrollbar" . #f)
-           ("ifne" . #f)
-           ("fork" . #f)
-           ("no-exec" . #f)
-           ("bottom" . #f)
-           ("grab" . #f)
-           ("no-overlap" . #f)
-           ("monitor" . #f)
-           ("fn"
-            . ,(font->string 'pango 'font-monospace config
-                             #:bold? #t
-                             #:size 10))
-           ("tb" . ,(palette 'primary))
-           ("tf" . ,(make-readable (palette 'primary)
-                                   (palette 'primary)))
-           ("fb" . ,(palette 'background))
-           ("ff" . ,(palette 'text))
-           ("nb" . ,(palette 'background))
-           ("nf" . ,(palette 'text))
-           ("ab" . ,(palette 'background))
-           ("af" . ,(palette 'text))
-           ("hb" . ,(offset (palette 'background) 10))
-           ("hf" . ,(palette 'primary-text))
-           ("sb" . #f)
-           ("sf" . ,(palette 'secondary-text))
-           ("scb" . #f)
-           ("scf" . #f))))))
-
-    (feature
-     (name 'wayland-bemenu)
-     (home-services-getter get-home-services))))
+  (feature
+   (name 'wayland-bemenu)
+   (home-services-getter get-home-services))))
 
 (define* (feature-wayland-bemenu-power
           #:key
           (open-key "S-s-<backspace>"))
-  "Install and configure bemenu power prompt."
+"Install and configure bemenu power prompt."
 
-  (define actions
-    (let ((loginctl (file-append elogind "/bin/loginctl")))
-      `(("suspend" . (system* ,loginctl "suspend"))
-        ("restart dwl" . (system* ,(file-append shepherd "/bin/herd") "restart" "dwl-guile"))
-        ("logout" . (system* ,loginctl "terminate-session"
-                             (getenv "XDG_SESSION_ID")))
-        ("reboot" . (system* ,loginctl "reboot"))
-        ("shutdown" . (system* ,loginctl "poweroff")))))
+(define actions
+  (let ((loginctl (file-append elogind "/bin/loginctl")))
+    `(("suspend" . (system* ,loginctl "suspend"))
+      ("restart dwl" . (system* ,(file-append shepherd "/bin/herd") "restart" "dwl-guile"))
+      ("logout" . (system* ,loginctl "terminate-session"
+                           (getenv "XDG_SESSION_ID")))
+      ("reboot" . (system* ,loginctl "reboot"))
+      ("shutdown" . (system* ,loginctl "poweroff")))))
 
-  (define (get-home-services config)
-    (let ((executable
-           (compute-bemenu-prompt
-            "bemenu.scm"
-            "What do you want to do?"
-            actions)))
-      (make-service-list
+(define (get-home-services config)
+  (let ((executable
+         (compute-bemenu-prompt
+          "bemenu.scm"
+          "What do you want to do?"
+          actions)))
+    (make-service-list
+     (simple-service
+      'create-bemenu-power-executable
+      home-files-service-type
+      `((".config/bemenu.scm" ,executable)))
+     (when (get-value 'dwl-guile config)
        (simple-service
-        'create-bemenu-power-executable
-        home-files-service-type
-        `((".config/bemenu.scm" ,executable)))
-       (when (get-value 'dwl-guile config)
-         (simple-service
-          'add-bemenu-power-dwl-keybinding
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (keys
-                     (append
-                      (list
-                       (dwl-key
-                        (key open-key)
-                        (action `(dwl:shcmd ,executable))))
-                      (dwl-config-keys config)))))))))))
+        'add-bemenu-power-dwl-keybinding
+        home-dwl-guile-extension
+        #~((bind 'keys #$open-key (lambda () (dwl:shcmd #$executable)))))))))
 
-  (feature
-   (name 'wayland-bemenu-power)
-   (home-services-getter get-home-services)))
+(feature
+ (name 'wayland-bemenu-power)
+ (home-services-getter get-home-services)))
 
 ;; TODO: Add options?
 (define* (feature-wayland-swaylock
@@ -743,18 +676,8 @@
        (when (and add-keybindings? (get-value 'dwl-guile config))
          (simple-service
           'add-swaylock-dwl-keybindings
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (keys
-                     (append
-                      (list
-                       (dwl-key
-                        (key lock-key)
-                        (action `(dwl:shcmd "swaylock"))))
-                      (dwl-config-keys config))))))))))
+          home-dwl-guile-extension
+          #~(bind 'keys #$lock-key (lambda () (dwl:shcmd "swaylock")))))))
 
     (define (get-system-services config)
       (list

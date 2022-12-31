@@ -2,6 +2,7 @@
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
   #:use-module (engstrand features laptop)
+  #:use-module (guix gexp)
   #:use-module (rde features system)
   #:use-module (gnu system file-systems)
   #:use-module (gnu system mapped-devices))

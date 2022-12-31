@@ -4,6 +4,7 @@
   #:use-module (engstrand features display)
   #:use-module (engstrand features bluetooth)
   #:use-module (rde features system)
+  #:use-module (guix gexp)
   #:use-module (gnu bootloader)
   #:use-module (gnu bootloader grub)
   #:use-module (dwl-guile home-service)
@@ -45,11 +46,9 @@
       (type "ext4")
       (dependencies %mapped-devices))))
    (feature-dwl-guile-monitor-config
-    #:monitors
-    (list
-     (dwl-monitor-rule
-      (name "DP-2")
-      (width 2560)
-      (height 1440)
-      (refresh-rate 240)
-      (adaptive-sync? #t))))))
+    #:rules
+    #~((set-monitor-rules '((name "DP-2")
+                            (width 2560)
+                            (height 1440)
+                            (refresh-rate 240)
+                            (adaptive-sync? #t)))))))

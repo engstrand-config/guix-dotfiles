@@ -2,6 +2,7 @@
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
   #:use-module (engstrand features display)
+  #:use-module (guix gexp)
   #:use-module (rde features system)
   #:use-module (dwl-guile home-service)
   #:use-module (gnu system file-systems)
@@ -30,11 +31,9 @@
     (list (swap-space
            (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03")))))
    (feature-dwl-guile-monitor-config
-    #:monitors
-    (list
-     (dwl-monitor-rule
-      (name "DP-1")
-      (width 2560)
-      (height 1440)
-      (refresh-rate 60)
-      (adaptive-sync? #f))))))
+    #:rules
+    #~((set-monitor-rules '((name "DP-1")
+                            (width 2560)
+                            (height 1440)
+                            (refresh-rate 60)
+                            (adaptive-sync? #f)))))))

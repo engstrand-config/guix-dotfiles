@@ -31,12 +31,9 @@
 ;;  ddcutil setvcp 10 + 5
 ;;  )
 
-(define (list-of-monitor-rules? x)
-  (every dwl-monitor-rule? x))
-
 (define* (feature-dwl-guile-monitor-config
           #:key
-          (monitors '())
+          (rules #~())
           (focus-left-key "s-<left>")
           (focus-right-key "s-<right>")
           (focus-up-key "s-<up>")
@@ -48,7 +45,7 @@
           (add-keybindings? #t))
   "Configure monitor settings for dwl-guile."
 
-  (ensure-pred list-of-monitor-rules? monitors)
+  (ensure-pred gexp? rules)
   (ensure-pred string? focus-left-key)
   (ensure-pred string? focus-right-key)
   (ensure-pred string? focus-up-key)
@@ -62,69 +59,20 @@
     "Return a list of home services required for configuring monitors in dwl-guile."
     (when (get-value 'dwl-guile config)
       (list
-       (simple-service
-        'add-dwl-guile-monitor-config-patch
-        home-dwl-guile-service-type
-        (modify-dwl-guile
-         (config =>
-                 (home-dwl-guile-configuration
-                  (inherit config)
-                  (package
-                   (patch-dwl-guile-package dwl-guile
-                                            #:patches
-                                            (append
-                                             %engstrand-dwl-guile-patches
-                                             (list %patch-monitor-config
-                                                   %patch-focusmonpointer))))))))
-       (simple-service
-        'add-dwl-guile-monitor-rules
-        home-dwl-guile-service-type
-        (modify-dwl-guile-config
-         (config =>
-                 (dwl-config
-                  (inherit config)
-                  (monitor-rules
-                   (append monitors
-                           ;; The selected monitor rule is based on the order
-                           ;; of the rules in the list.
-                           (list (dwl-monitor-rule
-                                  (layout "tile")))))))))
        (when add-keybindings?
          (simple-service
-          'add-dwl-guile-keybindings
-          home-dwl-guile-service-type
-          (modify-dwl-guile-config
-           (config =>
-                   (dwl-config
-                    (inherit config)
-                    (keys
-                     (append
-                      (list
-                       (dwl-key
-                        (key focus-left-key)
-                        (action `(dwl:focus-monitor DIRECTION-LEFT)))
-                       (dwl-key
-                        (key focus-right-key)
-                        (action `(dwl:focus-monitor DIRECTION-RIGHT)))
-                       (dwl-key
-                        (key focus-up-key)
-                        (action `(dwl:focus-monitor DIRECTION-UP)))
-                       (dwl-key
-                        (key focus-down-key)
-                        (action `(dwl:focus-monitor DIRECTION-DOWN)))
-                       (dwl-key
-                        (key move-left-key)
-                        (action `(dwl:tag-monitor DIRECTION-LEFT)))
-                       (dwl-key
-                        (key move-right-key)
-                        (action `(dwl:tag-monitor DIRECTION-RIGHT)))
-                       (dwl-key
-                        (key move-up-key)
-                        (action `(dwl:tag-monitor DIRECTION-UP)))
-                       (dwl-key
-                        (key move-down-key)
-                        (action `(dwl:tag-monitor DIRECTION-DOWN))))
-                      (dwl-config-keys config)))))))))))
+          'add-dwl-guile-keybindings-and-monitor-rules
+          home-dwl-guile-extension
+          #~((bind 'keys #$focus-left-key (lambda () (dwl:focus-monitor 'DIRECTION-LEFT)))
+             (bind 'keys #$focus-right-key (lambda () (dwl:focus-monitor 'DIRECTION-RIGHT)))
+             (bind 'keys #$focus-up-key (lambda () (dwl:focus-monitor 'DIRECTION-UP)))
+             (bind 'keys #$focus-down-key (lambda () (dwl:focus-monitor 'DIRECTION-DOWN)))
+             (bind 'keys #$move-left-key (lambda () (dwl:tag-monitor 'DIRECTION-LEFT)))
+             (bind 'keys #$move-right-key (lambda () (dwl:tag-monitor 'DIRECTION-RIGHT)))
+             (bind 'keys #$move-up-key (lambda () (dwl:tag-monitor 'DIRECTION-UP)))
+             (bind 'keys #$move-down-key (lambda () (dwl:tag-monitor 'DIRECTION-DOWN)))
+
+             #$rules))))))
 
   (feature
    (name 'dwl-guile-monitor-config)

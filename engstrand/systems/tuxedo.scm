@@ -5,6 +5,7 @@
   #:use-module (engstrand features laptop)
   #:use-module (engstrand features display)
   #:use-module (engstrand features bluetooth)
+  #:use-module (guix gexp)
   #:use-module (dwl-guile home-service)
   #:use-module (rde features system)
   #:use-module (nongnu packages linux)
@@ -46,16 +47,14 @@
        (target (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))))
     (feature-bluetooth)
     (feature-dwl-guile-monitor-config
-     #:monitors
-     (list
-      (dwl-monitor-rule
-       (name "eDP-1")
-       (x 0)
-       (y 0)
-       (width 1920)
-       (height 1080)
-       (refresh-rate 60)
-       (adaptive-sync? #f))))
+     #:rules
+     #~((set-monitor-rules '((name "eDP-1")
+                             (x 0)
+                             (y 0)
+                             (width 1920)
+                             (height 1080)
+                             (refresh-rate 60)
+                             (adaptive-sync? #f)))))
     (feature-kanshi-autorandr
      #:profiles
      '((("Ancor Communications Inc MG248 G6LMQS123017" .
