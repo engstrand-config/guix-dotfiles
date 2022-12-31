@@ -5,6 +5,7 @@
   #:use-module (engstrand features bluetooth)
   #:use-module (engstrand features radio)
   #:use-module (rde features system)
+  #:use-module (guix gexp)
   #:use-module (gnu system file-systems)
   #:use-module (gnu bootloader)
   #:use-module (gnu bootloader grub)

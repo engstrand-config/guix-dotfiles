@@ -1,4 +1,5 @@
 (define-module (engstrand configs johan)
+  #:use-module (guix gexp)
   #:use-module (gnu services)
   #:use-module (rde features base)
   #:use-module (rde features gnupg)
@@ -55,15 +56,11 @@
      (list
       (simple-service
        'change-dwl-guile-borderpx
-       home-dwl-guile-service-type
-       (modify-dwl-guile-config
-        (config =>
-                (dwl-config
-                 (inherit config)
-                 (smart-gaps? #f)
-                 (smart-borders? #f)
-                 (gaps-horizontal-outer 20)
-                 (gaps-vertical-outer 20)
-                 (border-px 2))))))))
+       home-dwl-guile-extension
+       #~((set 'smart-gaps? #f)
+          (set 'smart-borders? #f)
+          (set 'gaps-horizontal-outer 20)
+          (set 'gaps-vertical-outer 20)
+          (set 'border-px 2))))))
    %engstrand-emacs-base-features
    %engstrand-base-features))
