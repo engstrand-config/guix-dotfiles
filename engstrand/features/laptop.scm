@@ -62,8 +62,8 @@
      (when (get-value 'dwl-guile config)
        (simple-service
         'set-natural-scrolling-in-dwl-guile
-        home-dwl-guile-extension
-        #~((set 'natural-scrolling? #$natural-scrolling?))))))
+        home-dwl-guile-service-type
+        `((setq natural-scrolling? ,natural-scrolling?))))))
 
   (feature
    (name 'laptop-natural-scrolling)
@@ -137,9 +137,11 @@
              (change (string-append (number->string step) "%")))
          (simple-service
           'add-dwl-guile-brightness-keys
-          home-dwl-guile-extension
-          #~((bind 'keys #$decrease-brightness-key (lambda () (dwl:shcmd #$bin "s" #$(string-append change "-"))))
-             (bind 'keys #$increase-brightness-key (lambda () (dwl:shcmd #$bin "s" #$(string-append "+" change))))))))))
+          home-dwl-guile-service-type
+          `((set-keys ,decrease-brightness-key
+                      (lambda () (dwl:shcmd ,bin "s" ,(string-append change "-")))
+                      ,increase-brightness-key
+                      (lambda () (dwl:shcmd ,bin "s" ,(string-append "+" change))))))))))
 
   (feature
    (name 'laptop-monitor-brightness)

@@ -131,5 +131,5 @@
    (feature-wayland-wlsunset)
    (feature-wayland-screenshot)
    (feature-wayland-swaylock)
-   (feature-statusbar-dtao-guile)
-   (feature-wayland-dwl-guile)))
+   (feature-wayland-dwl-guile)
+   (feature-statusbar-dtao-guile)))

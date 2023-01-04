@@ -33,46 +33,19 @@
 
 (define* (feature-dwl-guile-monitor-config
           #:key
-          (rules #~())
-          (focus-left-key "s-<left>")
-          (focus-right-key "s-<right>")
-          (focus-up-key "s-<up>")
-          (focus-down-key "s-<down>")
-          (move-left-key "S-s-<left>")
-          (move-right-key "S-s-<right>")
-          (move-up-key "S-s-<up>")
-          (move-down-key "S-s-<down>")
-          (add-keybindings? #t))
+          (rules '()))
   "Configure monitor settings for dwl-guile."
 
-  (ensure-pred gexp? rules)
-  (ensure-pred string? focus-left-key)
-  (ensure-pred string? focus-right-key)
-  (ensure-pred string? focus-up-key)
-  (ensure-pred string? focus-down-key)
-  (ensure-pred string? move-left-key)
-  (ensure-pred string? move-right-key)
-  (ensure-pred string? move-up-key)
-  (ensure-pred string? move-down-key)
+  (ensure-pred list? rules)
 
   (define (get-home-services config)
     "Return a list of home services required for configuring monitors in dwl-guile."
     (when (get-value 'dwl-guile config)
       (list
-       (when add-keybindings?
-         (simple-service
-          'add-dwl-guile-keybindings-and-monitor-rules
-          home-dwl-guile-extension
-          #~((bind 'keys #$focus-left-key (lambda () (dwl:focus-monitor 'DIRECTION-LEFT)))
-             (bind 'keys #$focus-right-key (lambda () (dwl:focus-monitor 'DIRECTION-RIGHT)))
-             (bind 'keys #$focus-up-key (lambda () (dwl:focus-monitor 'DIRECTION-UP)))
-             (bind 'keys #$focus-down-key (lambda () (dwl:focus-monitor 'DIRECTION-DOWN)))
-             (bind 'keys #$move-left-key (lambda () (dwl:tag-monitor 'DIRECTION-LEFT)))
-             (bind 'keys #$move-right-key (lambda () (dwl:tag-monitor 'DIRECTION-RIGHT)))
-             (bind 'keys #$move-up-key (lambda () (dwl:tag-monitor 'DIRECTION-UP)))
-             (bind 'keys #$move-down-key (lambda () (dwl:tag-monitor 'DIRECTION-DOWN)))
-
-             #$rules))))))
+       (simple-service
+        'add-dwl-guile-monitor-rules
+        home-dwl-guile-service-type
+        rules))))
 
   (feature
    (name 'dwl-guile-monitor-config)
