@@ -231,7 +231,8 @@
                         (use-modules (ice-9 popen))
                         (display "Reloading qutebrowser to update theme...\n")
                         (let* ((dir (getenv "XDG_RUNTIME_DIR"))
-                               (files (length (scandir (string-append dir "/qutebrowser")))))
+                               (qutefiles (scandir (string-append dir "/qutebrowser")))
+                               (files (if qutefiles (length qutefiles) 0)))
                           (when (> files 2) ; FIFO file is available, instance is running
                             (system* #$(file-append package "/bin/qutebrowser")
                                      ":config-source"
@@ -244,8 +245,8 @@
           home-dwl-guile-service-type
           `((set-keys ,open-key
                       (lambda ()
-                        (dwl:spawn (action ,(file-append package "/bin/qutebrowser")
-                                           "--qt-arg" "no-sandbox" "true")))))))))
+                        (dwl:spawn ,(file-append package "/bin/qutebrowser")
+                                   "--qt-arg" "no-sandbox" "true"))))))))
 
     (feature
      (name 'qutebrowser)
