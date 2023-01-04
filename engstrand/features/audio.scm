@@ -38,19 +38,19 @@
      (when (and add-keybindings? (get-value 'dwl-guile config))
        (simple-service
         'add-pamixer-dwl-keybindings
-        home-dwl-guile-extension
-        #~((bind 'keys #$increase-volume-key
-                 (lambda ()
-                   (dwl:shcmd #$command
-                              "--unmute"
-                              "--increase" #$(number->string step))))
-           (bind 'keys #$decrease-volume-key
-                 (lambda ()
-                   (dwl:shcmd #$command
-                              "--unmute"
-                              "--decrease" #$(number->string step))))
-           (bind 'keys #$mute-volume-key
-                 (lambda () (dwl:shcmd #$command "--toggle-mute"))))))))
+        home-dwl-guile-service-type
+        `((set-keys ,increase-volume-key
+                    (lambda ()
+                      (dwl:shcmd ,command
+                                 "--unmute"
+                                 "--increase" ,(number->string step)))
+                    ,decrease-volume-key
+                    (lambda ()
+                      (dwl:shcmd ,command
+                                 "--unmute"
+                                 "--decrease" ,(number->string step)))
+                    ,mute-volume-key
+                    (lambda () (dwl:shcmd ,command "--toggle-mute"))))))))
 
   (feature
    (name 'pulseaudio-control)

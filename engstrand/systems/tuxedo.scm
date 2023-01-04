@@ -48,13 +48,12 @@
     (feature-bluetooth)
     (feature-dwl-guile-monitor-config
      #:rules
-     #~((set-monitor-rules '((name "eDP-1")
-                             (x 0)
-                             (y 0)
-                             (width 1920)
-                             (height 1080)
-                             (refresh-rate 60)
-                             (adaptive-sync? #f)))))
+     `((set-monitor-rules
+        '((name "eDP-1")
+          (width 1920)
+          (height 1080)
+          (refresh-rate 60)
+          (adaptive-sync? #f)))))
     (feature-kanshi-autorandr
      #:profiles
      '((("Ancor Communications Inc MG248 G6LMQS123017" .

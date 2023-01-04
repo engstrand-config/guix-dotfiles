@@ -32,8 +32,9 @@
            (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03")))))
    (feature-dwl-guile-monitor-config
     #:rules
-    #~((set-monitor-rules '((name "DP-1")
-                            (width 2560)
-                            (height 1440)
-                            (refresh-rate 60)
-                            (adaptive-sync? #f)))))))
+    `((set-monitor-rules
+       '((name "DP-1")
+         (width 2560)
+         (height 1440)
+         (refresh-rate 60)
+         (adaptive-sync? #f)))))))

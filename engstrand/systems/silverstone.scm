@@ -47,8 +47,9 @@
       (dependencies %mapped-devices))))
    (feature-dwl-guile-monitor-config
     #:rules
-    #~((set-monitor-rules '((name "DP-2")
-                            (width 2560)
-                            (height 1440)
-                            (refresh-rate 240)
-                            (adaptive-sync? #t)))))))
+    `((set-monitor-rules
+       '((name "DP-2")
+         (width 2560)
+         (height 1440)
+         (refresh-rate 240)
+         (adaptive-sync? #t)))))))

@@ -63,8 +63,8 @@
        (when (and default-browser? (get-value 'dwl-guile config))
          (simple-service
           'add-firefox-dwl-keybindings
-          home-dwl-guile-extension
-          #~((bind 'keys #$open-key (lambda () (dwl:spawn #$spawn-parameters)))))))))
+          home-dwl-guile-service-type
+          `((set-keys ,open-key (lambda () (dwl:spawn ,spawn-parameters)))))))))
 
   (feature
    (name 'firefox)
@@ -241,11 +241,11 @@
        (when (and default-browser? (get-value 'dwl-guile config))
          (simple-service
           'add-qutebrowser-dwl-keybindings
-          home-dwl-guile-extension
-          #~((bind 'keys #$open-key
-                   (lambda ()
-                     (dwl:spawn (action #$(file-append package "/bin/qutebrowser")
-                                        "--qt-arg" "no-sandbox" "true")))))))))
+          home-dwl-guile-service-type
+          `((set-keys ,open-key
+                      (lambda ()
+                        (dwl:spawn (action ,(file-append package "/bin/qutebrowser")
+                                           "--qt-arg" "no-sandbox" "true")))))))))
 
     (feature
      (name 'qutebrowser)
