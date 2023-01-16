@@ -33,8 +33,8 @@
    (feature-dwl-guile-monitor-config
     #:rules
     `((set-monitor-rules
-       '((name "DP-1")
-         (width 2560)
-         (height 1440)
-         (refresh-rate 60)
-         (adaptive-sync? #f)))))))
+       '((name . "DP-1")
+         (width . 2560)
+         (height . 1440)
+         (refresh-rate . 60)
+         (adaptive-sync? . #f)))))))

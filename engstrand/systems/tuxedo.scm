@@ -49,11 +49,11 @@
     (feature-dwl-guile-monitor-config
      #:rules
      `((set-monitor-rules
-        '((name "eDP-1")
-          (width 1920)
-          (height 1080)
-          (refresh-rate 60)
-          (adaptive-sync? #f)))))
+        '((name . "eDP-1")
+          (width . 1920)
+          (height . 1080)
+          (refresh-rate . 60)
+          (adaptive-sync? . #f)))))
     (feature-kanshi-autorandr
      #:profiles
      '((("Ancor Communications Inc MG248 G6LMQS123017 (HDMI-A-1)" .

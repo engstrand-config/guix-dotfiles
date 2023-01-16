@@ -44,15 +44,18 @@
             %engstrand-dwl-guile-home-configuration))
 
 (define %engstrand-dwl-guile-patches
-  (list %patch-xwayland))
-;; %patch-swallow
-;; %patch-movestack
-;; %patch-attachabove
-;; %patch-focusmonpointer
-;; %patch-monitor-config))
+  (list %patch-xwayland
+        %patch-swallow
+        %patch-movestack
+        %patch-attachabove
+        %patch-focusmonpointer
+        %patch-monitor-config))
 
 (define %engstrand-dwl-guile-config
-  `((setq border-px 2)))
+  `((setq border-px 2
+          sloppy-focus? #t
+          smart-gaps? #t
+          smart-borders? #t)))
 
 (define %engstrand-dwl-guile-home-configuration
   (home-dwl-guile-configuration
@@ -174,7 +177,7 @@
           (package foot)
           (open-key "s-<return>")
           (set-default-terminal? #t)
-          (swallow-clients? #t)) ;; TODO: Add swallow patch automatically if #t?
+          (swallow-clients? #t))
   "Setup foot terminal."
 
   (ensure-pred package? package)
@@ -294,7 +297,6 @@
             `((set-keys "s-<return>" (lambda () (dwl:spawn ,(file-append foot "/bin/foot"))))
               (set-rules '((id . "foot")
                            (alpha . ,(palette 'alpha))
-                           (swallow? . ,swallow-clients?)
                            (terminal? . ,swallow-clients?)))))))))
 
     (feature
