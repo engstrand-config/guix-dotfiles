@@ -7,7 +7,6 @@
   #:use-module (rde features base)
   #:use-module (rde features linux)
   #:use-module (rde features fontutils)
-  #:use-module (rde features networking)
   #:use-module (rde features version-control)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
@@ -29,6 +28,7 @@
   #:use-module (engstrand features documents)
   #:use-module (engstrand features statusbar)
   #:use-module (engstrand features messaging)
+  #:use-module (engstrand features networking)
   #:use-module (engstrand features version-control)
   #:export (
             %engstrand-base-system-packages
