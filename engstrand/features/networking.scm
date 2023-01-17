@@ -14,4 +14,4 @@
 
   (feature
    (name 'engstrand-networking)
-   (system-services-getter get-system-services))))
+   (system-services-getter get-system-services)))
