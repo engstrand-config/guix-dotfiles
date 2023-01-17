@@ -6,6 +6,7 @@
   #:use-module (rde features ssh)
   #:use-module (rde features base)
   #:use-module (rde features linux)
+  #:use-module (rde features shellutils)
   #:use-module (rde features fontutils)
   #:use-module (rde features version-control)
   #:use-module (dwl-guile patches)
