@@ -19,13 +19,19 @@
   (define (get-home-services config)
     "Return a list of home services required by zsh"
     (list
-     (service home-zsh-autosuggestions-service-type
-              zsh-autosuggestions)
-     (service home-zsh-service-type
-              (home-zsh-configuration
-               ;; TODO: Use absolute paths
-               (zshrc `(,(slurp-file-like (local-file "../files/zshrc"))))
-               (zprofile `(,(slurp-file-like (local-file "../files/shell-profile"))))))))
+     (service home-zsh-direnv-service-type)
+     (simple-service
+      'setup-zsh-autosuggestions
+      home-zsh-autosuggestions-service-type
+      zsh-autosuggestions)
+     (simple-service
+      'setup-zsh-config
+      home-zsh-service-type
+      (home-zsh-extension
+       ;; TODO: Use absolute paths
+       (zshrc `(,(slurp-file-like (local-file "../files/zshrc"))))
+       (zprofile `(,(slurp-file-like (local-file "../files/shell-profile"))))))))
+
   (feature
    (name 'zsh)
    (values `((login-shell . ,(file-append zsh "/bin/zsh"))))
