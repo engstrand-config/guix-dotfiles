@@ -5,6 +5,7 @@
   #:use-module (rde features xdg)
   #:use-module (rde features ssh)
   #:use-module (rde features base)
+  #:use-module (rde features shells)
   #:use-module (rde features linux)
   #:use-module (rde features shellutils)
   #:use-module (rde features fontutils)
@@ -81,6 +82,7 @@
    (feature-pipewire)
    (feature-pulseaudio-control)
    (feature-backlight)
+   (feature-bash)
    (feature-zsh)
    (feature-ssh)
    (feature-xdg
