@@ -9,8 +9,6 @@
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
-  #:use-module (dwl-guile configuration)
-  #:use-module (dwl-guile configuration records)
   #:use-module (dtao-guile home-service)
   #:use-module (engstrand utils)
   #:export (

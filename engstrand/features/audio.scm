@@ -9,7 +9,6 @@
   #:use-module (engstrand utils)
   #:use-module (engstrand packages wayland)
   #:use-module (dwl-guile home-service)
-  #:use-module (dwl-guile configuration)
   #:export (feature-pulseaudio-control))
 
 (define* (feature-pulseaudio-control

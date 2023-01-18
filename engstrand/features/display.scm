@@ -12,8 +12,6 @@
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
-  #:use-module (dwl-guile configuration)
-  #:use-module (dwl-guile configuration records)
   #:use-module (engstrand utils)
   #:use-module (engstrand features wayland)
   #:export (

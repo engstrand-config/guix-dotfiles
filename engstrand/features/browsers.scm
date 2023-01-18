@@ -9,7 +9,6 @@
   #:use-module (nongnu packages mozilla)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service)
-  #:use-module (dwl-guile configuration)
   #:use-module (gnu packages web-browsers)
   #:use-module (farg config)
   #:use-module (farg colorscheme)

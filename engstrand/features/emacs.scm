@@ -1,7 +1,6 @@
 (define-module (engstrand features emacs)
   #:use-module (guix gexp)
   #:use-module (dwl-guile home-service)
-  #:use-module (dwl-guile configuration)
   #:use-module (farg colorscheme)
   #:use-module (farg home-service)
   #:use-module (engstrand utils)

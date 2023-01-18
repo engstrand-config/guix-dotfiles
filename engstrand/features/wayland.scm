@@ -26,8 +26,6 @@
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
-  #:use-module (dwl-guile configuration)
-  #:use-module (dwl-guile configuration default-config)
   #:export (
             feature-wayland-dwl-guile
             feature-wayland-bemenu
