@@ -48,7 +48,7 @@
 
   (define (get-home-services config)
     "Return a list of home services required by Firefox."
-    (let ((package (if (get-value 'wayland config) firefox/wayland-95.0.2 firefox)))
+    (let ((package (if (get-value 'wayland config) firefox/wayland firefox)))
       (make-service-list
        (if default-browser?
            (simple-service
