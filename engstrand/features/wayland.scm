@@ -27,7 +27,6 @@
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
   #:export (
-            feature-wayland-dwl-guile
             feature-wayland-bemenu
             feature-wayland-bemenu-power
             feature-wayland-foot
@@ -35,69 +34,7 @@
             feature-wayland-swaybg
             feature-wayland-wlsunset
             feature-wayland-screenshot
-            feature-wayland-swaylock
-
-            %engstrand-dwl-guile-patches
-            %engstrand-dwl-guile-config
-            %engstrand-dwl-guile-home-configuration))
-
-(define %engstrand-dwl-guile-patches
-  (list %patch-xwayland
-        %patch-swallow
-        %patch-movestack
-        %patch-attachabove
-        %patch-focusmonpointer
-        %patch-monitor-config))
-
-(define %engstrand-dwl-guile-config
-  `((setq border-px 2
-          sloppy-focus? #t
-          smart-gaps? #t
-          smart-borders? #t)))
-
-(define %engstrand-dwl-guile-home-configuration
-  (home-dwl-guile-configuration
-   (package
-    (patch-dwl-guile-package dwl-guile
-                             #:patches %engstrand-dwl-guile-patches))
-   (config (list %engstrand-dwl-guile-config))))
-
-;; Checks if SYMBOL corresponds to a patch that is/will
-;; be applied to dwl-guile, based on the feature values in CONFIG.
-;; SYMBOL should be the name of the patch, not including the ".patch" extension.
-;; I.e. @code{(has-dwl-patch? 'xwayland config)}.
-(define (has-dwl-patch? symbol config)
-  (let ((patch-name (string-append (symbol->string symbol) ".patch")))
-    (find (lambda (p) (equal? patch-name (local-file-name p)))
-          (get-value 'dwl-guile-patches config))))
-
-(define* (feature-wayland-dwl-guile
-          #:key
-          (dwl-guile-configuration %engstrand-dwl-guile-home-configuration))
-  "Setup dwl-guile."
-
-  (ensure-pred home-dwl-guile-configuration? dwl-guile-configuration)
-
-  (lambda (fconfig palette)
-    (define (get-home-services config)
-      "Return a list of home services required by dwl."
-      (list
-       (service home-dwl-guile-service-type
-                dwl-guile-configuration)
-       (simple-service
-        'set-dwl-colorscheme-dwl
-        home-dwl-guile-service-type
-        `((setq root-color ,(palette 'background)
-                border-color ,(offset (palette 'background) 10)
-                focus-color ,(palette 'primary)
-                lockscreen-color ,(with-alpha (palette 'background) 90))))))
-
-    (feature
-     (name 'wayland-dwl-guile)
-     (values `((wayland . #t)
-               (dwl-guile . #t)
-               (dwl-guile-patches . ,%engstrand-dwl-guile-patches)))
-     (home-services-getter get-home-services))))
+            feature-wayland-swaylock))
 
 (define* (feature-wayland-mako
           #:key
