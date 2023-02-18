@@ -26,7 +26,7 @@
   (ensure-pred string? mute-volume-key)
   (ensure-pred boolean? add-keybindings?)
 
-  (define command (list (file-append pamixer "/bin/pamixer")))
+  (define command (file-append pamixer "/bin/pamixer"))
 
   (define (get-home-services config)
     (make-service-list
