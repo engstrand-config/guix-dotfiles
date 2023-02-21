@@ -10,6 +10,7 @@
   #:use-module (rde features system)
   #:use-module (nongnu packages linux)
   #:use-module (nongnu system linux-initrd)
+  #:use-module (gnu packages linux)
   #:use-module (gnu system file-systems)
   #:use-module (gnu system mapped-devices))
 
@@ -22,8 +23,10 @@
      #:kernel linux
      #:firmware (list linux-firmware)
      #:kernel-arguments %engstrand-kernel-arguments
-     #:kernel-loadable-modules (kernel-modules->list (list tuxedo-keyboard-module)
-                                                     linux))
+     #:kernel-loadable-modules
+     (append (list v4l2loopback-linux-module)
+             (kernel-modules->list (list tuxedo-keyboard-module)
+                                   linux)))
     (feature-host-info
      #:host-name "tuxedo"
      #:timezone %engstrand-timezone
