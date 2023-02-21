@@ -38,8 +38,8 @@
 (define-public %engstrand-initial-os
   (operating-system
    (host-name "engstrand")
-   (locale  %engstrand-locale)
-   (timezone  %engstrand-timezone)
+   (locale %engstrand-locale)
+   (timezone %engstrand-timezone)
    (kernel linux)
    (firmware (list linux-firmware))
    (initrd microcode-initrd)
@@ -50,6 +50,7 @@
                 (targets '("/boot/efi"))))
    (services '())
    (file-systems %base-file-systems)
+   (sudoers-file #f)
    (issue "This is the GNU/Engstrand system. Welcome.\n")))
 
 (define-public %engstrand-system-base-features
