@@ -125,7 +125,8 @@
    (feature-obs)
    (feature-imv)
    (feature-neovim)
-   (feature-zathura)
+   (feature-zathura
+    #:default-reader? #t)
    (feature-signal)
    (feature-dwl-guile)
    (feature-wayland-swaybg)
