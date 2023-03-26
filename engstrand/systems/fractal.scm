@@ -46,17 +46,10 @@
    (feature-dwl-guile-monitor-config
     #:rules
     `((set-monitor-rules
-       '((name . "DP-1")
-         (x . 1920)
-         (y . 0)
-         (width . 2560)
-         (height . 1440)
-         (refresh-rate . 144)
-         (adaptive-sync? . #t))
        '((name "DP-3")
-         (x . 0)
-         (y . 200)
          (width . 1920)
          (height . 1080)
          (refresh-rate . 144)
-         (adaptive-sync? . #t)))))))
+         ;; Adaptive sync is broken on this display.
+         ;; Enabling it will result in a black screen.
+         (adaptive-sync? . #f)))))))
