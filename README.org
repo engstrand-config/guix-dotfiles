@@ -1,7 +1,7 @@
 * The GNU/Linux+Engstrand system
 
 This is our opinionated, minimalist GNU Guix configuration.
-It features [[https://sr.ht/abcdw/rde/][ =rde= ]], Emacs (evil mode) and various Wayland applications.
+It features [[https://sr.ht/abcdw/~rde/][=rde=]], Emacs (evil mode) and various Wayland applications.
 
 [[./images/desktop.jpeg]]
 [[./images/apps.jpeg]]
