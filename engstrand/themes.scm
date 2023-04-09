@@ -15,20 +15,24 @@
    (theme
     (farg-theme
      (light? #t)
+     (alpha 0.98)
      (fg "#000000")
      (bg "#FFFFFF")
      (bg-alt "#F0F0F0")
-     (accent "#0031A9")))))
+     (accent "#0031A9")
+     (complementary "#731C52")))))
 
 (define engstrand-theme-dark
   (farg-source
    (theme
     (farg-theme
      (light? #f)
+     (alpha 0.96)
      (fg "#FFFFFF")
      (bg "#000000")
      (bg-alt "#1E1E1E")
-     (accent "#338FFF")))))
+     (accent "#338FFF")
+     (complementary "#CF7FA7")))))
 
 (define (engstrand-farg-palette palette)
   (define red
