@@ -2,7 +2,7 @@
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
   #:use-module (engstrand features display)
-  #:use-module (engstrand features bluetooth)
+  #:use-module (rde features bluetooth)
   #:use-module (rde features system)
   #:use-module (guix gexp)
   #:use-module (gnu bootloader)
