@@ -104,8 +104,8 @@
                     (cursor text)
                     (background (palette 'bg))
                     (background-offset (palette 'bg-alt))
-                    (primary (palette 'accent))
-                    (primary-text (palette 'accent-text))
+                    (primary (palette 'accent-0))
+                    (primary-text (palette 'accent-0-text))
                     (primary-overlay-text
                      (farg:make-readable primary primary))
                     (disabled-text

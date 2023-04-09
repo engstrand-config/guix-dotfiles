@@ -57,7 +57,7 @@
   (ensure-pred boolean? repl?)
   (ensure-pred string? repl-key)
 
-  (lambda (fconfig palette)
+  (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by dwl-guile."
       (list
@@ -67,7 +67,7 @@
         home-dwl-guile-service-type
         `((setq root-color ,(palette 'bg)
                 border-color ,(farg:offset (palette 'bg) 10)
-                focus-color ,(palette 'accent)
+                focus-color ,(palette 'accent-0)
                 lockscreen-color ,(farg:with-alpha (palette 'bg) 90))))
        (when repl?
          (simple-service

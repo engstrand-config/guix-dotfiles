@@ -30,8 +30,8 @@
          (render `(cond
                    ((dtao:selected-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
-                             (palette 'accent)
-                             (farg:make-readable (palette 'accent) (palette 'accent))
+                             (palette 'accent-0)
+                             (farg:make-readable (palette 'accent-0) (palette 'accent-0))
                              str))
                    ((dtao:urgent-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
@@ -70,7 +70,7 @@
   ;; Statusbar height
   (define height 25)
 
-  (lambda (fconfig palette)
+  (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by dtao-guile."
       (require-value 'font-monospace config)
