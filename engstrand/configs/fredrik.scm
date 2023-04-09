@@ -9,6 +9,7 @@
   #:use-module (farg source pywal)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
+  #:use-module (engstrand themes)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path
   #:use-module (engstrand features base)
   #:use-module (engstrand features xorg)
@@ -23,10 +24,7 @@
   #:use-module (engstrand features virtualization)
   #:use-module (engstrand features wayland))
 
-(define-public %user-theme
-  (farg:generator-pywal (get-wallpaper-path "f1/9w30A0D.jpg")
-                        #:light? #f
-                        #:alpha 0.96))
+(define-public %user-theme engstrand-theme-dark)
 
 (define-public %user-features
   (append
