@@ -10,12 +10,7 @@
   #:use-module (gnu bootloader)
   #:use-module (gnu bootloader grub)
   #:use-module (gnu system mapped-devices)
-  #:use-module (nongnu packages linux)
-  )
-
-(define-public %system-swap
-  (swap-space
-   (target (uuid "2055b78a-6584-490e-a51f-9ddc1195fc94"))))
+  #:use-module (nongnu packages linux))
 
 (define-public %system-features
   (append
@@ -23,7 +18,7 @@
     (feature-kernel
      #:kernel linux
      #:firmware (list linux-firmware)
-     #:kernel-arguments (append %engstrand-kernel-arguments ))
+     #:kernel-arguments %engstrand-kernel-arguments)
     (feature-host-info
      #:host-name "kommunbook"
      #:timezone %engstrand-timezone
@@ -41,7 +36,11 @@
        (device
         (uuid "dd627ff0-9b52-4396-b67c-ddc81c5c6d38"
               'ext4))
-       (type "ext4"))))
+       (type "ext4")))
+     #:swap-devices
+     (list
+      (swap-space
+       (target (uuid "2055b78a-6584-490e-a51f-9ddc1195fc94")))))
     (feature-radio
      #:rtl-sdr? #t)
     (feature-bluetooth))
