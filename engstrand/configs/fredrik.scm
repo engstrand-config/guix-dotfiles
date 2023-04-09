@@ -6,7 +6,7 @@
   #:use-module (gnu services)
   #:use-module (gnu services databases)
   #:use-module (gnu home-services ssh) ;; rde home-service
-  #:use-module (farg sources pywal)
+  #:use-module (farg source pywal)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path

@@ -5,7 +5,7 @@
   #:use-module (rde features gnupg)
   #:use-module (rde features bittorrent)
   #:use-module (rde features mail)
-  #:use-module (farg sources pywal)
+  #:use-module (farg source pywal)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path

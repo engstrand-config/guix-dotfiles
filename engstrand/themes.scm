@@ -3,7 +3,7 @@
   #:use-module (guix gexp)
   #:use-module (farg theme)
   #:use-module (farg colors)
-  #:use-module (farg sources)
+  #:use-module (farg source)
   #:use-module (engstrand wallpapers)
   #:export (
             engstrand-theme-light
