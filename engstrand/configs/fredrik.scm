@@ -7,6 +7,7 @@
   #:use-module (gnu services databases)
   #:use-module (gnu home-services ssh) ;; rde home-service
   #:use-module (farg source pywal)
+  #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand themes)
@@ -53,7 +54,18 @@
     (feature-zathura)
     (feature-sioyek
      #:default-reader? #t)
-    (feature-kdeconnect))
+    (feature-kdeconnect)
+    (feature-custom-services
+     #:home-services
+     (list
+      (simple-service
+       'change-dwl-guile-borderpx
+       home-dwl-guile-service-type
+       `((setq gaps-oh 0
+               gaps-ov 0
+               gaps-ih 10
+               gaps-iv 10
+               border-px 1))))))
    %engstrand-emacs-base-features
    (modify-features %engstrand-base-features
                     (delete 'zathura)
