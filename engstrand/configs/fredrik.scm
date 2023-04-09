@@ -61,8 +61,8 @@
       (simple-service
        'change-dwl-guile-borderpx
        home-dwl-guile-service-type
-       `((setq gaps-oh 0
-               gaps-ov 0
+       `((setq gaps-oh 10
+               gaps-ov 10
                gaps-ih 10
                gaps-iv 10
                border-px 1))))))
