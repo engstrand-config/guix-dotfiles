@@ -5,6 +5,7 @@
   #:use-module (rde features gnupg)
   #:use-module (rde features bittorrent)
   #:use-module (rde features mail)
+  #:use-module (farg sources pywal)
   #:use-module (engstrand utils)
   #:use-module (engstrand configs)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path
@@ -16,14 +17,13 @@
   #:use-module (engstrand features theming)
   #:use-module (engstrand features browsers)
   #:use-module (engstrand features virtualization)
-  #:use-module (farg config)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service))
 
-(define-public %user-colorscheme
-  (farg-config
-   (inherit %engstrand-default-farg-config)
-   (wallpaper (get-wallpaper-path "nature/jack-b-8Wqm1W59Baw-unsplash.jpg"))))
+(define-public %user-theme
+  (farg:generator-pywal (get-wallpaper-path "nature/jack-b-8Wqm1W59Baw-unsplash.jpg")
+                        #:light? #f
+                        #:alpha 0.96))
 
 (define email-engstrand-primary "johan@engstrand.nu")
 

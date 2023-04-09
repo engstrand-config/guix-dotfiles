@@ -19,9 +19,8 @@
   #:use-module (engstrand utils bemenu-prompt)
   #:use-module (engstrand systems)
   #:use-module (engstrand packages wayland)
-  #:use-module (farg config)
   #:use-module (farg reload)
-  #:use-module (farg colorscheme)
+  #:use-module (farg colors)
   #:use-module (farg home-service)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
@@ -47,7 +46,7 @@
   (ensure-pred string? dismiss-all-key)
   (ensure-pred boolean? add-keybindings?)
 
-  (lambda (fconfig palette)
+  (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by mako"
       (require-value 'font-monospace config)
@@ -64,11 +63,11 @@
                         `(("font"
                            . ,(font->string 'pango 'font-sans config
                                             #:size 11))
-                          ("background-color" . ,(palette 'background))
-                          ("text-color" . ,(palette 'text))
+                          ("background-color" . ,(palette 'bg))
+                          ("text-color" . ,(palette 'fg))
                           ("width" . 370)
                           ("height" . 100)
-                          ("border-color" . ,(offset (palette 'background) 25))
+                          ("border-color" . ,(farg:offset (palette 'bg) 25))
                           ("border-size" . 1)
                           ("border-radius" . 0)
                           ("margin" . 5)
@@ -84,16 +83,10 @@
        (simple-service
         'reload-mako-config-on-farg-activation
         home-farg-service-type
-        (modify-farg-config
-         (config =>
-                 (farg-config
-                  (inherit config)
-                  (activation-commands
-                   (cons
-                    #~(begin
-                        (display "Reloading mako configuration...\n")
-                        (system* #$(file-append mako "/bin/makoctl") "reload"))
-                    (farg-config-activation-commands config)))))))
+        (list
+         #~(begin
+             (display "Reloading mako configuration...\n")
+             (system* #$(file-append mako "/bin/makoctl") "reload"))))
        (when (and add-keybindings? (get-value 'dwl-guile config))
          (simple-service
           'add-mako-dwl-keybindings
@@ -127,22 +120,24 @@
 
       ;; Terminal color overrides for the default pywal colors.
       (define color-overrides
-        `((0 . ,(palette '0-text))
-          (1 . ,(palette '1-text))
-          (2 . ,(palette '2-text))
-          (3 . ,(palette '3-text))
-          (4 . ,(palette '4-text))
-          (5 . ,(palette '5-text))
-          (6 . ,(palette '6-text))
-          (7 . ,(palette '7-text))
-          (8 . ,(brighten (palette '0-text) 10))
-          (9 . ,(brighten (palette '1-text) 10))
-          (10 . ,(brighten (palette '2-text) 10))
-          (11 . ,(brighten (palette '3-text) 10))
-          (12 . ,(brighten (palette '4-text) 10))
-          (13 . ,(brighten (palette '5-text) 10))
-          (14 . ,(brighten (palette '6-text) 10))
-          (15 . ,(brighten (palette '7-text) 10))))
+        (let ((accent-text (palette 'accent-text))
+               (comp-text (palette 'complementary-text)))
+        `((0 . ,accent-text)
+          (1 . ,comp-text)
+          (2 . ,accent-text)
+          (3 . ,comp-text)
+          (4 . ,accent-text)
+          (5 . ,comp-text)
+          (6 . ,accent-text)
+          (7 . ,comp-text)
+          (8 . ,(farg:brighten accent-text 10))
+          (9 . ,(farg:brighten comp-text 10))
+          (10 . ,(farg:brighten accent-text 10))
+          (11 . ,(farg:brighten comp-text 10))
+          (12 . ,(farg:brighten accent-text 10))
+          (13 . ,(farg:brighten comp-text 10))
+          (14 . ,(farg:brighten accent-text 10))
+          (15 . ,(farg:brighten comp-text 10)))))
 
       (let ((has-dwl-guile? (get-value 'dwl-guile config)))
         (make-service-list
@@ -163,8 +158,8 @@
 
                             ("[colors]")
                             ("alpha" . ,(palette 'alpha))
-                            ("foreground" . ,(strip-hex (palette 'text)))
-                            ("background" . ,(strip-hex (palette 'background)))
+                            ("foreground" . ,(strip-hex (palette 'fg)))
+                            ("background" . ,(strip-hex (palette 'bg)))
                             ("regular0" . ,(strip-hex (assoc-ref color-overrides 0)))
                             ("regular1" . ,(strip-hex (assoc-ref color-overrides 1)))
                             ("regular2" . ,(strip-hex (assoc-ref color-overrides 2)))
@@ -215,16 +210,10 @@
          (simple-service
           'reload-open-foot-instances-on-farg-activation
           home-farg-service-type
-          (modify-farg-config
-           (config =>
-                   (farg-config
-                    (inherit config)
-                    (activation-commands
-                     (cons
-                      #~(begin
-                          (display "Reloading theme in open foot instances...\n")
-                          #$(reload-terminal-colors palette color-overrides))
-                      (farg-config-activation-commands config)))))))
+          (list
+           #~(begin
+               (display "Reloading theme in open foot instances...\n")
+               #$(reload-terminal-colors palette color-overrides))))
          (when has-dwl-guile?
            (simple-service
             'set-as-default-terminal-in-dwl-guile
@@ -247,13 +236,8 @@
   (ensure-pred maybe-string? path)
   (ensure-pred boolean? auto-start?)
 
-  (lambda (fconfig palette)
-    (define wallpaper-path
-      (let ((colorscheme (home-farg-configuration-colorscheme fconfig)))
-        (match path
-          (#f (colorscheme-wallpaper colorscheme))
-          (else path))))
-
+  (lambda (_ palette)
+    (define wallpaper-path (palette 'wallpaper))
     (define user-wallpaper-path
       (string-append (getenv "HOME") "/.config/wallpaper.jpg"))
 
@@ -274,18 +258,12 @@
            (simple-service
             'reload-wallpaper-on-farg-activation
             home-farg-service-type
-            (modify-farg-config
-             (config =>
-                     (farg-config
-                      (inherit config)
-                      (activation-commands
-                       (cons
-                        #~(begin
-                            (display "Reloading swaybg to update wallpaper...\n")
-                            (with-output-to-file "/dev/null"
-                              (lambda ()
-                                (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg"))))
-                        (farg-config-activation-commands config))))))))
+            (list
+             #~(begin
+                 (display "Reloading swaybg to update wallpaper...\n")
+                 (with-output-to-file "/dev/null"
+                   (lambda ()
+                     (system* #$(file-append shepherd "/bin/herd") "restart" "swaybg")))))))
          (when wallpaper-path
            (simple-service
             'add-swaybg-shepherd-service
@@ -457,7 +435,7 @@
   (ensure-pred string? open-key)
   (ensure-pred boolean? set-default-menu?)
 
-  (lambda (fconfig palette)
+  (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by bemenu."
       (require-value 'font-monospace config)
@@ -498,19 +476,19 @@
             . ,(font->string 'pango 'font-monospace config
                              #:bold? #t
                              #:size 10))
-           ("tb" . ,(palette 'primary))
-           ("tf" . ,(make-readable (palette 'primary)
-                                   (palette 'primary)))
-           ("fb" . ,(palette 'background))
-           ("ff" . ,(palette 'text))
-           ("nb" . ,(palette 'background))
-           ("nf" . ,(palette 'text))
-           ("ab" . ,(palette 'background))
-           ("af" . ,(palette 'text))
-           ("hb" . ,(offset (palette 'background) 10))
-           ("hf" . ,(palette 'primary-text))
+           ("tb" . ,(palette 'accent))
+           ("tf" . ,(farg:make-readable (palette 'accent)
+                                        (palette 'accent)))
+           ("fb" . ,(palette 'bg))
+           ("ff" . ,(palette 'fg))
+           ("nb" . ,(palette 'bg))
+           ("nf" . ,(palette 'fg))
+           ("ab" . ,(palette 'bg))
+           ("af" . ,(palette 'fg))
+           ("hb" . ,(farg:offset (palette 'bg) 10))
+           ("hf" . ,(palette 'accent-text))
            ("sb" . #f)
-           ("sf" . ,(palette 'secondary-text))
+           ("sf" . ,(palette 'fg))
            ("scb" . #f)
            ("scf" . #f))))))
 
@@ -579,16 +557,16 @@
                           ("font-size" . 40)
                           ("indicator-thickness" . 10)
                           ("indicator-radius" . 80)
-                          ("key-hl-color" . ,(strip-hex (palette 'primary)))
+                          ("key-hl-color" . ,(strip-hex (palette 'accent)))
                           ("bs-hl-color" . ,(strip-hex (palette 'red)))
                           ("inside-color" . "00000000")
                           ("inside-clear-color" . "00000000")
                           ("inside-ver-color" . "00000000")
                           ("inside-wrong-color" . "00000000")
-                          ("ring-color" . ,(strip-hex (offset (palette 'background) 20)))
+                          ("ring-color" . ,(strip-hex (farg:offset (palette 'bg) 20)))
                           ("ring-ver-color" . ,(strip-hex (palette 'green)))
                           ("ring-wrong-color" . ,(strip-hex (palette 'red)))
-                          ("ring-clear-color" . ,(strip-hex (palette 'secondary)))
+                          ("ring-clear-color" . ,(strip-hex (palette 'accent)))
                           ("text-clear-color" . "00000000")
                           ("text-ver-color" . "00000000")
                           ("text-wrong-color" . "00000000")

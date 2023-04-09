@@ -4,11 +4,9 @@
   #:use-module (guix gexp)
   #:use-module (gnu packages)
   #:use-module (rde features)
-  #:use-module (farg provider)
-  #:use-module (farg colorscheme)
-  #:use-module (farg home-service)
   #:use-module (rde features fontutils)
   #:use-module (rde features predicates)
+  #:use-module (engstrand themes)
   #:export (
             modify-features
             font->string))
@@ -58,7 +56,8 @@
     ((_ feature (delete kind) clauses ...)
      ;; HACK: Unwrap features that uses the farg provider.
      (let ((feature-struct (if (procedure? feature)
-                               (feature (home-farg-configuration) (make-colorscheme-accessor (colorscheme)))
+                               (feature engstrand-theme-dark
+                                        (lambda (name) name))
                                feature)))
          (if (eq? (feature-name feature-struct) kind)
              #f

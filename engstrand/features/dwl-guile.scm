@@ -3,7 +3,7 @@
   #:use-module (guix gexp)
   #:use-module (gnu services)
   #:use-module (gnu home services)
-  #:use-module (farg colorscheme)
+  #:use-module (farg colors)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
@@ -65,10 +65,10 @@
        (simple-service
         'dwl-guile-colorscheme
         home-dwl-guile-service-type
-        `((setq root-color ,(palette 'background)
-                border-color ,(offset (palette 'background) 10)
-                focus-color ,(palette 'primary)
-                lockscreen-color ,(with-alpha (palette 'background) 90))))
+        `((setq root-color ,(palette 'bg)
+                border-color ,(farg:offset (palette 'bg) 10)
+                focus-color ,(palette 'accent)
+                lockscreen-color ,(farg:with-alpha (palette 'bg) 90))))
        (when repl?
          (simple-service
           'dwl-guile-repl

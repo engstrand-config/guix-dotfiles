@@ -6,8 +6,8 @@
   #:use-module (gnu system accounts)
   #:use-module (rde features)
   #:use-module (rde features predicates)
-  #:use-module (farg config)
   #:use-module (farg provider)
+  #:use-module (engstrand themes)
   #:use-module (engstrand systems)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path
   #:export (make-config))
@@ -43,7 +43,7 @@
   (ensure-pred operating-system? initial-os)
 
   (define %user-features (dynamic-load 'configs user '%user-features))
-  (define %user-colorscheme (dynamic-load 'configs user '%user-colorscheme #:throw? #f))
+  (define %user-theme (dynamic-load 'configs user '%user-theme #:throw? #f))
   (define %system-features (dynamic-load 'systems system '%system-features))
 
   ;; All is good, create the configuration
@@ -51,14 +51,12 @@
     (rde-config
      (initial-os initial-os)
      (features
-      (colorscheme-provider
-       ;; Fallback to default colorscheme
-       #:config (if (unspecified? %user-colorscheme)
-                    %engstrand-default-farg-config
-                    %user-colorscheme)
-       #:services (append %user-features
-                          %engstrand-system-base-features
-                          %system-features)))))
+      (farg:theme-provider
+       (if (unspecified? %user-theme)
+           engstrand-theme-dark
+           %user-theme)
+       (append %user-features %engstrand-system-base-features %system-features)
+       #:palette-extension engstrand-farg-palette))))
 
   (define %engstrand-he
     (rde-config-home-environment %generated-config))

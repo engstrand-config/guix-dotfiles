@@ -10,8 +10,7 @@
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile home-service)
   #:use-module (gnu packages web-browsers)
-  #:use-module (farg config)
-  #:use-module (farg colorscheme)
+  #:use-module (farg colors)
   #:use-module (farg home-service)
   #:use-module (engstrand packages browsers)
   #:use-module (engstrand utils)
@@ -81,15 +80,15 @@
   (ensure-pred string? open-key)
   (ensure-pred boolean? default-browser?)
 
-  (lambda (fconfig palette)
+  (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by qutebrowser"
       (make-service-list
-       (if default-browser?
-           (simple-service
-            'set-qutebrowser-environment-variable
-            home-environment-variables-service-type
-            `(("BROWSER" . ,(file-append package "/bin/qutebrowser")))))
+       (when default-browser?
+         (simple-service
+          'set-qutebrowser-environment-variable
+          home-environment-variables-service-type
+          `(("BROWSER" . ,(file-append package "/bin/qutebrowser")))))
        (simple-service
         'add-qutebrowser-home-packages-to-profile
         home-profile-service-type
@@ -100,26 +99,29 @@
         `((".config/qutebrowser/config.py"
            ,(plain-file
              "qutebrowser-config.py"
-             (let* ((light? (farg-config-light? (home-farg-configuration-config fconfig)))
-                    (text (palette 'text))
+             (let* ((light? (palette 'light?))
+                    (text (palette 'fg))
                     (cursor text)
-                    (background (palette 'background))
-                    (background-offset (offset background 10))
-                    (primary (palette 'primary))
-                    (primary-text (palette 'primary-text))
-                    (primary-overlay-text (make-readable primary primary))
-                    (secondary-text (palette 'secondary-text))
-                    (disabled-text (make-readable background-offset background-offset))
+                    (background (palette 'bg))
+                    (background-offset (palette 'bg-alt))
+                    (primary (palette 'accent))
+                    (primary-text (palette 'accent-text))
+                    (primary-overlay-text
+                     (farg:make-readable primary primary))
+                    (disabled-text
+                     (farg:make-readable background-offset background-offset))
                     (red (palette 'red))
                     (green (palette 'green))
                     (blue (palette 'blue))
                     (yellow (palette 'yellow))
+                    (magenta (palette 'magenta))
+                    (cyan (palette 'cyan))
                     (red-text (palette 'red-text))
                     (green-text (palette 'green-text))
                     (blue-text (palette 'blue-text))
                     (yellow-text (palette 'yellow-text))
-                    (magenta (palette 5))
-                    (cyan (palette 6)))
+                    (magenta-text (palette 'magenta-text))
+                    (cyan-text (palette 'cyan-text)))
                (serialize-qutebrowser-config
                 `(("auto_save.session" . True)
                   ("content.blocking.enabled" . True)
@@ -142,7 +144,7 @@
                   ("colors.completion.item.selected.border.bottom" . ,background)
                   ("colors.completion.item.selected.border.top" . ,background)
                   ("colors.completion.item.selected.fg" . ,text)
-                  ("colors.completion.item.selected.match.fg" . ,secondary-text)
+                  ("colors.completion.item.selected.match.fg" . ,primary-text)
                   ("colors.completion.match.fg" . ,primary-text)
                   ("colors.completion.scrollbar.bg" . ,background)
                   ("colors.completion.scrollbar.fg" . ,text)
@@ -171,9 +173,9 @@
                   ("colors.prompts.fg" . ,text)
                   ("colors.prompts.selected.bg" . ,magenta)
                   ("colors.statusbar.caret.bg" . ,cyan)
-                  ("colors.statusbar.caret.fg" . ,cursor)
+                  ("colors.statusbar.caret.fg" . ,cyan-text)
                   ("colors.statusbar.caret.selection.bg" . ,cyan)
-                  ("colors.statusbar.caret.selection.fg" . ,text)
+                  ("colors.statusbar.caret.selection.fg" . ,cyan-text)
                   ("colors.statusbar.command.bg" . ,background)
                   ("colors.statusbar.command.fg" . ,text)
                   ("colors.statusbar.command.private.bg" . ,background)
@@ -220,24 +222,18 @@
        (simple-service
         'reload-qutebrowser-on-farg-activation
         home-farg-service-type
-        (modify-farg-config
-         (config =>
-                 (farg-config
-                  (inherit config)
-                  (activation-commands
-                   (cons
-                    #~(begin
-                        (use-modules (ice-9 popen))
-                        (display "Reloading qutebrowser to update theme...\n")
-                        (let* ((dir (getenv "XDG_RUNTIME_DIR"))
-                               (qutefiles (scandir (string-append dir "/qutebrowser")))
-                               (files (if qutefiles (length qutefiles) 0)))
-                          (when (> files 2) ; FIFO file is available, instance is running
-                            (system* #$(file-append package "/bin/qutebrowser")
-                                     ":config-source"
-                                     ;; Only output potential errors
-                                     "-l=critical"))))
-                    (farg-config-activation-commands config)))))))
+        (list
+         #~(begin
+             (use-modules (ice-9 popen))
+             (display "Reloading qutebrowser to update theme...\n")
+             (let* ((dir (getenv "XDG_RUNTIME_DIR"))
+                    (qutefiles (scandir (string-append dir "/qutebrowser")))
+                    (files (if qutefiles (length qutefiles) 0)))
+               (when (> files 2) ; FIFO file is available, instance is running
+                 (system* #$(file-append package "/bin/qutebrowser")
+                          ":config-source"
+                          ;; Only output potential errors
+                          "-l=critical"))))))
        (when (and default-browser? (get-value 'dwl-guile config))
          (simple-service
           'add-qutebrowser-dwl-keybindings

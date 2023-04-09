@@ -102,7 +102,7 @@
                 (string-append "^fg("
                                (cond
                                 ((<= percent 20) ,(palette 'red))
-                                ((<= percent 50) ,(palette 'text))
+                                ((<= percent 50) ,(palette 'fg))
                                 (else ,(palette 'green)))
                                ")" result "%^fg()")))))))))
 

@@ -1,7 +1,7 @@
 (define-module (engstrand features emacs)
   #:use-module (guix gexp)
   #:use-module (dwl-guile home-service)
-  #:use-module (farg colorscheme)
+  #:use-module (farg colors)
   #:use-module (farg home-service)
   #:use-module (engstrand utils)
   #:use-module (gnu home services)
@@ -185,55 +185,53 @@
   "Override default rde Emacs appearance."
   (define emacs-f-name 'engstrand-appearance)
 
-  (lambda (fconfig palette)
+  (lambda (_ palette)
     (define (get-home-services config)
-      (let ((light? (colorscheme-light? (home-farg-configuration-colorscheme fconfig))))
-        (list
-         (rde-elisp-configuration-service
-          emacs-f-name
-          config
-          `((require 'modus-themes)
-            (window-divider-mode 0)
-            (setq modus-themes-italic-constructs t
-                  modus-themes-bold-constructs t
-                  modus-themes-mixed-fonts t
-                  modus-themes-subtle-line-numbers t
-                  modus-themes-intense-markup t
-                  modus-themes-lang-checkers nil
-                  modus-themes-mode-line '(borderless)
-                  modus-themes-syntax nil
-                  modus-themes-hl-line '(underline intense)
-                  modus-themes-paren-match nil
-                  modus-themes-links nil
-                  modus-themes-prompts nil
-                  modus-themes-mail-citations 'faint
-                  modus-themes-region '(bg-only accented)
-                  modus-themes-diffs 'nil
-                  modus-themes-org-blocks 'gray-background
-                  modus-themes-org-agenda
-                  '((header-block . (variable-pitch 1.3))
-                    (header-date . (grayscale workaholic bold-today 1.1))
-                    (event . (accented varied))
-                    (scheduled . uniform)
-                    (habit . traffic-light))
-                  modus-themes-headings
-                  '((1 . (background variable-pitch 1.3))
-                    (2 . (rainbow overline 1.1))
-                    (t . (semibold))))
+      (list
+       (rde-elisp-configuration-service
+        emacs-f-name
+        config
+        `((require 'modus-themes)
+          (window-divider-mode 0)
+          (setq modus-themes-italic-constructs t
+                modus-themes-bold-constructs t
+                modus-themes-mixed-fonts t
+                modus-themes-subtle-line-numbers t
+                modus-themes-intense-markup t
+                modus-themes-lang-checkers nil
+                modus-themes-mode-line '(borderless)
+                modus-themes-syntax nil
+                modus-themes-hl-line '(underline intense)
+                modus-themes-paren-match nil
+                modus-themes-links nil
+                modus-themes-prompts nil
+                modus-themes-mail-citations 'faint
+                modus-themes-region '(bg-only accented)
+                modus-themes-diffs 'nil
+                modus-themes-org-blocks 'gray-background
+                modus-themes-org-agenda
+                '((header-block . (variable-pitch 1.3))
+                  (header-date . (grayscale workaholic bold-today 1.1))
+                  (event . (accented varied))
+                  (scheduled . uniform)
+                  (habit . traffic-light))
+                modus-themes-headings
+                '((1 . (background variable-pitch 1.3))
+                  (2 . (rainbow overline 1.1))
+                  (t . (semibold))))
 
-            (setq modus-themes-common-palette-overrides
-                  `((fg-line-number-inactive "gray50")
-                    (fg-line-number-active fg-main)
-                    (bg-line-number-inactive bg-main)
-                    (bg-line-number-active bg-main)
-                    (border-mode-line-active unspecified)
-                    (border-mode-line-inactive unspecified)
-                    (fringe unspecified)))
-
-            (load-theme 'modus-operandi t t)
-            (load-theme 'modus-vivendi t t)
-            (enable-theme ',(if light? 'modus-operandi 'modus-vivendi)))
-          #:elisp-packages (list emacs-modus-themes)))))
+          (setq modus-themes-common-palette-overrides
+                `((fg-line-number-inactive "gray50")
+                  (fg-line-number-active fg-main)
+                  (bg-line-number-inactive bg-main)
+                  (bg-line-number-active bg-main)
+                  (border-mode-line-active unspecified)
+                  (border-mode-line-inactive unspecified)
+                  (fringe unspecified)))
+          (load-theme 'modus-operandi t t)
+          (load-theme 'modus-vivendi t t)
+          (enable-theme ',(if (palette 'light?) 'modus-operandi 'modus-vivendi)))
+          #:elisp-packages (list emacs-modus-themes))))
 
     (make-emacs-feature emacs-f-name
                         #:home-services get-home-services)))
@@ -362,11 +360,11 @@
                       (setq persp-suppress-no-prefix-key-warning t)
                       ;; for some reason this must be added manually
                       (vertico-mode)))
-   (feature-emacs-modus-themes
-    #:deuteranopia? #f)
    (feature-emacs-appearance
     #:margin 5
     #:header-line-as-mode-line? #f)
+   (feature-emacs-modus-themes
+    #:deuteranopia? #f)
    (feature-emacs-engstrand-appearance)
    (feature-emacs-transparency)
    (feature-emacs-dashboard)

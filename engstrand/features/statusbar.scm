@@ -5,7 +5,7 @@
   #:use-module (rde features)
   #:use-module (rde features predicates)
   #:use-module (engstrand utils)
-  #:use-module (farg colorscheme)
+  #:use-module (farg colors)
   #:use-module (dtao-guile home-service)
   #:export (
             feature-statusbar-dtao-guile
@@ -30,18 +30,18 @@
          (render `(cond
                    ((dtao:selected-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
-                             (palette 'primary)
-                             (make-readable (palette 'primary) (palette 'primary))
+                             (palette 'accent)
+                             (farg:make-readable (palette 'accent) (palette 'accent))
                              str))
                    ((dtao:urgent-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
                              (palette 'red)
-                             (palette 'background) ;; TODO: Light/dark based on theme mode
+                             (palette 'bg) ;; TODO: Light/dark based on theme mode
                              str))
                    ((dtao:active-tag? ,index)
                     ,(format #f "^bg(~a)^fg(~a)~a^fg()^bg()"
-                             (offset (palette 'background) 10)
-                             (palette 'text)
+                             (farg:offset (palette 'bg) 10)
+                             (palette 'fg)
                              str))
                    (else ,str))))))
     (iota 9 1))
@@ -82,9 +82,9 @@
                    (font (font->string 'fcft 'font-monospace config
                                        #:bold? #t))
                    (block-spacing 0)
-                   (background-color (palette 'background))
-                   (foreground-color (palette 'text))
-                   (border-color (palette 'background))
+                   (background-color (palette 'bg))
+                   (foreground-color (palette 'fg))
+                   (border-color (palette 'bg))
                    (modules '((ice-9 match)
                               (ice-9 popen)
                               (ice-9 rdelim)
