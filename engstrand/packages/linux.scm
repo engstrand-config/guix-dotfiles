@@ -12,7 +12,7 @@
 (define-public (tuxedo-keyboard-module kernel)
   (package
    (name "tuxedo-keyboard-module")
-   (version "3.0.8")
+   (version "3.2.1")
    (source (origin
             (method git-fetch)
             (uri
@@ -22,11 +22,11 @@
             (file-name (git-file-name name version))
             (sha256
              (base32
-              "1rv3ns4n61v18cpnp36zi47jpnqhj410yzi8b307ghiyriapbijv"))))
+              "13fncirqcci46zxmsrawsxpazip5k46i849dwkhkqlg0mg4vxxw5"))))
    (build-system linux-module-build-system)
    (arguments
     `(#:tests? #f
-               #:linux ,kernel))
+      #:linux ,kernel))
    (home-page "https://github.com/tuxedocomputers/tuxedo-keyboard")
    (synopsis "Tuxedo computers kernel module for keyboard
 backlighting")
