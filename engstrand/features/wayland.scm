@@ -481,8 +481,6 @@
            ("ff" . ,(palette 'fg))
            ("nb" . ,(palette 'bg))
            ("nf" . ,(palette 'fg))
-           ("ab" . ,(palette 'bg))
-           ("af" . ,(palette 'fg))
            ("hb" . ,(farg:offset (palette 'bg) 10))
            ("hf" . ,(palette 'accent-0-text))
            ("sb" . #f)
