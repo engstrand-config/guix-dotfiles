@@ -36,13 +36,13 @@
 
 (define* (feature-firefox
           #:key
+          (package firefox/wayland)
           (open-key "S-s-w")
-          (spawn-parameters '("firefox"))
           (default-browser? #f))
   "Setup Firefox."
 
   (ensure-pred string? open-key)
-  (ensure-pred start-parameters? spawn-parameters)
+  (ensure-pred package? package)
   (ensure-pred boolean? default-browser?)
 
   (define (get-home-services config)
@@ -62,7 +62,9 @@
          (simple-service
           'add-firefox-dwl-keybindings
           home-dwl-guile-service-type
-          `((set-keys ,open-key (lambda () (dwl:spawn ,spawn-parameters)))))))))
+          `((set-keys ,open-key
+                      (lambda ()
+                        (dwl:spawn ,(file-append package "/bin/firefox"))))))))))
 
   (feature
    (name 'firefox)
