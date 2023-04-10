@@ -4,6 +4,7 @@
   #:use-module (engstrand packages linux)
   #:use-module (engstrand features laptop)
   #:use-module (engstrand features display)
+  #:use-module (engstrand features bluetooth)
   #:use-module (guix gexp)
   #:use-module (dwl-guile home-service)
   #:use-module (rde features bluetooth)
@@ -49,6 +50,7 @@
       (swap-space
        (target (uuid "40c98866-74b1-4e99-9c32-24d584fe0617")))))
     (feature-bluetooth)
+    (feature-bluetooth-quick-connect)
     (feature-dwl-guile-monitor-config
      #:rules
      `((set-monitor-rules
