@@ -577,11 +577,9 @@
 
     (define (get-system-services config)
       (list
-       (simple-service
-        'add-screen-locker-system-service
-        screen-locker-service-type
-        (screen-locker-configuration
-        "swaylock" (file-append swaylock "/bin/swaylock") #f))))
+       (service screen-locker-service-type
+                (screen-locker-configuration
+                 "swaylock" (file-append swaylock "/bin/swaylock") #f))))
 
     (feature
      (name 'wayland-swaylock)
