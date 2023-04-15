@@ -39,7 +39,8 @@
      #:pinentry-flavor 'gtk2)
     (feature-virtualization)
     (feature-kdeconnect)
-    (feature-transmission)
+    (feature-transmission
+     #:download-dir "~/downloads")
     (feature-piper)
     (feature-ardour)
     (feature-calf-plugins)
