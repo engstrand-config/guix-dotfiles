@@ -14,6 +14,7 @@
   #:use-module (rde features base)
   #:use-module (rde features emacs)
   #:use-module (rde features emacs-xyz)
+  #:use-module (contrib features emacs-xyz)
   #:use-module (rde packages emacs)
   #:export (
             feature-emacs-default-editor
@@ -23,7 +24,7 @@
             feature-emacs-dashboard
             feature-emacs-transparency
             feature-emacs-engstrand-appearance
-            feature-emacs-evil
+            ;; feature-emacs-evil
 
             %engstrand-emacs-package
             %engstrand-emacs-base-features))
@@ -236,86 +237,6 @@
     (make-emacs-feature emacs-f-name
                         #:home-services get-home-services)))
 
-(define* (feature-emacs-evil
-          #:key
-          (no-insert-state-message? #t)
-          (leader? #t)
-          (undo-fu? #t)
-          (commentary? #t)
-          (collection? #t)
-          (surround? #t))
-  "Add and configure evil-mode for Emacs."
-  (ensure-pred boolean? no-insert-state-message?)
-  (ensure-pred boolean? leader?)
-  (ensure-pred boolean? undo-fu?)
-  (ensure-pred boolean? collection?)
-  (ensure-pred boolean? surround?)
-  (define emacs-f-name 'evil)
-
-  (define (get-home-services config)
-    (list
-     (rde-elisp-configuration-service
-      emacs-f-name
-      config
-      `(;; Make the Escape key behave more nicely for evil-mode
-        (global-set-key (kbd "<escape>") 'keyboard-quit)
-        (define-key query-replace-map (kbd "<escape>") 'quit)
-        ;; Hide ``-- INSERT --'' message
-        ,@(if no-insert-state-message?
-              `((setq evil-insert-state-message nil))
-              '())
-        ;; Required by the additional packages... should we toggle this?
-        (setq evil-want-keybinding nil)
-        ;; Use C-u to scroll up
-        (setq evil-want-C-u-scroll t)
-        ;; undo with higher granularity
-        (setq evil-want-fine-undo t)
-        ;; The packages below must be loaded and configured in a certain order
-        (require 'evil)
-        ,@(if leader?
-              `((require 'evil-leader)
-                (global-evil-leader-mode)
-                (evil-leader/set-leader "<SPC>")
-                (evil-leader/set-key
-                 "<SPC>" 'find-file
-                 "b" 'switch-to-buffer
-                 "k" 'kill-buffer
-                 "K" 'kill-this-buffer
-                 "s" 'save-buffer
-                 "S" 'evil-write-all
-                 )
-                '()))
-        ,@(if undo-fu?
-              `((eval-when-compile (require 'undo-fu))
-                (setq evil-undo-system 'undo-fu)
-                (define-key evil-normal-state-map (kbd "u") 'undo-fu-only-undo)
-                (define-key evil-normal-state-map (kbd "C-r") 'undo-fu-only-redo))
-              '())
-        (evil-mode 1)
-        ,@(if commentary?
-              `((require 'evil-commentary)
-                (evil-commentary-mode))
-              '())
-        ,@(if collection?
-              `((when (require 'evil-collection nil t)
-                  (evil-collection-init)))
-              '())
-        ,@(if surround?
-              `((require 'evil-surround)
-                (global-evil-surround-mode 1))
-              '())
-        )
-      #:elisp-packages (list
-                        emacs-evil
-                        (if leader? emacs-evil-leader)
-                        (if undo-fu? emacs-undo-fu)
-                        (if commentary? emacs-evil-commentary)
-                        (if collection? emacs-evil-collection)
-                        (if surround? emacs-evil-surround)))))
-
-  (make-emacs-feature emacs-f-name
-                      #:home-services get-home-services))
-
 (define %engstrand-emacs-package emacs-next-pgtk-latest)
 
 (define %engstrand-emacs-base-features
@@ -358,6 +279,16 @@
                       (setq org-confirm-babel-evaluate nil)
                       ;; (Temporarily) suppress startup warning in perspective.el
                       (setq persp-suppress-no-prefix-key-warning t)
+                      ;; TODO: set in rde evil feature
+                      (setq evil-want-minibuffer nil)
+                      ;; undo with higher granularity
+                      (setq evil-want-fine-undo t)
+                      ;; Hide ``-- INSERT --'' message
+                      (setq evil-insert-state-message nil)
+                      ;; undo-fu
+                      (setq evil-undo-system 'undo-fu)
+                      (define-key evil-normal-state-map (kbd "u") 'undo-fu-only-undo)
+                      (define-key evil-normal-state-map (kbd "C-r") 'undo-fu-only-redo)
                       ;; for some reason this must be added manually
                       (vertico-mode)))
    (feature-emacs-appearance
