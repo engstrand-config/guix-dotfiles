@@ -44,11 +44,18 @@
     (feature-piper)
     (feature-ardour)
     (feature-calf-plugins)
-    (feature-sfz)
+    ;; (feature-sfz)
     (feature-mail-settings
      #:mail-accounts (list (mail-account (id 'personal) (fqda email-engstrand-primary) (type 'generic))))
     (feature-emacs-message)
-    (feature-isync)
+    (feature-notmuch)
+    (feature-msmtp
+     #:msmtp-provider-settings
+     `((generic . ((host . "eagle.mxlogin.com")
+				   (port . 587)
+				   (tls_starttls . on)))))
+    (feature-isync #:isync-verbose #t)
+    (feature-l2md)
     (feature-qutebrowser)
     (feature-firefox
      #:default-browser? #t)
@@ -56,12 +63,14 @@
      #:home-services
      (list
       (simple-service
-       'change-dwl-guile-borderpx
+       'change-dwl-guile-configuration
        home-dwl-guile-service-type
        `((setq smart-gaps? #f
                smart-borders? #f
-               gaps-oh 20
-               gaps-ov 20
-               border-px 2))))))
+               gaps-oh 30
+               gaps-ov 30
+               gaps-ih 20
+               gaps-iv 10
+               border-px 3))))))
    %engstrand-emacs-base-features
    %engstrand-base-features))
