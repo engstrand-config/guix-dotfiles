@@ -12,6 +12,7 @@
   #:use-module (rde features image-viewers)
   #:use-module (rde features video)
   #:use-module (rde features version-control)
+  #:use-module (rde features password-utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
   #:use-module (dtao-guile home-service)
@@ -75,7 +76,8 @@
    (feature-hidpi
     #:console-font (file-append font-terminus "/share/consolefonts/ter-120b"))
    (feature-git
-    #:sign-commits? #t)
+    #:sign-commits? #t
+    #:git-send-email? #t)
    (feature-git-colorscheme)
    (feature-fonts
     #:font-packages (list font-jetbrains-mono font-iosevka-aile)
@@ -131,6 +133,7 @@
    (feature-zathura
     #:default-reader? #t)
    (feature-signal)
+   (feature-password-store)
    (feature-dwl-guile)
    (feature-wayland-swaybg)
    (feature-wayland-bemenu)
