@@ -1,10 +1,14 @@
 (define-module (engstrand systems silverstone)
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
+  #:use-module (nongnu packages linux)
+  #:use-module (gnu packages linux)
+  #:use-module (engstrand features bluetooth)
   #:use-module (engstrand features display)
   #:use-module (rde features bluetooth)
   #:use-module (rde features system)
   #:use-module (guix gexp)
+  #:use-module (guix utils)
   #:use-module (gnu bootloader)
   #:use-module (gnu bootloader grub)
   #:use-module (dwl-guile home-service)
@@ -21,6 +25,10 @@
 
 (define-public %system-features
   (list
+   (feature-kernel
+    #:kernel linux ;; (corrupt-linux linux-libre #:configs '("CONFIG_MT7921E=m"))
+    #:firmware (list linux-firmware)
+    #:kernel-arguments %engstrand-kernel-arguments)
    (feature-host-info
     #:host-name "silverstone"
     #:timezone %engstrand-timezone
@@ -32,6 +40,7 @@
      (targets '("/boot/efi"))
      (keyboard-layout %engstrand-keyboard-layout)))
    (feature-bluetooth)
+   (feature-bluetooth-quick-connect)
    (feature-file-systems
     #:mapped-devices %mapped-devices
     #:file-systems
