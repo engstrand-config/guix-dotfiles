@@ -24,7 +24,6 @@
             feature-emacs-dashboard
             feature-emacs-transparency
             feature-emacs-engstrand-appearance
-            ;; feature-emacs-evil
 
             %engstrand-emacs-package
             %engstrand-emacs-base-features))
@@ -281,14 +280,6 @@
                       (setq persp-suppress-no-prefix-key-warning t)
                       ;; TODO: set in rde evil feature
                       (setq evil-want-minibuffer nil)
-                      ;; undo with higher granularity
-                      (setq evil-want-fine-undo t)
-                      ;; Hide ``-- INSERT --'' message
-                      (setq evil-insert-state-message nil)
-                      ;; undo-fu
-                      (setq evil-undo-system 'undo-fu)
-                      (define-key evil-normal-state-map (kbd "u") 'undo-fu-only-undo)
-                      (define-key evil-normal-state-map (kbd "C-r") 'undo-fu-only-redo)
                       ;; for some reason this must be added manually
                       (vertico-mode)))
    (feature-emacs-appearance
