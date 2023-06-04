@@ -16,9 +16,7 @@
   #:use-module (engstrand features wayland)
   #:use-module (engstrand features theming)
   #:use-module (engstrand features browsers)
-  #:use-module (engstrand features virtualization)
-  #:use-module (dwl-guile utils)
-  #:use-module (dwl-guile home-service))
+  #:use-module (engstrand features virtualization))
 
 (define-public %user-theme
   (farg:generator-pywal (get-wallpaper-path "nature/jack-b-8Wqm1W59Baw-unsplash.jpg")
@@ -52,25 +50,12 @@
     (feature-msmtp
      #:msmtp-provider-settings
      `((generic . ((host . "eagle.mxlogin.com")
-				   (port . 587)
-				   (tls_starttls . on)))))
+                   (port . 587)
+                   (tls_starttls . on)))))
     (feature-isync #:isync-verbose #t)
     (feature-l2md)
     (feature-qutebrowser)
     (feature-firefox
-     #:default-browser? #t)
-    (feature-custom-services
-     #:home-services
-     (list
-      (simple-service
-       'change-dwl-guile-configuration
-       home-dwl-guile-service-type
-       `((setq smart-gaps? #f
-               smart-borders? #f
-               gaps-oh 30
-               gaps-ov 30
-               gaps-ih 20
-               gaps-iv 10
-               border-px 3))))))
+     #:default-browser? #t))
    %engstrand-emacs-base-features
    %engstrand-base-features))
