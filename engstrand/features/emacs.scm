@@ -251,6 +251,8 @@
                          (setq inhibit-startup-screen
                                (file-exists-p
                                 (expand-file-name argi command-line-default-directory)))))
+                      ;; always open the normal switch-to-buffe
+                      (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
                       (add-hook 'command-line-functions 'my-inhibit-startup-screen-file)
                       ;; ignore warnings from native-comp
                       ;; (setq native-comp-async-report-warnings-errors nil)
