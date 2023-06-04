@@ -149,7 +149,7 @@
           `((".config/foot/foot.ini"
              ,(alist->ini "foot-config"
                           `(("pad" . "5x5")
-                            ("font" . "monospace:size=12")
+                            ("font" . ,(font->string 'fcft 'font-monospace config #:size 12))
                             ("dpi-aware" . "no")
                             ;; nmtui does not like if term is set to foot
                             ("term" . "xterm")
@@ -473,7 +473,7 @@
            ("fn"
             . ,(font->string 'pango 'font-monospace config
                              #:bold? #t
-                             #:size 10))
+                             #:size 11))
            ("tb" . ,(palette 'accent-0))
            ("tf" . ,(farg:make-readable (palette 'accent-0)
                                         (palette 'accent-0)))
