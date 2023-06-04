@@ -1,7 +1,8 @@
 #!/bin/zsh
 
-source $HOME/.guix-home/profile/etc/profile
-source $HOME/.guix-profile/etc/profile
+[[ -e "$HOME/.guix-profile/etc/profile" ]] && . $HOME/.guix-profile/etc/profile
+[[ -e "$HOME/.guix-home/profile/etc/profile" ]] && . $HOME/.guix-home/profile/etc/profile
+export PATH=/run/setuid-programs:$PATH
 
 zmodload zsh/complist
 
