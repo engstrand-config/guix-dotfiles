@@ -20,6 +20,7 @@
   #:use-module (srfi srfi-35)
   #:use-module (ice-9 ftw)
   #:use-module (ice-9 match)
+  #:use-module (engstrand installer record)
   #:use-module (engstrand installer newt user)
   #:use-module (engstrand installer newt system)
   #:export (newt-engstrand-installer))
@@ -36,11 +37,11 @@
 (define (network-page)
   (run-network-page))
 
-(define (system-page)
-  (run-system-page))
+(define (system-page system-configs)
+  (run-system-page system-configs))
 
-(define (user-page)
-  (run-user-page))
+(define (user-page user-configs)
+  (run-user-page user-configs))
 
 (define (partition-page)
   (run-partitioning-page))
@@ -48,9 +49,9 @@
 (define newt-engstrand-installer
   (engstrand-installer
    (name 'newt)
-   (init init)
-   (exit exit)
-   (exit-error exit-error)
+   (init (@@ (gnu installer newt) init))
+   (exit (@@ (gnu installer newt) exit))
+   (exit-error (@@ (gnu installer newt) exit-error))
    (final-page final-page)
    (menu-page menu-page)
    (network-page network-page)
@@ -58,4 +59,4 @@
    (user-page user-page)
    (partition-page partition-page)
    (welcome-page welcome-page)
-   (run-command newt-run-command)))
+   (run-command (@@ (gnu installer newt) newt-run-command))))

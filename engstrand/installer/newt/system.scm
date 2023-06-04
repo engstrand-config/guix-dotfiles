@@ -12,20 +12,20 @@
   #:use-module (engstrand installer newt menu)
   #:export (run-system-page))
 
-(define* (run-system-page)
+(define* (run-system-page system-configs)
   "Run a page that asks the user which existing system config
 to use, if any. A new system can also be created if needed."
-  (define system-configs
+  (define items
     (map (lambda (config)
-           `(,(G_ (basename config ".scm")) . ,(lambda () (display config))))
-         (filter (lambda (file) (string-suffix? ".scm" file))
-                 (scandir "../../systems"))))
+           `(,(G_ (basename config ".scm")) . ,(lambda () '())))
+         system-configs))
 
+  (run-menu-page
    (G_ "System configuration")
    (G_ "Please select which system configuration file to use for this computer.")
    #:listbox-items
-   `(,@system-configs
+   `(,@items
      (,(G_ "Create new system config")
       .
       ,(lambda () (display "new config"))))
-   #:listbox-item->text car)
+   #:listbox-item->text car))

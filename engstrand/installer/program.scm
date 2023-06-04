@@ -36,6 +36,7 @@
   #:use-module (gnu packages tls)
   #:use-module (gnu packages xorg)
   #:use-module (gnu system locale)
+  #:use-module (ice-9 ftw)
   #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (web uri)
@@ -55,16 +56,15 @@
     (('guix 'read-print) #t)
     (_ #f)))
 
+(define (get-config-files path)
+  (let ((base-path (dirname (current-filename))))
+    (filter (lambda (file) (string-suffix? ".scm" file))
+            (scandir (string-append base-path "/" path)))))
+
 ;; Override the default Guix installer steps, such as hostname,
 ;; timezone, user setup, etc. All of this is already defined in our config files.
 (define (engstrand-installer-steps)
   #~(lambda (current-installer)
-      ;; ((installer-parameters-menu current-installer)
-      ;;  (lambda ()
-      ;;    ((installer-parameters-page current-installer)
-      ;;     (lambda _
-      ;;       (#$((@@ (gnu installer) compute-keymap-step) 'param)
-      ;;          current-installer)))))
       (list
        ;; Welcome the user and ask them to choose between manual
        ;; installation and graphical install.
@@ -89,14 +89,16 @@
         (id 'system)
         (description (G_ "System config selection"))
         (compute (lambda _
-                   ((engstrand-installer-system-page current-installer)))))
+                   ((engstrand-installer-system-page current-installer)
+                    (list #$@(get-config-files "../systems"))))))
 
        ;; Select which existing user configuration to use, or create a new one.
        (installer-step
         (id 'user)
         (description (G_ "User config selection"))
         (compute (lambda _
-                   ((engstrand-installer-user-page current-installer)))))
+                   ((engstrand-installer-user-page current-installer)
+                    (list #$@(get-config-files "../configs"))))))
 
        ;; Run a partitioning tool allowing the user to modify
        ;; partition tables, partitions and their mount points.
@@ -194,6 +196,7 @@
                          (gnu services herd)
                          (guix i18n)
                          (guix build utils)
+                         (engstrand installer record)
                          (engstrand installer newt)
                          (engstrand installer newt menu)
                          (engstrand installer newt user)

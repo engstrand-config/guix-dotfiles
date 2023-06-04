@@ -10,6 +10,9 @@
   #:use-module (newt)
   #:export (run-menu-page))
 
+(define info-textbox-width (make-parameter 40))
+(define options-listbox-height (make-parameter 15))
+
 (define* (run-menu-page title info-text
                         #:key
                         listbox-items
