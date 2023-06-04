@@ -180,6 +180,8 @@
                             ("[key-bindings]")
                             ("scrollback-up-line" . "Mod1+k")
                             ("scrollback-down-line" . "Mod1+j")
+                            ("scrollback-up-line" . "Page_Up")
+                            ("scrollback-down-line" . "Page_Down")
                             ("clipboard-copy" . "Mod1+c")
                             ("clipboard-paste" . "Mod1+v")
                             ("search-start" . "Mod1+s")
