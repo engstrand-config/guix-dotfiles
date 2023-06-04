@@ -3,10 +3,13 @@
   #:use-module (engstrand systems)
   #:use-module (engstrand features laptop)
   #:use-module (engstrand features radio)
+  #:use-module (dwl-guile home-service)
+  #:use-module (rde features base)
   #:use-module (rde features system)
   #:use-module (rde features bluetooth)
   #:use-module (guix gexp)
   #:use-module (gnu system file-systems)
+  #:use-module (gnu services)
   #:use-module (gnu bootloader)
   #:use-module (gnu bootloader grub)
   #:use-module (gnu system mapped-devices)
@@ -34,14 +37,25 @@
       (file-system
        (mount-point "/")
        (device
-        (uuid "dd627ff0-9b52-4396-b67c-ddc81c5c6d38"
-              'ext4))
-       (type "ext4")))
+        (uuid "84ed6452-d8c9-4649-bfd4-c3171a7985cf"
+              'btrfs))
+       (type "btrfs")))
      #:swap-devices
      (list
       (swap-space
-       (target (uuid "2055b78a-6584-490e-a51f-9ddc1195fc94")))))
+       (target (uuid "4ea38741-230c-47c4-97d6-132f2002d9fb")))))
     (feature-radio
      #:rtl-sdr? #t)
-    (feature-bluetooth))
+    (feature-bluetooth)
+    (feature-custom-services
+     #:home-services
+     (list
+      (simple-service
+       'dwl-guile-nogaps
+       home-dwl-guile-service-type
+       `((setq gaps-oh 0
+               gaps-ov 0
+               gaps-ih 0
+               gaps-iv 0
+               border-px 3))))))
    %engstrand-laptop-base-features))

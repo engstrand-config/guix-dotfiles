@@ -5,12 +5,14 @@
   #:use-module (gnu packages linux)
   #:use-module (engstrand features bluetooth)
   #:use-module (engstrand features display)
+  #:use-module (rde features base)
   #:use-module (rde features bluetooth)
   #:use-module (rde features system)
   #:use-module (guix gexp)
   #:use-module (guix utils)
   #:use-module (gnu bootloader)
   #:use-module (gnu bootloader grub)
+  #:use-module (gnu services)
   #:use-module (dwl-guile home-service)
   #:use-module (gnu system file-systems)
   #:use-module (gnu system mapped-devices))
@@ -54,6 +56,19 @@
       (device "/dev/mapper/cryptroot")
       (type "ext4")
       (dependencies %mapped-devices))))
+   (feature-custom-services
+    #:home-services
+    (list
+     (simple-service
+      'change-dwl-guile-configuration
+      home-dwl-guile-service-type
+      `((setq smart-gaps? #f
+              smart-borders? #f
+              gaps-oh 30
+              gaps-ov 30
+              gaps-ih 20
+              gaps-iv 10
+              border-px 3)))))
    (feature-dwl-guile-monitor-config
     #:rules
     `((set-monitor-rules
