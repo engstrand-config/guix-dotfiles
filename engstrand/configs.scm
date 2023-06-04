@@ -74,14 +74,14 @@
    (feature-switch-to-tty-on-boot)
    ;; TODO: Move to systems/*.scm?
    (feature-hidpi
-    #:console-font (file-append font-terminus "/share/consolefonts/ter-120b"))
+    #:console-font (file-append font-terminus "/share/consolefonts/ter-132b"))
    (feature-git
     #:sign-commits? #t
     #:git-send-email? #t)
    (feature-git-colorscheme)
    (feature-fonts
-    #:font-packages (list font-jetbrains-mono font-iosevka-aile)
-    #:font-monospace (font "JetBrains Mono" #:size 13)
+    #:font-packages (list font-iosevka-comfy font-iosevka-aile)
+    #:font-monospace (font "Iosevka Comfy Wide" #:size 13)
     #:font-sans (font "Iosevka Aile" #:size 13)
     #:font-serif (font "Iosevka Aile" #:size 13))
    (feature-pipewire)
