@@ -21,6 +21,7 @@
 ;; $ guix system image -t iso9660 installer.scm
 
 (define-module (engstrand installer)
+  #:use-module (gnu) ;; guix-service-type
   #:use-module (gnu services)
   #:use-module (gnu system)
   #:use-module (gnu system install)
@@ -34,6 +35,7 @@
   #:use-module (nongnu packages linux)
   #:use-module (guix gexp)
   #:use-module (guix packages)
+  #:use-module (engstrand systems)
   #:export (installation-os-nonfree))
 
 (define installation-os-nonfree
@@ -42,17 +44,40 @@
    (kernel linux)
    (firmware (list linux-firmware))
 
+   ;; Using vim or Emacs without Caps mapped to Escape is absolute hell.
+   (keyboard-layout %engstrand-keyboard-layout)
+
    ;; Add the 'net.ifnames' argument to prevent network interfaces
    ;; from having really long names.  This can cause an issue with
    ;; wpa_supplicant when you try to connect to a wifi network.
    (kernel-arguments '("quiet" "modprobe.blacklist=radeon" "net.ifnames=0"))
 
    (services
-    (cons*
-     ;; Include the channel file so that it can be used during installation
-     (simple-service 'channel-file etc-service-type
-                     (list `("channels.scm" ,(local-file "channels.scm"))))
-     (operating-system-user-services installation-os)))
+    (append
+     (list
+      (simple-service
+       'channel-file
+       etc-service-type
+       (list
+        ;; Include the channel file so that it can be used during installation
+        `("channels.scm" ,(local-file "channels.scm"))
+        ;; Include entire repo since it contains everything we need.
+        ;; If reinstalling, the previous system defintion can simply
+        ;; by updated with the new file system.
+        `("guix-dotfiles" ,(local-file "../../guix-dotfiles" #:recursive? #t)))))
+     (modify-services
+      ;; Use nonguix substitutes.
+      (operating-system-user-services installation-os)
+      (guix-service-type config => (guix-configuration
+                                    (inherit config)
+                                    (substitute-urls
+                                     (append
+                                      (list "https://substitutes.nonguix.org")
+                                      %default-substitute-urls))
+                                    (authorized-keys
+                                     (append
+                                      (list (local-file "./files/nonguix-signing-key.pub"))
+                                      %default-authorized-guix-keys)))))))
 
    ;; Add some extra packages useful for the installation process
    (packages
