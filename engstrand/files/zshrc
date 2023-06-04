@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+source $HOME/.guix-home/profile/etc/profile
+source $HOME/.guix-profile/etc/profile
+
 zmodload zsh/complist
 
 setopt autocd
