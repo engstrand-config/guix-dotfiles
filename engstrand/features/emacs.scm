@@ -292,7 +292,8 @@
    (feature-emacs-engstrand-appearance)
    (feature-emacs-transparency)
    (feature-emacs-dashboard)
-   (feature-emacs-evil)
+   (feature-emacs-evil
+    #:hide-state-message? #t)
    (feature-emacs-monocle
     #:olivetti-body-width 100)
    (feature-emacs-dired)
