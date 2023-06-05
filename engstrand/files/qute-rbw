@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+import os
+import argparse
+import subprocess
+
+argument_parser = argparse.ArgumentParser()
+
+group = argument_parser.add_mutually_exclusive_group()
+group.add_argument('--username-only', '-e',
+                   action='store_true', help='Only insert username')
+group.add_argument('--password-only', '-w',
+                   action='store_true', help='Only insert password')
+
+def trim(output):
+    return output.decode("utf-8").replace("\n", "")
+
+def bemenu_prompt():
+    entries = []
+    try:
+        entries = subprocess.check_output([
+            "rbw", "list", "--fields", "name", "user"
+        ])
+    except subprocess.CalledProcessError:
+        # Command failed
+        return None
+
+    entries = entries.decode("utf-8").split("\n")
+    entries = list(map(lambda x: x.split("\t"), entries))
+    bemenu_options = "\n".join(list(map(lambda x: x[0], entries)))
+    cmd = f"echo \"{bemenu_options}\" | bemenu"
+    ps = subprocess.Popen(
+        cmd,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
+    )
+    raw = ps.communicate()
+    if len(raw) == 0:
+        return None
+
+    name = trim(raw[0])
+    for entry in entries:
+        if len(entry) < 2:
+            continue
+
+        if entry[0] == name:
+            return {
+                "name": entry[0],
+                "username": entry[1],
+            }
+    return None
+
+def get_password(data):
+    try:
+        return trim(subprocess.check_output(["rbw", "get", data["name"]]))
+    except subprocess.CalledProcessError:
+        # Command failed
+        return None
+
+def qute_command(command):
+    with open(os.environ["QUTE_FIFO"], "w") as fifo:
+        fifo.write(command + "\n")
+        fifo.flush()
+
+def fake_key_raw(text):
+    for character in text:
+        # Escape all characters by default, space requires special handling
+        sequence = '" "' if character == ' ' else r'\{}'.format(character)
+        qute_command('fake-key {}'.format(sequence))
+
+if __name__ == "__main__":
+    args = argument_parser.parse_args()
+    data = bemenu_prompt()
+    if data is None:
+        exit(0)
+
+    password = get_password(data)
+
+    if password is None:
+        exit(0)
+
+    if args.username_only:
+        fake_key_raw(data["username"])
+    elif args.password_only:
+        fake_key_raw(password)
+    else:
+        fake_key_raw(data["username"])
+        qute_command('fake-key <Tab>')
+        fake_key_raw(password)
