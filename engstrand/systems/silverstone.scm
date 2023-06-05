@@ -5,6 +5,7 @@
   #:use-module (gnu packages linux)
   #:use-module (engstrand features bluetooth)
   #:use-module (engstrand features display)
+  #:use-module (engstrand features daw)
   #:use-module (rde features base)
   #:use-module (rde features bluetooth)
   #:use-module (rde features system)
@@ -43,6 +44,9 @@
      (keyboard-layout %engstrand-keyboard-layout)))
    (feature-bluetooth)
    (feature-bluetooth-quick-connect)
+   (feature-ardour)
+   (feature-calf-plugins)
+   ;; (feature-sfz)
    (feature-file-systems
     #:mapped-devices %mapped-devices
     #:file-systems
