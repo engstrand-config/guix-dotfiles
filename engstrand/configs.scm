@@ -111,14 +111,6 @@
    (feature-base-packages
     #:system-packages %engstrand-base-system-packages
     #:home-packages %engstrand-base-home-packages)
-   ;; (feature-state-git
-   ;;   #:repos
-   ;;   `(("engstrand-config/utils" .
-   ;;      "git@github.com:engstrand-config/utils.git")
-   ;;     ("engstrand-config/home-dwl-service" .
-   ;;      "git@github.com:engstrand-config/home-dwl-service.git")
-   ;;     ("engstrand-config/farg" .
-   ;;      "git@github.com:engstrand-config/farg.git")))
    (feature-dotfiles
     #:dotfiles
     `((".aliasrc" ,(local-file "files/aliasrc"))
@@ -126,10 +118,8 @@
       (".nix-channels" ,(local-file "files/nix-channels"))
       (".config/guix/channels.scm" ,(local-file "channels.scm"))
       (".config/guix/config.scm" ,(make-entrypoint))
-      (".config/dunst/dunstrc" ,(local-file "files/config/dunst/dunstrc"))
       (".config/nvim/init.vim" ,(local-file "files/config/nvim/init.vim"))
-      (".config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))
-      (".config/picom/picom.conf" ,(local-file "files/config/picom/picom.conf"))))
+      (".config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))))
    (feature-farg)
    (feature-nix)
    (feature-mpv)
