@@ -1,5 +1,6 @@
 (define-module (engstrand features browsers)
   #:use-module (ice-9 ftw)
+  #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (rde features)
   #:use-module (rde features predicates)
@@ -23,6 +24,13 @@
    ((symbol? value) (symbol->string value))
    ((number? value) (number->string value))
    ((string? value) (str-escape value))
+   ((list? value) (fold
+                   (lambda (x acc)
+                     (if (eq? acc "")
+                         (str-escape x)
+                         (string-append acc ", " (str-escape x))))
+                   ""
+                   value))
    (else value)))
 
 (define* (serialize-qutebrowser-config alist)
@@ -30,7 +38,9 @@
   (fold
    (lambda (entry acc)
      (let ((str-value (serialize-qutebrowser-value (cdr entry))))
-       (string-append acc "c." (car entry) " = " str-value "\n")))
+       (if (eq? (car entry) "bind")
+           (string-append acc "config.bind(" str-value ")\n")
+           (string-append acc "c." (car entry) " = " str-value "\n"))))
    "config.load_autoconfig()\n"
    alist))
 
@@ -70,16 +80,17 @@
    (name 'firefox)
    (home-services-getter get-home-services)))
 
-;; TODO: Add option for custom config
 (define* (feature-qutebrowser
           #:key
           (package qutebrowser/wayland)
           (open-key "S-s-w")
+          (auto-fill-bindings? #t)
           (default-browser? #f))
   "Setup qutebrowser, a keyboard-focused browser with a minimal GUI."
 
   (ensure-pred package? package)
   (ensure-pred string? open-key)
+  (ensure-pred boolean? auto-fill-bindings?)
   (ensure-pred boolean? default-browser?)
 
   (lambda (_ palette)
@@ -220,7 +231,21 @@
                   ;; in unreadable text.
                   ("colors.webpage.bg" . "#ffffff")
                   ("colors.webpage.preferred_color_scheme"
-                   . ,(if light? "light" "dark")))))))))
+                   . ,(if light? "light" "dark"))
+                  ,@(if auto-fill-bindings?
+                        '(("bind" .
+                           ("<Ctrl-Shift-i>"
+                            "spawn --userscript qute-rbw"
+                            "insert"))
+                          ("bind" .
+                           ("<Ctrl-Shift-p>"
+                            "spawn --userscript qute-rbw --password-only"
+                            "insert"))
+                          ("bind" .
+                           ("<Ctrl-Shift-u>"
+                            "spawn --userscript qute-rbw --username-only"
+                            "insert")))
+                        '()))))))))
        (simple-service
         'reload-qutebrowser-on-farg-activation
         home-farg-service-type

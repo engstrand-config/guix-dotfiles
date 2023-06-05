@@ -11,7 +11,8 @@
   #:use-module (gnu home services shepherd)
   #:use-module (engstrand utils)
   #:export (feature-imv
-            feature-bitwarden-cli
+            feature-rbw
+            feature-rbw-qutebrowser
             feature-piper))
 
 (define* (feature-imv)
@@ -56,7 +57,7 @@
    (home-services-getter get-home-services)
    (system-services-getter get-system-services)))
 
-(define* (feature-bitwarden-cli
+(define* (feature-rbw
           #:key
           (email #f)
           (pinentry pinentry-gtk2) ;; pinentry-bemenu does not work
@@ -115,5 +116,28 @@
         (stop #~(make-kill-destructor)))))))
 
   (feature
-   (name 'bitwarden-cli)
+   (name 'rbw)
+   (home-services-getter get-home-services)))
+
+
+(define* (feature-rbw-qutebrowser)
+  "Add a userscript to qutebrowser for adding auto-fill using rbw."
+
+  (define (get-home-services config)
+    (list
+     (simple-service
+      'create-rbw-qutebrowser-userscript
+      home-files-service-type
+      `((".config/qutebrowser/userscripts/qute-rbw"
+      ,(computed-file
+         "qute-rbw-userscript"
+         (with-imported-modules
+          '((guix build utils))
+          #~(begin
+              (use-modules (guix build utils))
+              (copy-file #$(local-file "../files/qute-rbw") #$output)
+              (chmod #$output #o555)))))))))
+
+  (feature
+   (name 'rbw-qutebrowser)
    (home-services-getter get-home-services)))
