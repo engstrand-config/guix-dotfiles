@@ -10,6 +10,7 @@
   #:use-module (rde features shellutils)
   #:use-module (rde features fontutils)
   #:use-module (rde features image-viewers)
+  #:use-module (rde features mail)
   #:use-module (rde features video)
   #:use-module (rde features version-control)
   #:use-module (rde features password-utils)
@@ -37,6 +38,7 @@
   #:use-module (engstrand features networking)
   #:use-module (engstrand features version-control)
   #:export (
+            %engstrand-email-primary
             %engstrand-base-system-packages
             %engstrand-base-home-packages
             %engstrand-base-features))
@@ -46,6 +48,11 @@
 ;;
 ;; Operating system configuration should be done in engstrand/systems.scm,
 ;; and computer specific settings in each corresponding file in engstrand/systems/.
+(define rde-user (getenv "RDE_USER"))
+
+(define %engstrand-email-primary
+  (string-append rde-user "@engstrand.nu"))
+
 (define %engstrand-base-system-packages
   (pkgs '("git" "nss-certs")))
 
@@ -61,7 +68,7 @@
   (scheme-file "entrypoint.scm"
                #~(begin
                    (use-modules (engstrand reconfigure))
-                   (make-config #:user #$(getenv "RDE_USER")
+                   (make-config #:user #$rde-user
                                 #:system #$(gethostname)))))
 
 (define %engstrand-base-features
@@ -134,6 +141,20 @@
     #:default-reader? #t)
    (feature-signal)
    (feature-password-store)
+   (feature-mail-settings
+    #:mail-accounts (list
+                     (mail-account (id 'personal)
+                                   (fqda %engstrand-email-primary)
+                                   (type 'generic))))
+   (feature-emacs-message)
+   (feature-notmuch)
+   (feature-msmtp
+    #:msmtp-provider-settings
+    `((generic . ((host . "eagle.mxlogin.com")
+                  (port . 587)
+                  (tls_starttls . on)))))
+   (feature-isync #:isync-verbose #t)
+   (feature-l2md)
    (feature-dwl-guile)
    (feature-wayland-swaybg)
    (feature-wayland-bemenu)

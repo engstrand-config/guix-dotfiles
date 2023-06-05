@@ -33,7 +33,7 @@
     (feature-user-info
      #:user-name "fredrik"
      #:full-name "Fredrik Engstrand"
-     #:email "fredrik@engstrand.nu")
+     #:email %engstrand-email-primary)
     (feature-gnupg
      #:gpg-primary-key "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
      #:pinentry-flavor 'gtk2)
