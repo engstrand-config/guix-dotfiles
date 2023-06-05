@@ -55,6 +55,9 @@
     (feature-sioyek
      #:default-reader? #t)
     (feature-kdeconnect)
+    (feature-rbw
+     #:email "frewacom@gmail.com")
+    (feature-rbw-qutebrowser)
     (feature-custom-services
      #:home-services
      (list
