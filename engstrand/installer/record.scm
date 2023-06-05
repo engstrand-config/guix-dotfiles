@@ -16,7 +16,22 @@
             engstrand-installer-user-page
             engstrand-installer-partition-page
             engstrand-installer-welcome-page
-            engstrand-installer-run-command))
+            engstrand-installer-run-command
+
+            <new-user>
+            new-user
+            make-new-user
+            new-user?
+            new-user-name
+            new-user-full-name
+            new-user-email
+
+            <new-system>
+            new-system
+            make-new-system
+            new-system?
+            new-system-name
+            new-system-features))
 
 ;;;
 ;;; Installer record.
@@ -53,3 +68,32 @@
   (welcome-page engstrand-installer-welcome-page)
   ;; procedure command -> bool
   (run-command engstrand-installer-run-command))
+
+;;;
+;;; New user record.
+;;;
+
+;; The <new-user> record contains information about a new user.
+;; Information stored in this record will be used when creating a new
+;; user configuration.
+
+(define-record-type* <new-user>
+  new-user make-new-user
+  new-user?
+  (name new-user-name)
+  (full-name new-user-full-name)
+  (email new-user-email))
+
+;;;
+;;; New system record.
+;;;
+
+;; The <new-system> record contains information about a new system.
+;; Information stored in this record will be used when creating a new
+;; system configuration.
+
+(define-record-type* <new-system>
+  new-system make-new-system
+  new-system?
+  (name new-system-name)
+  (features new-system-features))

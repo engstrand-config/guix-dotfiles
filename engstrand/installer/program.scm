@@ -58,8 +58,9 @@
 
 (define (get-config-files path)
   (let ((base-path (dirname (current-filename))))
-    (filter (lambda (file) (string-suffix? ".scm" file))
-            (scandir (string-append base-path "/" path)))))
+    (map (lambda (config) (G_ (basename config ".scm")))
+         (filter (lambda (file) (string-suffix? ".scm" file))
+                 (scandir (string-append base-path "/" path))))))
 
 ;; Override the default Guix installer steps, such as hostname,
 ;; timezone, user setup, etc. All of this is already defined in our config files.
@@ -198,8 +199,8 @@
                          (guix build utils)
                          (engstrand installer record)
                          (engstrand installer newt)
-                         (engstrand installer newt menu)
                          (engstrand installer newt user)
+                         (engstrand installer newt utils)
                          (engstrand installer newt system)
                          ((system repl debug)
                           #:select (terminal-width))
