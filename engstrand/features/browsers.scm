@@ -73,7 +73,7 @@
 ;; TODO: Add option for custom config
 (define* (feature-qutebrowser
           #:key
-          (package qutebrowser-with-scripts)
+          (package qutebrowser/wayland)
           (open-key "S-s-w")
           (default-browser? #f))
   "Setup qutebrowser, a keyboard-focused browser with a minimal GUI."

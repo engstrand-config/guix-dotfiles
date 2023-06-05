@@ -3,28 +3,26 @@
   #:use-module (guix utils)
   #:use-module (guix download)
   #:use-module (guix packages)
-  #:use-module (nongnu packages mozilla)
+  #:use-module (gnu packages qt)
   #:use-module (gnu packages web-browsers))
 
-;; This package is the same as the default qutebrowser package in Guix,
-;; but adds another phase that copies all official userscripts into share/.
-;;
-;; You can find all available userscripts here:
-;; @url{https://github.com/qutebrowser/qutebrowser/tree/master/misc/userscripts}.
-(define-public
-  qutebrowser-with-scripts
-  (package
-   (inherit qutebrowser)
-   (name "qutebrowser-with-scripts")
+;; Until https://issues.guix.gnu.org/63558 is merged.
+(define-public qutebrowser/wayland
+  (package/inherit
+   qutebrowser
+   (name "qutebrowser-wayland")
+   (inputs
+    (modify-inputs (package-inputs qutebrowser)
+                   (prepend qtwayland-5)))
    (arguments
-    `(,@(substitute-keyword-arguments
-         (package-arguments qutebrowser)
-         ((#:phases phases)
-          `(modify-phases
-            ,phases
-            (add-after 'install 'install-userscripts
-                       (lambda* (#:key outputs #:allow-other-keys)
-                         (let* ((out (assoc-ref outputs "out"))
-                                (scripts (string-append out "/share/qutebrowser/userscripts")))
-                           (mkdir-p scripts)
-                           (copy-recursively "misc/userscripts" scripts)))))))))))
+    (substitute-keyword-arguments
+     (package-arguments qutebrowser)
+     ((#:phases phases)
+      #~(modify-phases
+         #$phases
+         (add-after 'wrap-qt-process-path 'wrap-qtwebengine-path
+                    (lambda* (#:key inputs outputs #:allow-other-keys)
+                      (wrap-program (search-input-file outputs "bin/qutebrowser")
+                                    `("QT_PLUGIN_PATH" =
+                                      (,(string-append (assoc-ref inputs "qtwayland")
+                                                       "/lib/qt5/plugins/"))))))))))))
