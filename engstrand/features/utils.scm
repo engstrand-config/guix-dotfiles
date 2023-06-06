@@ -63,12 +63,12 @@
           #:key
           (package rbw-latest)
           (email #f)
-          (pinentry pinentry-gtk2) ;; pinentry-bemenu does not work
+          (pinentry (file-append pinentry-bemenu "/bin/pinentry-bemenu"))
           (lock-timeout 300)) ;; 5 minutes
   "Setup rbw, the unofficial Bitwarden CLI."
 
   (ensure-pred package? package)
-  (ensure-pred package? pinentry)
+  (ensure-pred file-like? pinentry)
   (ensure-pred maybe-string? email)
   (ensure-pred number? lock-timeout)
 
@@ -88,27 +88,26 @@
      (simple-service
       'create-rbw-config
       home-files-service-type
-      `((".config/rbw/guix-watcher"
+      `((".config/rbw/immutable-config"
          ,(mixed-text-file
-           "guix-watcher"
+           "rbw-immutable-config"
            email (number->string lock-timeout) pinentry))))
      (simple-service
       'on-rbw-config-change
       home-run-on-change-service-type
       (let ((bin (file-append package "/bin/rbw")))
-        `(("files/.config/rbw/guix-watcher"
+        `(("files/.config/rbw/immutable-config"
            ,#~(begin
                 (when #$email
                   (system* #$bin "config" "set" "email" #$email))
                 (system* #$bin "config" "set" "pinentry"
-                         #$(file-append pinentry "/bin/pinentry-gtk-2"))
+                         #$pinentry)
                 (system* #$bin "config" "set" "lock_timeout"
                          #$(number->string lock-timeout)))))))))
 
   (feature
    (name 'rbw)
    (home-services-getter get-home-services)))
-
 
 (define* (feature-rbw-qutebrowser)
   "Add a userscript to qutebrowser for adding auto-fill using rbw."
