@@ -61,6 +61,7 @@ Passwords for e.g. git send-mail are fetched from Bitwarden using the =rbw= bina
 1. Login to your Bitwarden account in your browser.
 2. Navigate to https://vault.bitwarden.com/#/settings/security/security-keys.
 3. Create/view your API key.
-4. Run =herd start rbw-setup=.
+4. Run =rbw register=.
 5. Enter the client id and secret as requested.
-6. Done.
+6. If you are using 2FA for your account, login using =rbw login=.
+7. Done.

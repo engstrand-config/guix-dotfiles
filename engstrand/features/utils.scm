@@ -103,21 +103,7 @@
                 (system* #$bin "config" "set" "pinentry"
                          #$(file-append pinentry "/bin/pinentry-gtk-2"))
                 (system* #$bin "config" "set" "lock_timeout"
-                         #$(number->string lock-timeout)))))))
-     (simple-service
-      'add-rbw-initial-setup-shepherd-service
-      home-shepherd-service-type
-      (list
-       (shepherd-service
-        (documentation "Run initial setup for rbw (Bitwarden CLI).")
-        (provision '(rbw-setup))
-        (requirement '())
-        (auto-start? #f)
-        (respawn? #f)
-        (start
-         #~(make-forkexec-constructor
-            (list #$(file-append package "/bin/rbw") "register")))
-        (stop #~(make-kill-destructor)))))))
+                         #$(number->string lock-timeout)))))))))
 
   (feature
    (name 'rbw)
