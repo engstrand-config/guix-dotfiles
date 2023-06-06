@@ -53,3 +53,14 @@ That depends on the user and system configuration we would like to apply. For ex
 The =build-iso.sh= script builds a GNU Guix System ISO that has
 - the full Linux kernel
 - the channels in =./engstrand/channels.scm= included
+
+** Usage
+*** Bitwarden CLI setup using rbw
+Passwords for e.g. git send-mail are fetched from Bitwarden using the =rbw= binary. On newly installed computers, you need to first register your device to the Bitwarden API.
+
+1. Login to your Bitwarden account in your browser.
+2. Navigate to https://vault.bitwarden.com/#/settings/security/security-keys.
+3. Create/view your API key.
+4. Run =herd start rbw-setup=.
+5. Enter the client id and secret as requested.
+6. Done.
