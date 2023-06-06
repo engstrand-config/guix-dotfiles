@@ -70,8 +70,8 @@
 
                      ,@(if repl?
                            `((set-keys ,repl-key
-                                       `(dwl:spawn "emacs" "--eval"
-                                                   ,(get-emacs-start-repl-exp)))
+                                       (lambda () (dwl:spawn "emacs" "--eval"
+                                                  	     ,(get-emacs-start-repl-exp))))
                              (add-hook! dwl:hook-startup dwl:start-repl-server))
                            '()))))))))
 
