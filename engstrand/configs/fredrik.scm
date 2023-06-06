@@ -20,9 +20,9 @@
   #:use-module (engstrand features emacs)
   #:use-module (engstrand features publish)
   #:use-module (engstrand features theming)
-  #:use-module (engstrand features browsers)
   #:use-module (engstrand features documents)
   #:use-module (engstrand features virtualization)
+  #:use-module (engstrand features web-browsers)
   #:use-module (engstrand features wayland))
 
 (define-public %user-theme engstrand-theme-dark)

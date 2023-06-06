@@ -16,7 +16,7 @@
   #:use-module (engstrand features utils)
   #:use-module (engstrand features wayland)
   #:use-module (engstrand features theming)
-  #:use-module (engstrand features browsers)
+  #:use-module (engstrand features web-browsers)
   #:use-module (engstrand features virtualization))
 
 (define-public %user-theme
