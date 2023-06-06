@@ -10,6 +10,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (engstrand utils)
+  #:use-module (engstrand packages utils)
   #:use-module (engstrand home-services qutebrowser)
   #:export (feature-imv
             feature-rbw
@@ -60,11 +61,13 @@
 
 (define* (feature-rbw
           #:key
+          (package rbw-latest)
           (email #f)
           (pinentry pinentry-gtk2) ;; pinentry-bemenu does not work
           (lock-timeout 300)) ;; 5 minutes
   "Setup rbw, the unofficial Bitwarden CLI."
 
+  (ensure-pred package? package)
   (ensure-pred package? pinentry)
   (ensure-pred maybe-string? email)
   (ensure-pred number? lock-timeout)
@@ -75,7 +78,7 @@
      (simple-service
       'add-rbw-home-packages-to-profile
       home-profile-service-type
-      (list rbw))
+      (list package))
      ;; rbw mutates the configuration file to set a unique device-id
      ;; upon registering the device using your API key.
      ;; See https://github.com/doy/rbw/issues/74.
@@ -92,7 +95,7 @@
      (simple-service
       'on-rbw-config-change
       home-run-on-change-service-type
-      (let ((bin (file-append rbw "/bin/rbw")))
+      (let ((bin (file-append package "/bin/rbw")))
         `(("files/.config/rbw/guix-watcher"
            ,#~(begin
                 (when #$email
@@ -113,7 +116,7 @@
         (respawn? #f)
         (start
          #~(make-forkexec-constructor
-            (list #$(file-append rbw "/bin/rbw") "register")))
+            (list #$(file-append package "/bin/rbw") "register")))
         (stop #~(make-kill-destructor)))))))
 
   (feature
