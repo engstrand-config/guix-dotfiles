@@ -132,10 +132,12 @@
    (feature-signal)
    (feature-password-store)
    (feature-mail-settings
-    #:mail-accounts (list
-                     (mail-account (id 'personal)
-                                   (fqda %engstrand-email-primary)
-                                   (type 'generic))))
+    #:mail-accounts
+    (list
+     (mail-account (id 'personal)
+                   (fqda %engstrand-email-primary)
+                   (type 'generic)
+                   (pass-cmd "rbw get \"$(rbw ls | bemenu)\""))))
    (feature-emacs-message)
    (feature-notmuch)
    (feature-msmtp
