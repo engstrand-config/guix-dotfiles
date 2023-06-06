@@ -38,6 +38,16 @@
   (ensure-pred boolean? repl?)
   (ensure-pred string? repl-key)
 
+  (define (get-emacs-start-repl-exp)
+    (object->string
+      '(progn
+        (require 'geiser-repl)
+        (geiser-repl--start-repl
+         (geiser-repl--get-impl "Connect to Scheme impl: ")
+         ,%dwl:repl-socket-path)
+        (kill-buffer "*scratch*")
+        (delete-other-windows))))
+
   (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by dwl-guile."
@@ -48,31 +58,22 @@
                   (patch-dwl-guile-package dwl-guile
                                            #:patches %engstrand-dwl-guile-patches))
                  (config
-                  `((setq root-color ,(palette 'bg)
-                          border-color ,(farg:offset (palette 'bg) 10)
-                          focus-color ,(palette 'accent-0)
-                          lockscreen-color ,(farg:with-alpha (palette 'bg) 90)
-                          border-px 2
-                          sloppy-focus? #t
-                          smart-gaps? #t
-                          smart-borders? #t)
+                  (list
+                   `((setq root-color ,(palette 'bg)
+                           border-color ,(farg:offset (palette 'bg) 10)
+                           focus-color ,(palette 'accent-0)
+                           lockscreen-color ,(farg:with-alpha (palette 'bg) 90)
+                           border-px 2
+                           sloppy-focus? #t
+                           smart-gaps? #t
+                           smart-borders? #t)
 
-                    ,@(if repl?
-                          `((define (get-emacs-start-repl-exp)
-                              (object->string
-                               `(progn
-                                 (require 'geiser-repl)
-                                 (geiser-repl--start-repl
-                                  (geiser-repl--get-impl "Connect to Scheme impl: ")
-                                  ,%dwl:repl-socket-path)
-                                 (kill-buffer "*scratch*")
-                                 (delete-other-windows))))
-
-                            (set-keys ,repl-key
-                                      `(dwl:spawn "emacs" "--eval" ,(get-emacs-start-repl-exp)))
-
-                            (add-hook! dwl:hook-startup dwl:start-repl-server))
-                          '())))))))
+                     ,@(if repl?
+                           `((set-keys ,repl-key
+                                       `(dwl:spawn "emacs" "--eval"
+                                                   ,(get-emacs-start-repl-exp)))
+                             (add-hook! dwl:hook-startup dwl:start-repl-server))
+                           '()))))))))
 
     (feature
      (name 'wayland-dwl-guile)
