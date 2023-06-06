@@ -10,10 +10,12 @@
             engstrand-theme-dark
             engstrand-farg-palette))
 
-(define engstrand-theme-light
+(define* (engstrand-theme-light
+          #:key (wallpaper #f))
   (farg-source
    (theme
     (farg-theme
+     (wallpaper wallpaper)
      (light? #t)
      (alpha 0.98)
      (fg "#000000")
@@ -28,10 +30,12 @@
      (accent-6 "#3548CF")
      (accent-7 "#2A5045")))))
 
-(define engstrand-theme-dark
+(define* (engstrand-theme-dark
+          #:key (wallpaper #f))
   (farg-source
    (theme
     (farg-theme
+     (wallpaper wallpaper)
      (light? #f)
      (alpha 0.96)
      (fg "#FFFFFF")
