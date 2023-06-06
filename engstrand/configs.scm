@@ -126,6 +126,8 @@
    (feature-youtube-dl)
    (feature-obs)
    (feature-imv)
+   (feature-rbw
+    #:email %engstrand-email-primary)
    (feature-neovim)
    (feature-zathura
     #:default-reader? #t)
