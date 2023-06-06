@@ -36,7 +36,7 @@
      #:email %engstrand-email-primary)
     (feature-gnupg
      #:gpg-primary-key "C9BEB8A04458FDDF12681B39029D8EB77E18D68C"
-     #:pinentry-flavor 'gtk2)
+     #:pinentry-flavor 'bemenu)
     (feature-ssh
      #:ssh-configuration
      (home-ssh-configuration

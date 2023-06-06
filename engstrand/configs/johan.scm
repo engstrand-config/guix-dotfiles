@@ -32,7 +32,7 @@
      #:email %engstrand-email-primary)
     (feature-gnupg
      #:gpg-primary-key "DFC6C6B70EF5F7CB75EE97E6DF3088DDBCAD566D"
-     #:pinentry-flavor 'gtk2)
+     #:pinentry-flavor 'bemenu)
     (feature-virtualization)
     (feature-kdeconnect)
     (feature-piper)
