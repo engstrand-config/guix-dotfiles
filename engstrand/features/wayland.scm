@@ -448,14 +448,14 @@
          (simple-service
           'set-bemenu-as-default-menu-in-dwl-guile
           home-dwl-guile-service-type
-          `((set-keys ,open-key (lambda () (dwl:spawn ,(file-append bemenu "/bin/bemenu-run")))))))
+          `((set-keys ,open-key
+                      (lambda () (dwl:spawn ,(file-append bemenu "/bin/bemenu-run")))))))
        (simple-service
         'bemenu-options
         home-environment-variables-service-type
         (alist->environment-variable
          "BEMENU_OPTS"
-         `(("ignorecase" . #t)
-           ("line-height"
+         `(("line-height"
             . ,(get-value 'statusbar-height config 25))
            ("filter" . #f)
            ("wrap" . #f)
@@ -488,7 +488,11 @@
            ("sb" . #f)
            ("sf" . ,(palette 'accent-1-text))
            ("scb" . #f)
-           ("scf" . #f))))))
+           ("scf" . #f)
+           ;; NOTE: pinentry-bemenu does not support this option,
+           ;; so we need to keep it last in the list of options,
+           ;; otherwise they will be ignored.
+           ("ignorecase" . #t))))))
 
     (feature
      (name 'wayland-bemenu)
