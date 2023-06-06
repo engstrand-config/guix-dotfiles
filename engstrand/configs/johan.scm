@@ -19,8 +19,10 @@
   #:use-module (engstrand features browsers)
   #:use-module (engstrand features virtualization))
 
-(define-public %user-theme engstrand-theme-dark)
-
+(define-public %user-theme
+  (engstrand-theme-dark
+   #:wallpaper
+   (get-wallpaper-path "art/the-cleveland-museum-of-art-3_m6yeqmbv8-unsplash.jpg")))
 (define-public %user-features
   (append
    (list
