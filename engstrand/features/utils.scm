@@ -10,6 +10,7 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (engstrand utils)
+  #:use-module (engstrand home-services qutebrowser)
   #:export (feature-imv
             feature-rbw
             feature-rbw-qutebrowser
@@ -126,17 +127,18 @@
   (define (get-home-services config)
     (list
      (simple-service
-      'create-rbw-qutebrowser-userscript
-      home-files-service-type
-      `((".config/qutebrowser/userscripts/qute-rbw"
-      ,(computed-file
-         "qute-rbw-userscript"
-         (with-imported-modules
-          '((guix build utils))
-          #~(begin
-              (use-modules (guix build utils))
-              (copy-file #$(local-file "../files/qute-rbw") #$output)
-              (chmod #$output #o555)))))))))
+      'qutebrowser-rbw-autofill
+      home-qutebrowser-service-type
+      (home-qutebrowser-extension
+       (bindings
+        '(("<Ctrl-Shift-i>" "spawn --userscript qute-rbw" "insert")
+          ("<Ctrl-Shift-p>" "spawn --userscript qute-rbw --password-only" "insert")
+          ("<Ctrl-Shift-u>" "spawn --userscript qute-rbw --username-only" "insert")
+          ("<Ctrl-Shift-i>" "spawn --userscript qute-rbw" "normal")
+          ("<Ctrl-Shift-p>" "spawn --userscript qute-rbw --password-only" "normal")
+          ("<Ctrl-Shift-u>" "spawn --userscript qute-rbw --username-only" "normal")))
+       (userscripts
+        `(("qute-rbw" . ,(local-file "../files/qute-rbw"))))))))
 
   (feature
    (name 'rbw-qutebrowser)
