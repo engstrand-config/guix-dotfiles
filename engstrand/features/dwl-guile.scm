@@ -9,12 +9,8 @@
   #:use-module (dwl-guile home-service)
   #:export (
             feature-dwl-guile
-
             has-dwl-patch?
-
-            %engstrand-dwl-guile-patches
-            %engstrand-dwl-guile-config
-            %engstrand-dwl-guile-home-configuration))
+            %engstrand-dwl-guile-patches))
 
 ;; Checks if SYMBOL corresponds to a patch that is/will
 ;; be applied to dwl-guile, based on the feature values in CONFIG.
@@ -33,27 +29,12 @@
         %patch-focusmonpointer
         %patch-monitor-config))
 
-(define %engstrand-dwl-guile-config
-  `((setq border-px 2
-          sloppy-focus? #t
-          smart-gaps? #t
-          smart-borders? #t)))
-
-(define %engstrand-dwl-guile-home-configuration
-  (home-dwl-guile-configuration
-   (package
-    (patch-dwl-guile-package dwl-guile
-                             #:patches %engstrand-dwl-guile-patches))
-   (config (list %engstrand-dwl-guile-config))))
-
 (define* (feature-dwl-guile
           #:key
-          (dwl-guile-config %engstrand-dwl-guile-home-configuration)
           (repl? #t)
           (repl-key "s-S-C-i"))
   "Setup dwl-guile."
 
-  (ensure-pred home-dwl-guile-configuration? dwl-guile-config)
   (ensure-pred boolean? repl?)
   (ensure-pred string? repl-key)
 
@@ -61,32 +42,37 @@
     (define (get-home-services config)
       "Return a list of home services required by dwl-guile."
       (list
-       (service home-dwl-guile-service-type dwl-guile-config)
-       (simple-service
-        'dwl-guile-colorscheme
-        home-dwl-guile-service-type
-        `((setq root-color ,(palette 'bg)
-                border-color ,(farg:offset (palette 'bg) 10)
-                focus-color ,(palette 'accent-0)
-                lockscreen-color ,(farg:with-alpha (palette 'bg) 90))))
-       (when repl?
-         (simple-service
-          'dwl-guile-repl
-          home-dwl-guile-service-type
-          `((define (get-emacs-start-repl-exp)
-              (object->string
-               `(progn
-                 (require 'geiser-repl)
-                 (geiser-repl--start-repl
-                  (geiser-repl--get-impl "Connect to Scheme impl: ")
-                  ,%dwl:repl-socket-path)
-                 (kill-buffer "*scratch*")
-                 (delete-other-windows))))
+       (service home-dwl-guile-service-type
+                (home-dwl-guile-configuration
+                 (package
+                  (patch-dwl-guile-package dwl-guile
+                                           #:patches %engstrand-dwl-guile-patches))
+                 (config
+                  `((setq root-color ,(palette 'bg)
+                          border-color ,(farg:offset (palette 'bg) 10)
+                          focus-color ,(palette 'accent-0)
+                          lockscreen-color ,(farg:with-alpha (palette 'bg) 90)
+                          border-px 2
+                          sloppy-focus? #t
+                          smart-gaps? #t
+                          smart-borders? #t)
 
-            (set-keys ,repl-key
-                      `(dwl:spawn "emacs" "--eval" ,(get-emacs-start-repl-exp)))
+                    ,@(if repl?
+                          `((define (get-emacs-start-repl-exp)
+                              (object->string
+                               `(progn
+                                 (require 'geiser-repl)
+                                 (geiser-repl--start-repl
+                                  (geiser-repl--get-impl "Connect to Scheme impl: ")
+                                  ,%dwl:repl-socket-path)
+                                 (kill-buffer "*scratch*")
+                                 (delete-other-windows))))
 
-            (add-hook! dwl:hook-startup dwl:start-repl-server))))))
+                            (set-keys ,repl-key
+                                      `(dwl:spawn "emacs" "--eval" ,(get-emacs-start-repl-exp)))
+
+                            (add-hook! dwl:hook-startup dwl:start-repl-server))
+                          '())))))))
 
     (feature
      (name 'wayland-dwl-guile)
