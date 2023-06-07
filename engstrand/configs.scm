@@ -87,10 +87,21 @@
     #:git-send-email? #t)
    (feature-git-colorscheme)
    (feature-fonts
-    #:font-packages (list font-iosevka-comfy font-iosevka-aile)
-    #:font-monospace (font "Iosevka Comfy Wide" #:size 13)
-    #:font-sans (font "Iosevka Aile" #:size 13)
-    #:font-serif (font "Iosevka Aile" #:size 13))
+    #:font-monospace
+    (font
+     (name "Iosevka Comfy Wide")
+     (size 13)
+     (package font-iosevka-comfy))
+    #:font-sans
+    (font
+     (name "Iosevka Aile")
+     (size 13)
+     (package font-iosevka-aile))
+    #:font-serif
+    (font
+     (name "Iosevka Aile")
+     (size 13)
+     (package font-iosevka-aile)))
    (feature-pipewire)
    (feature-pulseaudio-control)
    (feature-backlight)
