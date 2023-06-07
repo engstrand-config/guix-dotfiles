@@ -583,7 +583,10 @@
       (list
        (service screen-locker-service-type
                 (screen-locker-configuration
-                 "swaylock" (file-append swaylock "/bin/swaylock") #f))))
+                 (name "swaylock")
+                 (program (file-append swaylock "/bin/swaylock"))
+                 (using-setuid? #f)
+                 (using-pam? #t)))))
 
     (feature
      (name 'wayland-swaylock)
