@@ -51,7 +51,7 @@
 (define rde-user (getenv "RDE_USER"))
 
 (define %engstrand-email-primary
-  (format "~a@engstrand.nu" rde-user))
+  (format #f "~a@engstrand.nu" rde-user))
 
 (define %engstrand-base-system-packages
   (pkgs '("git" "nss-certs")))
