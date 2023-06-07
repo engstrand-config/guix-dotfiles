@@ -65,3 +65,8 @@ Passwords for e.g. git send-mail are fetched from Bitwarden using the =rbw= bina
 5. Enter the client id and secret as requested.
 6. If you are using 2FA for your account, login using =rbw login=.
 7. Done.
+
+*** Qutebrowser adblock
+To improve the adblock in qutebrowser, you need to install the Brave adblocker. This needs to be manually downloaded from pip (for now).
+
+Run =pip install adblock=, followed by =:adblock-update= in qutebrowser.
