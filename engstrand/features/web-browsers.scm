@@ -101,7 +101,10 @@
            (default-browser? default-browser?)
            (properties
             `(("auto_save.session" . True)
+              ("content.blocking.method" . "both")
               ("content.blocking.enabled" . True)
+              ("content.headers.user_agent"
+               . "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0")
               ("tabs.position" . ,"top")
               ("tabs.padding"
                . ,(string->symbol
