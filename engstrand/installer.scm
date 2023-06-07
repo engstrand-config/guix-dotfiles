@@ -37,7 +37,7 @@
   #:use-module (guix gexp)
   #:use-module (guix packages)
   #:use-module (engstrand systems)
-  #:use-module (engstrand installer program)
+  ;; #:use-module (engstrand installer program)
   #:export (installation-os-nonfree))
 
 (define installation-os-nonfree
@@ -70,9 +70,9 @@
      (modify-services
       ;; Use nonguix substitutes.
       (operating-system-user-services installation-os)
-      (kmscon-service-type config => (kmscon-configuration
-                                      (inherit config)
-                                      (login-program (engstrand-installer-program))))
+      ;; (kmscon-service-type config => (kmscon-configuration
+      ;;                                 (inherit config)
+      ;;                                 (login-program (engstrand-installer-program))))
       (guix-service-type config => (guix-configuration
                                     (inherit config)
                                     (substitute-urls
