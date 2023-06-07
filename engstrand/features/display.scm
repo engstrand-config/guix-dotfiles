@@ -14,9 +14,7 @@
   #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand features wayland)
-  #:export (
-            feature-dwl-guile-monitor-config
-            feature-kanshi-autorandr))
+  #:export (feature-kanshi-autorandr))
 
 ;;  TODO: requires package ddcutil from (gnu packages hardware)
 ;;  please check if package i2c-tools from (gnu packages linux) is required
@@ -28,26 +26,6 @@
 ;;  or (increases brightness by 5 %):
 ;;  ddcutil setvcp 10 + 5
 ;;  )
-
-(define* (feature-dwl-guile-monitor-config
-          #:key
-          (rules '()))
-  "Configure monitor settings for dwl-guile."
-
-  (ensure-pred list? rules)
-
-  (define (get-home-services config)
-    "Return a list of home services required for configuring monitors in dwl-guile."
-    (when (get-value 'dwl-guile config)
-      (list
-       (simple-service
-        'add-dwl-guile-monitor-rules
-        home-dwl-guile-service-type
-        rules))))
-
-  (feature
-   (name 'dwl-guile-monitor-config)
-   (home-services-getter get-home-services)))
 
 (define* (feature-kanshi-autorandr
           #:key

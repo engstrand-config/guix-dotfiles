@@ -9,6 +9,8 @@
   #:use-module (dwl-guile home-service)
   #:export (
             feature-dwl-guile
+            feature-dwl-guile-custom-config
+
             has-dwl-patch?
             %engstrand-dwl-guile-patches))
 
@@ -70,8 +72,9 @@
 
                      ,@(if repl?
                            `((set-keys ,repl-key
-                                       (lambda () (dwl:spawn "emacs" "--eval"
-                                                  	     ,(get-emacs-start-repl-exp))))
+                                       (lambda ()
+                                         (dwl:spawn "emacs" "--eval"
+                                                    ,(get-emacs-start-repl-exp))))
                              (add-hook! dwl:hook-startup dwl:start-repl-server))
                            '()))))))))
 
@@ -81,3 +84,23 @@
                (dwl-guile . #t)
                (dwl-guile-patches . ,%engstrand-dwl-guile-patches)))
      (home-services-getter get-home-services))))
+
+(define* (feature-dwl-guile-custom-config
+          #:key
+          (name 'dwl-guile-custom-config)
+          (config '()))
+  "Personal customization overrides to your dwl-guile configuration."
+
+  (ensure-pred symbol? name)
+  (ensure-pred list? config)
+
+  (define (get-home-services config)
+    (list
+     (simple-service
+      name
+      home-dwl-guile-service-type
+      config)))
+
+  (feature
+   (name name)
+   (home-services-getter get-home-services)))

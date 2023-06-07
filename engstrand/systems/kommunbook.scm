@@ -3,6 +3,7 @@
   #:use-module (engstrand systems)
   #:use-module (engstrand features laptop)
   #:use-module (engstrand features radio)
+  #:use-module (engstrand features dwl-guile)
   #:use-module (dwl-guile home-service)
   #:use-module (rde features base)
   #:use-module (rde features system)
@@ -47,15 +48,11 @@
     (feature-radio
      #:rtl-sdr? #t)
     (feature-bluetooth)
-    (feature-custom-services
-     #:home-services
-     (list
-      (simple-service
-       'dwl-guile-nogaps
-       home-dwl-guile-service-type
-       `((setq gaps-oh 0
-               gaps-ov 0
-               gaps-ih 0
-               gaps-iv 0
-               border-px 3))))))
+    (feature-dwl-guile-custom-config
+     #:config
+     `((setq gaps-oh 0
+             gaps-ov 0
+             gaps-ih 0
+             gaps-iv 0
+             border-px 3))))
    %engstrand-laptop-base-features))

@@ -2,6 +2,7 @@
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
   #:use-module (engstrand features display)
+  #:use-module (engstrand features dwl-guile)
   #:use-module (engstrand features bluetooth)
   #:use-module (rde features system)
   #:use-module (rde features bluetooth)
@@ -47,9 +48,10 @@
       (dependencies %mapped-devices))))
    (feature-bluetooth)
    (feature-bluetooth-quick-connect)
-   (feature-dwl-guile-monitor-config
-    #:rules
-    `((set-monitor-rules
+   (feature-dwl-guile-custom-config
+    #:config
+    `((setq accel-speed -0.7)
+      (set-monitor-rules
        '((name "DP-3")
          (width . 1920)
          (height . 1080)

@@ -21,11 +21,12 @@
   #:use-module (engstrand features publish)
   #:use-module (engstrand features theming)
   #:use-module (engstrand features documents)
+  #:use-module (engstrand features dwl-guile)
   #:use-module (engstrand features virtualization)
   #:use-module (engstrand features web-browsers)
   #:use-module (engstrand features wayland))
 
-(define-public %user-theme engstrand-theme-dark)
+(define-public %user-theme (engstrand-theme-dark))
 
 (define-public %user-features
   (append
@@ -56,17 +57,13 @@
      #:default-reader? #t)
     (feature-kdeconnect)
     (feature-rbw-qutebrowser)
-    (feature-custom-services
-     #:home-services
-     (list
-      (simple-service
-       'change-dwl-guile-borderpx
-       home-dwl-guile-service-type
-       `((setq gaps-oh 10
-               gaps-ov 10
-               gaps-ih 10
-               gaps-iv 10
-               border-px 1))))))
+    (feature-dwl-guile-custom-config
+     #:config
+     `((setq gaps-oh 10
+             gaps-ov 10
+             gaps-ih 10
+             gaps-iv 10
+             border-px 1))))
    %engstrand-emacs-base-features
    (modify-features %engstrand-base-features
                     (delete 'zathura)

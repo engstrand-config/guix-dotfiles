@@ -1,7 +1,7 @@
 (define-module (engstrand systems p400s)
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
-  #:use-module (engstrand features display)
+  #:use-module (engstrand features dwl-guile)
   #:use-module (guix gexp)
   #:use-module (gnu services)
   #:use-module (rde features base)
@@ -32,22 +32,16 @@
     #:swap-devices
     (list (swap-space
            (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03")))))
-   (feature-custom-services
-    #:home-services
-    (list
-     (simple-service
-      'change-dwl-guile-configuration
-      home-dwl-guile-service-type
-      `((setq smart-gaps? #f
-              smart-borders? #f
-              gaps-oh 30
-              gaps-ov 30
-              gaps-ih 20
-              gaps-iv 10
-              border-px 3)))))
-   (feature-dwl-guile-monitor-config
-    #:rules
-    `((set-monitor-rules
+   (feature-dwl-guile-custom-config
+    #:config
+    `((setq smart-gaps? #f
+            smart-borders? #f
+            gaps-oh 30
+            gaps-ov 30
+            gaps-ih 20
+            gaps-iv 10
+            border-px 3)
+      (set-monitor-rules
        '((name . "DP-1")
          (width . 2560)
          (height . 1440)

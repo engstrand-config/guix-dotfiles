@@ -3,6 +3,7 @@
   #:use-module (engstrand systems)
   #:use-module (nongnu packages linux)
   #:use-module (gnu packages linux)
+  #:use-module (engstrand features dwl-guile)
   #:use-module (engstrand features bluetooth)
   #:use-module (engstrand features display)
   #:use-module (engstrand features daw)
@@ -60,22 +61,16 @@
       (device "/dev/mapper/cryptroot")
       (type "ext4")
       (dependencies %mapped-devices))))
-   (feature-custom-services
-    #:home-services
-    (list
-     (simple-service
-      'change-dwl-guile-configuration
-      home-dwl-guile-service-type
-      `((setq smart-gaps? #f
-              smart-borders? #f
-              gaps-oh 30
-              gaps-ov 30
-              gaps-ih 20
-              gaps-iv 10
-              border-px 3)))))
-   (feature-dwl-guile-monitor-config
-    #:rules
-    `((set-monitor-rules
+   (feature-dwl-guile-custom-config
+    #:config
+    `((setq smart-gaps? #f
+            smart-borders? #f
+            gaps-oh 30
+            gaps-ov 30
+            gaps-ih 20
+            gaps-iv 10
+            border-px 3)
+      (set-monitor-rules
        '((name . "DP-2")
          (width . 2560)
          (height . 1440)

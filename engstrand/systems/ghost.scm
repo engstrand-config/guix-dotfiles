@@ -2,6 +2,7 @@
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
   #:use-module (engstrand features display)
+  #:use-module (engstrand features dwl-guile)
   #:use-module (guix gexp)
   #:use-module (rde features bluetooth)
   #:use-module (rde features system)
@@ -45,8 +46,8 @@
       (device "/dev/mapper/cryptroot")
       (type "ext4")
       (dependencies %mapped-devices))))
-   (feature-dwl-guile-monitor-config
-    #:rules
+   (feature-dwl-guile-custom-config
+    #:config
     `((set-monitor-rules
        '((name . "DP-1")
          (x . 1920)
