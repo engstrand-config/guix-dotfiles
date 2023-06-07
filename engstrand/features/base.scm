@@ -6,8 +6,11 @@
   #:use-module (gnu services shepherd)
   #:use-module (gnu home services)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages python-build)
   #:use-module (engstrand utils)
-  #:export (feature-switch-to-tty-on-boot))
+  #:export (feature-switch-to-tty-on-boot
+            feature-python))
 
 (define* (feature-switch-to-tty-on-boot
           #:key
@@ -33,3 +36,17 @@
   (feature
    (name 'switch-tty-after-boot)
    (system-services-getter get-system-services)))
+
+(define* (feature-python)
+  "Install and configure python and pip."
+
+  (define (get-home-services config)
+    (list
+     (simple-service
+      'install-python
+      home-profile-service-type
+      (list python python-pip))))
+
+  (feature
+   (name 'python)
+   (home-services-getter get-home-services)))

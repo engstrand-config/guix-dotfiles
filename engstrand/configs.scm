@@ -103,6 +103,7 @@
      (size 13)
      (package font-iosevka-aile)))
    (feature-latex)
+   (feature-python)
    (feature-pipewire)
    (feature-pulseaudio-control)
    (feature-backlight)
