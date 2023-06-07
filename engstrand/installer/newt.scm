@@ -1,7 +1,6 @@
 (define-module (engstrand installer newt)
   #:use-module (gnu installer record)
   #:use-module (gnu installer utils)
-  #:use-module (gnu installer dump)
   #:use-module (gnu installer newt ethernet)
   #:use-module (gnu installer newt final)
   #:use-module (gnu installer newt menu)
