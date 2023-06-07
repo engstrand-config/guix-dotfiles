@@ -102,6 +102,7 @@
      (name "Iosevka Aile")
      (size 13)
      (package font-iosevka-aile)))
+   (feature-latex)
    (feature-pipewire)
    (feature-pulseaudio-control)
    (feature-backlight)

@@ -63,11 +63,15 @@
   (define emacs-f-name 'org-latex-preview)
 
   (define (get-home-services config)
+    ;; Ensure that we have latex enabled.
+    (require-value 'latex config)
+
     (list
      (simple-service
       'add-org-mode-latex-preview-home-packages-to-profile
       home-profile-service-type
-      (pkgs '("texlive" "texlive-latex-preview" "texlive-graphics-def")))
+      ;; Add additional packages needed for preview
+      (pkgs '("texlive-latex-preview" "texlive-graphics-def")))
      (rde-elisp-configuration-service
       emacs-f-name
       config

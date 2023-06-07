@@ -80,8 +80,20 @@
      (simple-service
       'add-latex-home-packages-to-profile
       home-profile-service-type
-      (list texlive texlive-latex-base python-pygments))))
+      (list texlive-base
+            texlive-listings
+            texlive-hyperref
+            texlive-wrapfig
+            texlive-amsmath
+            texlive-amsfonts
+            texlive-url
+            texlive-xcolor
+            texlive-tcolorbox
+            texlive-minted
+            texlive-caption
+            python-pygments))))
 
   (feature
    (name 'latex)
+   (values '((latex . #t)))
    (home-services-getter get-home-services)))
