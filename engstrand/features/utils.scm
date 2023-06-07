@@ -63,7 +63,8 @@
           #:key
           (package rbw-latest)
           (email #f)
-          (pinentry (file-append pinentry-bemenu "/bin/pinentry-bemenu"))
+          ;; TODO: pinentry-bemenu does not work with rbw for some reason.
+          (pinentry (file-append pinentry-gtk2 "/bin/pinentry-gtk-2"))
           (lock-timeout 300)) ;; 5 minutes
   "Setup rbw, the unofficial Bitwarden CLI."
 
