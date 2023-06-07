@@ -40,16 +40,6 @@
   (ensure-pred boolean? repl?)
   (ensure-pred string? repl-key)
 
-  (define (get-emacs-start-repl-exp)
-    (object->string
-      '(progn
-        (require 'geiser-repl)
-        (geiser-repl--start-repl
-         (geiser-repl--get-impl "Connect to Scheme impl: ")
-         ,%dwl:repl-socket-path)
-        (kill-buffer "*scratch*")
-        (delete-other-windows))))
-
   (lambda (_ palette)
     (define (get-home-services config)
       "Return a list of home services required by dwl-guile."
@@ -71,10 +61,20 @@
                            smart-borders? #t)
 
                      ,@(if repl?
-                           `((set-keys ,repl-key
+                           `((define (get-emacs-start-repl-exp)
+                               (object->string
+                                `(progn
+                                  (require 'geiser-repl)
+                                  (geiser-repl--start-repl
+                                   (geiser-repl--get-impl "Connect to Scheme impl: ")
+                                   ,%dwl:repl-socket-path)
+                                  (kill-buffer "*scratch*")
+                                  (delete-other-windows))))
+
+                             (set-keys ,repl-key
                                        (lambda ()
                                          (dwl:spawn "emacs" "--eval"
-                                                    ,(get-emacs-start-repl-exp))))
+                                                    (get-emacs-start-repl-exp))))
                              (add-hook! dwl:hook-startup dwl:start-repl-server))
                            '()))))))))
 
