@@ -94,7 +94,7 @@
   (ensure-pred symbol? name)
   (ensure-pred list? config)
 
-  (define (get-home-services config)
+  (define (get-home-services _)
     (list
      (simple-service
       name
