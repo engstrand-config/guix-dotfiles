@@ -93,6 +93,8 @@
                    (padding-top 0)
                    (padding-bottom 0)
                    (height height)
+                   ;; Ensure that blocks have spacing between them
+                   (delimiter-right " ")
                    (left-blocks (engstrand-dtao-guile-left-blocks palette))
                    (center-blocks (engstrand-dtao-guile-center-blocks palette))
                    (right-blocks (engstrand-dtao-guile-right-blocks palette))))))))
