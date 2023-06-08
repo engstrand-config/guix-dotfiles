@@ -67,7 +67,7 @@
                                   (require 'geiser-repl)
                                   (geiser-repl--start-repl
                                    (geiser-repl--get-impl "Connect to Scheme impl: ")
-                                   ,%dwl:repl-socket-path)
+                                   ,dwl:%repl-socket-path)
                                   (kill-buffer "*scratch*")
                                   (delete-other-windows))))
 
