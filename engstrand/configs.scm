@@ -106,6 +106,7 @@
    (feature-python)
    (feature-pipewire)
    (feature-pulseaudio-control)
+   (feature-playerctl)
    (feature-backlight)
    (feature-bash)
    (feature-zsh)
