@@ -33,6 +33,9 @@
      (targets '("/dev/nvme0n1"))
      (keyboard-layout %engstrand-keyboard-layout)))
    (feature-bluetooth)
+   (feature-display-control
+    #:decrease-brightness-key "s-<F1>"
+    #:increase-brightness-key "s-<F2>")
    (feature-file-systems
     #:mapped-devices %mapped-devices
     #:file-systems

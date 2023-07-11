@@ -48,6 +48,9 @@
       (dependencies %mapped-devices))))
    (feature-bluetooth)
    (feature-bluetooth-quick-connect)
+   (feature-display-control
+    #:decrease-brightness-key "s-<F1>"
+    #:increase-brightness-key "s-<F2>")
    (feature-dwl-guile-custom-config
     #:config
     `((setq accel-speed -0.7)

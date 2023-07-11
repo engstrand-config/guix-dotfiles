@@ -45,6 +45,9 @@
      (keyboard-layout %engstrand-keyboard-layout)))
    (feature-bluetooth)
    (feature-bluetooth-quick-connect)
+   (feature-display-control
+    #:decrease-brightness-key "s-<F1>"
+    #:increase-brightness-key "s-<F2>")
    (feature-ardour)
    (feature-calf-plugins)
    ;; (feature-sfz)

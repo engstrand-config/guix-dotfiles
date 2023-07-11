@@ -1,6 +1,7 @@
 (define-module (engstrand systems p400s)
   #:use-module (engstrand utils)
   #:use-module (engstrand systems)
+  #:use-module (engstrand features display)
   #:use-module (engstrand features dwl-guile)
   #:use-module (guix gexp)
   #:use-module (gnu services)
@@ -32,6 +33,9 @@
     #:swap-devices
     (list (swap-space
            (target (uuid "5fdc125b-0a5f-4706-8b8f-82b783979d03")))))
+   (feature-display-control
+    #:decrease-brightness-key "s-<F1>"
+    #:increase-brightness-key "s-<F2>")
    (feature-dwl-guile-custom-config
     #:config
     `((setq smart-gaps? #f
