@@ -4,28 +4,70 @@
   #:use-module (srfi srfi-1)
   #:use-module (rde features)
   #:use-module (rde features predicates)
+  #:use-module (rde system services accounts)
   #:use-module (gnu services)
+  #:use-module (gnu services base)
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu packages wm)
+  #:use-module (gnu packages hardware)
   #:use-module (gnu packages linux)
   #:use-module (dwl-guile utils)
   #:use-module (dwl-guile patches)
   #:use-module (dwl-guile home-service)
   #:use-module (engstrand utils)
   #:use-module (engstrand features wayland)
-  #:export (feature-kanshi-autorandr))
+  #:export (feature-display-control
+            feature-kanshi-autorandr))
 
-;;  TODO: requires package ddcutil from (gnu packages hardware)
-;;  please check if package i2c-tools from (gnu packages linux) is required
-;;  TODO: add kernel module i2c-dev
-;;  TODO: add user to group i2c-dev
-;;  TODO: guile bindings for ddcutil?
-;;  example commands that we have used before:
-;;  ddcutil setvcp 10 $(echo -e "0\n50\n100" | bemenu -i -p "Set monitor brightness level:")
-;;  or (increases brightness by 5 %):
-;;  ddcutil setvcp 10 + 5
-;;  )
+(define* (feature-display-control
+          #:key
+          (step-brightness 10)
+          (increase-brightness-key "<XF86MonBrightnessUp>")
+          (decrease-brightness-key "<XF86MonBrightnessDown>")
+          (add-keybindings? #t))
+
+  (define (get-system-services _)
+    (list
+     (simple-service
+      'ddcutil-add-i2c-group-to-user
+      rde-account-service-type
+      (list "i2c"))
+     (udev-rules-service
+      'ddcutil-add-udev-rules-group
+      ddcutil
+      #:groups '("i2c"))))
+
+  (define command (file-append ddcutil "/bin/ddcutil"))
+
+  (define (get-home-services config)
+    "Return a list of home services required by ddcutil."
+    (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+      (list
+       (simple-service
+        'add-ddcutil-home-package-to-profile
+        home-profile-service-type
+        (list ddcutil))
+       (simple-service
+        'add-ddcutil-dwl-keybindings
+        home-dwl-guile-service-type
+        `((set-keys ,increase-brightness-key
+                    (lambda ()
+                      (dwl:shcmd ,command
+                                 "setvcp" "10"
+                                 "+"
+                                 ,(number->string step-brightness)))
+                    ,decrease-brightness-key
+                    (lambda ()
+                      (dwl:shcmd ,command
+                                 "setvcp" "10"
+                                 "-"
+                                 ,(number->string step-brightness)))))))))
+
+  (feature
+   (name 'display-control)
+   (home-services-getter get-home-services)
+   (system-services-getter get-system-services)))
 
 (define* (feature-kanshi-autorandr
           #:key
