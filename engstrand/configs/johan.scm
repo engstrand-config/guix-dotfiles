@@ -9,7 +9,7 @@
   #:use-module (engstrand configs)
   #:use-module (engstrand themes)
   #:use-module (engstrand wallpapers) ;; get-wallpaper-path
-  #:use-module (engstrand features daw)
+  #:use-module (engstrand features audio)
   #:use-module (engstrand features documents)
   #:use-module (engstrand features sync)
   #:use-module (engstrand features emacs)

@@ -6,7 +6,7 @@
   #:use-module (engstrand features dwl-guile)
   #:use-module (engstrand features bluetooth)
   #:use-module (engstrand features display)
-  #:use-module (engstrand features daw)
+  #:use-module (engstrand features audio)
   #:use-module (rde features base)
   #:use-module (rde features bluetooth)
   #:use-module (rde features system)
