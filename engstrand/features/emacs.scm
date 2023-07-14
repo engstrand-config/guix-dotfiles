@@ -1,6 +1,7 @@
 (define-module (engstrand features emacs)
   #:use-module (guix gexp)
   #:use-module (dwl-guile home-service)
+  #:use-module (dwl-guile utils)
   #:use-module (farg colors)
   #:use-module (farg home-service)
   #:use-module (engstrand utils)
@@ -40,23 +41,34 @@
      (home-services-getter home-services)
      (system-services-getter system-services))))
 
-(define* (feature-emacs-default-editor)
+(define* (feature-emacs-default-editor
+          #:key
+          (open-client-keybinding "S-s-e")
+          (add-keybindings? #t))
   "Configure emacs as the default system editor."
+  (define emacs-f-name 'default-editor)
 
   (lambda (_ palette)
     (define (get-home-services config)
-      (make-service-list
-       (simple-service
-        'set-emacs-environment-variables
-        home-environment-variables-service-type
-        `(("EDITOR" . ,(file-append %engstrand-emacs-package "/bin/emacs"))
-          ;; Used by guix commands, e.g. guix edit. rde sets this by itself,
-          ;; but the --no-wait option does not seem to play nice with our setup.
-          ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))))
+      (let ((has-dwl-guile? (get-value 'dwl-guile config)))
+        (make-service-list
+         (simple-service
+          'set-emacs-environment-variables
+          home-environment-variables-service-type
+          `(("EDITOR" . ,(file-append %engstrand-emacs-package "/bin/emacs"))
+            ;; Used by guix commands, e.g. guix edit. rde sets this by itself,
+            ;; but the --no-wait option does not seem to play nice with our setup.
+            ("VISUAL" . ,(get-value 'emacs-client-create-frame config))))
+         (when (and add-keybindings? has-dwl-guile?)
+           (simple-service
+            'emacs-dwl-guile-add-keybindings
+            home-dwl-guile-service-type
+            `((set-keys ,open-client-keybinding
+                        (lambda ()
+                          (dwl:spawn "emacsclient" "-c")))))))))
 
-    (feature
-     (name 'emacs-default-editor)
-     (home-services-getter get-home-services))))
+    (make-emacs-feature emacs-f-name
+                        #:home-services get-home-services)))
 
 (define* (feature-emacs-org-latex-preview)
   "Add and configure latex previews in Emacs Org mode."
