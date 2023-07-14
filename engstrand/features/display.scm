@@ -48,21 +48,22 @@
         'add-ddcutil-home-package-to-profile
         home-profile-service-type
         (list ddcutil))
-       (simple-service
-        'add-ddcutil-dwl-keybindings
-        home-dwl-guile-service-type
-        `((set-keys ,increase-brightness-key
-                    (lambda ()
-                      (dwl:shcmd ,command
-                                 "setvcp" "10"
-                                 "+"
-                                 ,(number->string step-brightness)))
-                    ,decrease-brightness-key
-                    (lambda ()
-                      (dwl:shcmd ,command
-                                 "setvcp" "10"
-                                 "-"
-                                 ,(number->string step-brightness)))))))))
+       (when (and add-keybindings? has-dwl-guile?)
+         (simple-service
+          'add-ddcutil-dwl-keybindings
+          home-dwl-guile-service-type
+          `((set-keys ,increase-brightness-key
+                      (lambda ()
+                        (dwl:shcmd ,command
+                                   "setvcp" "10"
+                                   "+"
+                                   ,(number->string step-brightness)))
+                      ,decrease-brightness-key
+                      (lambda ()
+                        (dwl:shcmd ,command
+                                   "setvcp" "10"
+                                   "-"
+                                   ,(number->string step-brightness))))))))))
 
   (feature
    (name 'display-control)
