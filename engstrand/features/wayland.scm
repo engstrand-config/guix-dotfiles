@@ -577,7 +577,7 @@
          (simple-service
           'add-swaylock-dwl-keybindings
           home-dwl-guile-service-type
-          `((set-keys ,lock-key (lambda () (dwl:shcmd "swaylock"))))))))
+          `((set-keys ,lock-key (lambda () (dwl:shcmd ,(file-append swaylock "/bin/swaylock")))))))))
 
     (define (get-system-services config)
       (list
