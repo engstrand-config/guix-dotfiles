@@ -1,5 +1,6 @@
 (define-module (engstrand features laptop)
   #:use-module (rde features)
+  #:use-module (rde features bluetooth)
   #:use-module (rde features predicates)
   #:use-module (guix gexp)
   #:use-module (gnu services)
@@ -11,6 +12,7 @@
   #:use-module (dwl-guile home-service)
   #:use-module (dtao-guile home-service)
   #:use-module (engstrand utils)
+  #:use-module (engstrand features bluetooth)
   #:export (
             feature-laptop
             feature-laptop-tlp
@@ -152,4 +154,6 @@
    (feature-laptop-natural-scrolling)
    (feature-laptop-statusbar-battery
     #:interface "BAT0")
-   (feature-laptop-monitor-brightness)))
+   (feature-laptop-monitor-brightness)
+   (feature-bluetooth)
+   (feature-bluetooth-quick-connect)))

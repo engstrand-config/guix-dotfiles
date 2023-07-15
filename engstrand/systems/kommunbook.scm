@@ -7,7 +7,6 @@
   #:use-module (dwl-guile home-service)
   #:use-module (rde features base)
   #:use-module (rde features system)
-  #:use-module (rde features bluetooth)
   #:use-module (guix gexp)
   #:use-module (gnu system file-systems)
   #:use-module (gnu services)
@@ -47,7 +46,6 @@
        (target (uuid "4ea38741-230c-47c4-97d6-132f2002d9fb")))))
     (feature-radio
      #:rtl-sdr? #t)
-    (feature-bluetooth)
     (feature-dwl-guile-custom-config
      #:config
      `((setq gaps-oh 0
