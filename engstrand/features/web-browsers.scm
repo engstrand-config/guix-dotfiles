@@ -22,7 +22,7 @@
 
 (define* (feature-firefox
           #:key
-          (package firefox/wayland)
+          (package firefox)
           (open-key "S-s-w")
           (default-browser? #f))
   "Setup Firefox."
@@ -33,24 +33,23 @@
 
   (define (get-home-services config)
     "Return a list of home services required by Firefox."
-    (let ((package (if (get-value 'wayland config) firefox/wayland firefox)))
-      (make-service-list
-       (if default-browser?
-           (simple-service
-            'set-firefox-environment-variable
-            home-environment-variables-service-type
-            `(("BROWSER" . ,(file-append package "/bin/firefox")))))
-       (simple-service
-        'add-firefox-home-packages-to-profile
-        home-profile-service-type
-        (list package))
-       (when (and default-browser? (get-value 'dwl-guile config))
+    (make-service-list
+     (if default-browser?
          (simple-service
-          'add-firefox-dwl-keybindings
-          home-dwl-guile-service-type
-          `((set-keys ,open-key
-                      (lambda ()
-                        (dwl:spawn ,(file-append package "/bin/firefox"))))))))))
+          'set-firefox-environment-variable
+          home-environment-variables-service-type
+          `(("BROWSER" . ,(file-append package "/bin/firefox")))))
+     (simple-service
+      'add-firefox-home-packages-to-profile
+      home-profile-service-type
+      (list package))
+     (when (and default-browser? (get-value 'dwl-guile config))
+       (simple-service
+        'add-firefox-dwl-keybindings
+        home-dwl-guile-service-type
+        `((set-keys ,open-key
+                    (lambda ()
+                      (dwl:spawn ,(file-append package "/bin/firefox")))))))))
 
   (feature
    (name 'firefox)
