@@ -37,7 +37,7 @@
     (feature-virtualization)
     (feature-kdeconnect)
     (feature-piper)
-    (feature-sioyek)
+    ;; (feature-sioyek)
     (feature-ungoogled-chromium)
     (feature-firefox
      #:default-browser? #t))
