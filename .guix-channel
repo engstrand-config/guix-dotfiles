@@ -10,14 +10,6 @@
      (commit "897c1a470da759236cc11798f4e0a5f7d4d59fbc")
      (signer "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
   (channel
-   (name flat)
-   (url "https://github.com/flatwhatson/guix-channel.git")
-   (introduction
-    (channel-introduction
-     (version 0)
-     (commit "33f86a4b48205c0dc19d7c036c85393f0766f806")
-     (signer "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
-  (channel
    (name home-service-dwl-guile)
    (url "https://github.com/engstrand-config/home-service-dwl-guile")
    (branch "main")
