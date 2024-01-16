@@ -52,17 +52,18 @@
     (feature-qutebrowser
      #:default-browser? #t)
     (feature-firefox)
-    (feature-zathura)
-    (feature-sioyek
+    (feature-zathura
      #:default-reader? #t)
+    ;; (feature-sioyek
+    ;;  #:default-reader? #t)
     (feature-kdeconnect)
     (feature-rbw-qutebrowser)
     (feature-dwl-guile-custom-config
      #:config
-     `((setq gaps-oh 10
-             gaps-ov 10
-             gaps-ih 10
-             gaps-iv 10
+     `((setq gaps-oh 0
+             gaps-ov 0
+             gaps-ih 0
+             gaps-iv 0
              border-px 1))))
    %engstrand-emacs-base-features
    (modify-features %engstrand-base-features
