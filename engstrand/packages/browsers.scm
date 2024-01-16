@@ -13,7 +13,7 @@
    (name "qutebrowser-wayland")
    (inputs
     (modify-inputs (package-inputs qutebrowser)
-                   (prepend qtwayland-5)))
+                   (prepend qtwayland)))
    (arguments
     (substitute-keyword-arguments
      (package-arguments qutebrowser)
@@ -25,4 +25,4 @@
                       (wrap-program (search-input-file outputs "bin/qutebrowser")
                                     `("QT_PLUGIN_PATH" =
                                       (,(string-append (assoc-ref inputs "qtwayland")
-                                                       "/lib/qt5/plugins/"))))))))))))
+                                                       "/lib/qt6/plugins/"))))))))))))
