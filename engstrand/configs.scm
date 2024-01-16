@@ -136,7 +136,7 @@
       (".config/nvim/autoload/plug.vim" ,(local-file "files/config/nvim/autoload/plug.vim"))))
    (feature-farg)
    (feature-nix)
-   (feature-mpv)
+   ;; (feature-mpv)
    (feature-youtube-dl)
    (feature-obs)
    (feature-imv)
